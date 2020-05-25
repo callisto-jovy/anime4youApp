@@ -1,0 +1,7 @@
+<component name="CopyrightManager">
+  <settings default="copyright yugata">
+    <module2copyright>
+      <element module="All" copyright="copyright yugata" />
+    </module2copyright>
+  </settings>
+</component>

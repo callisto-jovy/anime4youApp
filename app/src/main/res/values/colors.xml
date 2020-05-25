@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020. Roman P.
+  ~ All code is owned by Roman P. APIs are mentioned.
+  ~ Last modified: 08.05.20, 11:26
+  -->
+
+<resources>
+    <color name="toolbarDark">#30475e</color>
+    <color name="backgroundDark">#222831</color>
+    <color name="gridViewDark">#222831</color>
+    <color name="textDark">#ececec</color>
+    <color name="accentColor">#f2a365</color>
+</resources>

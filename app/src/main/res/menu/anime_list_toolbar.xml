@@ -1,0 +1,13 @@
+<!--
+  ~ Copyright (c) 2020. Roman P.
+  ~ All code is owned by Roman P. APIs are mentioned.
+  ~ Last modified: 20.05.20, 09:28
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="ga.abzzezz.anime4youapp.net.bplaced.abzzezz.animeapp.MainActivity">
+    <item android:title="Add AID" android:id="@+id/add_aid_item"/>
+    <item android:title="From Cloud" android:id="@+id/add_series_cloud"/>
+</menu>

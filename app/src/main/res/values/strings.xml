@@ -1,0 +1,17 @@
+<!--
+  ~ Copyright (c) 2020. Roman P.
+  ~ All code is owned by Roman P. APIs are mentioned.
+  ~ Last modified: 19.05.20, 18:47
+  -->
+
+<resources>
+    <string name="app_name">Anime4YOU</string>
+    <string name="action_settings">About</string>
+    <string name="title_activity_download">Download</string>
+
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="title_activity_player">PlayerActivity</string>
+</resources>
