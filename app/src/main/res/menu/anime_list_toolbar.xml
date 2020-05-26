@@ -10,4 +10,5 @@
       tools:context="ga.abzzezz.anime4youapp.net.bplaced.abzzezz.animeapp.MainActivity">
     <item android:title="Add AID" android:id="@+id/add_aid_item"/>
     <item android:title="From Cloud" android:id="@+id/add_series_cloud"/>
+    <item android:title="Options" android:id="@+id/menu_options"/>
 </menu>

@@ -14,4 +14,22 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="title_activity_player">PlayerActivity</string>
+    <string name="title_activity_main">Main</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="global_options">Options</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="dark_mode_toggle">Use Dark Mode</string>
+    <string name="check_list_for_existing">Check list for existing Anime</string>
+    <string name="attachment_summary_on">Checks if Anime already exists. Still accepts sub/dub</string>
+    <string name="attachment_summary_off">Does not check. Entries can be duplicated</string>
 </resources>

@@ -7,20 +7,99 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/gridViewDark</item>
-        <item name="colorPrimaryDark">@color/backgroundDark</item>
-        <item name="colorAccent">@color/accentColor</item>
+    <style name="DarkTheme" parent="Theme.AppCompat">
+        <!-- Background and itewm colors-->
+        <item name="android:colorPrimary">@color/primaryColorDark</item>
+        <item name="android:colorAccent">@color/accentColor</item>
+        <item name="android:textColor">@color/textDark</item>
+        <item name="android:itemBackground">@color/primaryColorDark</item>
+        <item name="android:actionBarItemBackground">@color/toolbarDark</item>
+        <item name="android:windowBackground">@color/primaryColorDark</item>
+
+        <!-- Gridview etc. -->
+        <item name="android:gridViewStyle">@color/primaryColorDark</item>
+        <item name="toolbarStyle">@style/AppTheme.ActionBarDark</item>
+        <item name="editTextStyle">@style/AppTheme.EditTextDark</item>
+        <item name="floatingActionButtonStyle">@style/AppTheme.ActionButtonDark</item>
+        <item name="switchPreferenceCompatStyle">@style/AppTheme.SwitchDark</item>
+
+        <!-- Extra -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppTheme.ActionBarDark" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/toolbarDark</item>
+        <item name="android:backgroundTint">@color/toolbarDark</item>
+    </style>
+    <style name="AppTheme.SwitchDark" parent="Preference.SwitchPreferenceCompat">
+        <item name="android:layout">@layout/preference_material</item>
+        <item name="allowDividerAbove">false</item>
+        <item name="allowDividerBelow">true</item>
+        <item name="iconSpaceReserved">@bool/config_materialPreferenceIconSpaceReserved</item>
+        <item name="colorAccent">@color/accentColor</item>
+    </style>
+    <style name="AppTheme.ActionButtonDark" parent="Widget.Design.FloatingActionButton">
+        <item name="android:backgroundTint">@color/accentColor</item>
+        <item name="borderWidth">0dp</item>
+    </style>
+    <style name="AppTheme.EditTextDark" parent="Widget.AppCompat.EditText">
+        <item name="backgroundTint">@color/accentColor</item>
+    </style>
+
+
+
+
+    <!-- Light theme. -->
+    <style name="LightTheme" parent="Theme.AppCompat">
+        <!-- Background and itewm colors-->
+        <item name="android:colorPrimary">@color/lightPrimary</item>
+        <item name="android:colorAccent">@color/lightAccent</item>
+        <item name="android:itemBackground">@color/lightBackground</item>
+        <item name="android:windowBackground">@color/lightBackground</item>
+
+        <!-- Text-->
+        <item name="android:textColor">@color/lightText</item>
+        <item name="android:textColorSecondary">@color/lightTextSecondary</item>
+
+        <!-- Gridview etc. -->
+        <item name="android:gridViewStyle">@color/lightPrimary</item>
+        <item name="toolbarStyle">@style/AppTheme.ActionBarLight</item>
+        <item name="editTextStyle">@style/AppTheme.EditTextLight</item>
+        <item name="floatingActionButtonStyle">@style/AppTheme.ActionButtonLight</item>
+        <item name="switchPreferenceCompatStyle">@style/AppTheme.SwitchLight</item>
+
+        <!-- Extra -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.ActionBarLight" parent="Widget.AppCompat.Toolbar">
+        <item name="android:background">@color/lightPrimary</item>
+        <item name="android:backgroundTint">@color/lightPrimary</item>
+    </style>
+
+    <style name="AppTheme.SwitchLight" parent="Preference.SwitchPreferenceCompat">
+        <item name="android:layout">@layout/preference_material</item>
+        <item name="allowDividerAbove">false</item>
+        <item name="allowDividerBelow">true</item>
+        <item name="iconSpaceReserved">@bool/config_materialPreferenceIconSpaceReserved</item>
+        <item name="android:colorControlActivated">@color/lightAccent</item>
+
+    </style>
+
+    <style name="AppTheme.ActionButtonLight" parent="Widget.Design.FloatingActionButton">
+        <item name="android:backgroundTint">@color/lightAccent</item>
+        <item name="borderWidth">0dp</item>
+    </style>
+    <style name="AppTheme.EditTextLight" parent="Widget.AppCompat.EditText">
+        <item name="backgroundTint">@color/lightAccent</item>
+    </style>
+
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark"/>
-    <style name="AppTheme.NoActionBar">
+    <style name="DarkTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
 </resources>

@@ -19,20 +19,4 @@ public class ImageUtil {
 
     public static int dimensions[] = {390, 500};
 
-    public static Bitmap getImageBitmap(String url, int width, int height) {
-        Bitmap bm = null;
-        try {
-            URL aURL = new URL(url);
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Bitmap.createScaledBitmap(bm, width, height, false);
-    }
 }

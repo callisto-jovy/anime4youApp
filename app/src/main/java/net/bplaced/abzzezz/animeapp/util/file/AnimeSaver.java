@@ -40,7 +40,7 @@ public class AnimeSaver {
 
     public void save() {
         Logger.log("Saving", Logger.LogType.INFO);
-        if(!list.isEmpty()) FileUtil.writeArrayListToFile(list, file, false, true);
+        if (!list.isEmpty()) FileUtil.writeArrayListToFile(list, file, false, true);
     }
 
     public void add(String name, String episode, String url, String aid) {
@@ -50,6 +50,14 @@ public class AnimeSaver {
     public void add(String string) {
         String split[] = string.split(StringUtil.splitter);
         list.add(split[0].replaceAll(":", "") + StringUtil.splitter + split[1] + StringUtil.splitter + split[2] + StringUtil.splitter + split[3]);
+    }
+
+    public boolean containsAid(int aid) {
+        for (String s : getList()) {
+            return s.split(StringUtil.splitter)[3].equalsIgnoreCase(String.valueOf(aid));
+        }
+
+        return false;
     }
 
     /**

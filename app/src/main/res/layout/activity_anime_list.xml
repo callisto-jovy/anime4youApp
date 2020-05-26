@@ -11,28 +11,29 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    android:id="@+id/anime_list_layout"
-                                                   android:backgroundTint="@color/backgroundDark">
+>
 
     <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="?attr/actionBarTheme"
             android:elevation="6dp"
-            android:minHeight="?attr/actionBarSize" android:id="@+id/animelist_toolbar"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="0.0"
-            android:backgroundTint="@color/toolbarDark" android:background="#FFFFFF"/>
+            android:id="@+id/animelist_toolbar"
+            app:layout_constraintTop_toTopOf="parent"
+    />
     <GridView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:numColumns="auto_fit"
+            android:numColumns="3"
+            android:columnWidth="@android:dimen/thumbnail_width"
+            android:stretchMode="columnWidth"
             tools:context="net.bplaced.abzzezz.animeapp.activities.main.AnimeListActivity"
             android:id="@+id/anime_grid"
             app:layout_constraintTop_toBottomOf="@+id/animelist_toolbar"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.0" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintHorizontal_bias="0.0"
-            android:columnWidth="300px"
-            android:background="@color/backgroundDark">
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.0">
+
     </GridView>
 </androidx.constraintlayout.widget.ConstraintLayout>

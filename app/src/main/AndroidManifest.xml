@@ -14,9 +14,13 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/appicon144"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme"
+            android:theme="@style/DarkTheme"
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity
+                android:name=".activities.extra.SettingsActivity"
+                android:label="@string/title_activity_settings">
+        </activity>
         <activity android:name=".activities.extra.CloudList">
         </activity>
         <activity android:name=".activities.extra.MainMenuActivity">
@@ -24,7 +28,7 @@
         <activity
                 android:name=".activities.extra.PlayerActivity"
                 android:label="@string/title_activity_player"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/DarkTheme.NoActionBar">
         </activity>
         <activity android:name=".activities.main.SelectedAnimeActivity">
         </activity>
@@ -35,7 +39,6 @@
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

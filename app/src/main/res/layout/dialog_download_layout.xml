@@ -14,5 +14,5 @@
             android:id="@+id/download_specific"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Download specific" android:textColorLink="@color/accentColor"/>
+            android:hint="Download specific"/>
     </RelativeLayout>

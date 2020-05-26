@@ -7,13 +7,16 @@
 package net.bplaced.abzzezz.animeapp.activities.extra;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Switch;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.util.file.AnimeSaver;
 import net.bplaced.abzzezz.animeapp.util.file.AutoUpdater;
@@ -28,6 +31,14 @@ public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.getBoolean("dark_mode", false)) {
+            setTheme(R.style.DarkTheme);
+        } else {
+            setTheme(R.style.LightTheme);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -42,7 +53,9 @@ public class SplashScreen extends AppCompatActivity {
             startActivity(intent);
             finish();
         }, 2500);
+
     }
+
 
     private void configureHandlers() {
         BackgroundHolder backgroundHolder = new BackgroundHolder();
@@ -53,6 +66,7 @@ public class SplashScreen extends AppCompatActivity {
         this.episodeDownloader = new EpisodeDownloader();
         AutoUpdater autoUpdater = new AutoUpdater();
         autoUpdater.update(this);
+
     }
 
 

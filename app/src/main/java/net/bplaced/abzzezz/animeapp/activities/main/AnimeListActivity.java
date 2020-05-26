@@ -9,6 +9,7 @@ package net.bplaced.abzzezz.animeapp.activities.main;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -19,10 +20,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
+import com.squareup.picasso.Picasso;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.extra.CloudList;
+import net.bplaced.abzzezz.animeapp.activities.extra.SettingsActivity;
 import net.bplaced.abzzezz.animeapp.activities.extra.SplashScreen;
 import net.bplaced.abzzezz.animeapp.input.AIDInput;
 import net.bplaced.abzzezz.animeapp.util.ImageUtil;
@@ -37,11 +42,19 @@ public class AnimeListActivity extends AppCompatActivity implements AIDInput.AID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.getBoolean("dark_mode", false)) {
+            setTheme(R.style.DarkTheme);
+        } else {
+            setTheme(R.style.LightTheme);
+        }
         setContentView(R.layout.activity_anime_list);
         super.onCreate(savedInstanceState);
         GridView gridView = findViewById(R.id.anime_grid);
         AnimeAdapter animeAdapter = new AnimeAdapter(SplashScreen.saver.getList(), getApplicationContext());
         gridView.setAdapter(animeAdapter);
+
         gridView.setOnItemClickListener((parent, view, position, id) -> new Handler().postDelayed(() -> {
             Intent intent = new Intent(this, SelectedAnimeActivity.class);
             String[] pass = SplashScreen.saver.getAll(animeAdapter.getString().get(position));
@@ -72,7 +85,6 @@ public class AnimeListActivity extends AppCompatActivity implements AIDInput.AID
                     }).show();
             return true;
         });
-
         Toolbar toolbar = findViewById(R.id.animelist_toolbar);
         setSupportActionBar(toolbar);
     }
@@ -85,6 +97,9 @@ public class AnimeListActivity extends AppCompatActivity implements AIDInput.AID
             input.show(getSupportFragmentManager(), "Enter AID");
         } else if (itemID == R.id.add_series_cloud) {
             Intent intent = new Intent(this, CloudList.class);
+            startActivity(intent);
+        } else if (itemID == R.id.menu_options) {
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
@@ -100,12 +115,19 @@ public class AnimeListActivity extends AppCompatActivity implements AIDInput.AID
     public void applyTexts(String aid) {
         int aid_int = Integer.valueOf(aid);
         String[] all = dataBaseSearch.getAll(aid_int);
-        SplashScreen.saver.add(all[0], all[1], all[2], all[3]);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("check_existing", false)) {
+            if (!SplashScreen.saver.containsAid(aid_int)) {
+                SplashScreen.saver.add(all[0], all[1], all[2], all[3]);
+            } else {
+                Toast.makeText(AnimeListActivity.this, "Anime already exists", Toast.LENGTH_LONG);
+            }
+        } else {
+            SplashScreen.saver.add(all[0], all[1], all[2], all[3]);
+        }
 
         File animeDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), all[0]);
         if (!animeDirectory.exists()) animeDirectory.mkdir();
-
-
         SplashScreen.saver.save();
     }
 
@@ -149,7 +171,9 @@ public class AnimeListActivity extends AppCompatActivity implements AIDInput.AID
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView = new ImageView(context);
-            imageView.setImageBitmap(ImageUtil.getImageBitmap(SplashScreen.saver.getAll(string.get(position))[2], ImageUtil.dimensions[0], ImageUtil.dimensions[1]));
+            Picasso.with(context).load(SplashScreen.saver.getAll(string.get(position))[2]).resize(ImageUtil.dimensions[0], ImageUtil.dimensions[1]).into(imageView);
+            imageView.setAdjustViewBounds(true);
+            //imageView.setImageBitmap(ImageUtil.getImageBitmap(SplashScreen.saver.getAll(string.get(position))[2], ImageUtil.dimensions[0], ImageUtil.dimensions[1]));
             return imageView;
         }
 

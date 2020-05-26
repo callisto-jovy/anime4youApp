@@ -9,6 +9,7 @@ package net.bplaced.abzzezz.animeapp.activities.main;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.Menu;
@@ -20,7 +21,10 @@ import android.webkit.WebViewClient;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
@@ -42,6 +46,13 @@ public class SelectedAnimeActivity extends AppCompatActivity implements Download
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (prefs.getBoolean("dark_mode", false)) {
+            setTheme(R.style.DarkTheme);
+        } else {
+            setTheme(R.style.LightTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anime_selected);
         /**
@@ -79,7 +90,8 @@ public class SelectedAnimeActivity extends AppCompatActivity implements Download
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(animeName);
-        cover.setImageBitmap(ImageUtil.getImageBitmap(animeCover, ImageUtil.dimensions[0], ImageUtil.dimensions[1]));
+        Picasso.with(getApplicationContext()).load(animeCover).memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE).resize(ImageUtil.dimensions[0], ImageUtil.dimensions[1]).into(cover);
+
         /**
          *
          */

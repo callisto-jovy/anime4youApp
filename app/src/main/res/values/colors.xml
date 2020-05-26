@@ -6,9 +6,17 @@
   -->
 
 <resources>
+
     <color name="toolbarDark">#30475e</color>
-    <color name="backgroundDark">#222831</color>
-    <color name="gridViewDark">#222831</color>
+    <color name="primaryColorDark">#222831</color>
     <color name="textDark">#ececec</color>
     <color name="accentColor">#f2a365</color>
+
+    <color name="lightBackground">#FFFFFF</color>
+    <color name="lightPrimary">#03A9F4</color>
+    <color name="lightText">#212121</color>
+    <color name="lightAccent">#03A9F4</color>
+    <color name="lightTextSecondary">#757575</color>
+
+
 </resources>
