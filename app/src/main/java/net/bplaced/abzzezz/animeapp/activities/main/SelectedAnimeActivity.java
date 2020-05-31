@@ -14,7 +14,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,14 +35,14 @@ import ga.abzzezz.util.stringing.StringUtil;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.extra.PlayerActivity;
 import net.bplaced.abzzezz.animeapp.activities.extra.SplashScreen;
-import net.bplaced.abzzezz.animeapp.activities.input.DownloadSpecificInput;
+import net.bplaced.abzzezz.animeapp.activities.input.InputDialog;
 import net.bplaced.abzzezz.animeapp.util.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.ScriptUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.URLHandler;
 
 import java.io.File;
 
-public class SelectedAnimeActivity extends AppCompatActivity implements DownloadSpecificInput.SpecificDownloadListener {
+public class SelectedAnimeActivity extends AppCompatActivity implements InputDialog.InputDialogListener {
 
     private String animeName, animeCover, language;
     private int position, aid, animeEpisodes;
@@ -125,10 +124,8 @@ public class SelectedAnimeActivity extends AppCompatActivity implements Download
          * Button
          */
         FloatingActionButton downloadAnime = findViewById(R.id.download_anime_button);
-        SplashScreen.episodeDownloader.setButton(downloadAnime);
-
         int nextStart = (episodes != null && episodes.length != 0) ? StringUtil.extractNumberI(episodes[episodes.length - 1].replaceAll(".mp4", "")) + 1 : 1;
-        downloadAnime.setOnClickListener(v -> download(nextStart, animeEpisodes));
+        downloadAnime.setOnClickListener(v -> downloadEpisode(nextStart, animeEpisodes, 0));
     }
 
     @Override
@@ -144,12 +141,10 @@ public class SelectedAnimeActivity extends AppCompatActivity implements Download
             case R.id.delete_aid_item:
                 SplashScreen.saver.getList().remove(position);
                 break;
-
             case R.id.download_specific_episode:
-                DownloadSpecificInput input = new DownloadSpecificInput();
+                InputDialog input = new InputDialog("Episode to download");
                 input.show(getSupportFragmentManager(), "Download specific");
                 break;
-
             default:
                 break;
         }
@@ -171,33 +166,18 @@ public class SelectedAnimeActivity extends AppCompatActivity implements Download
         super.onBackPressed();
     }
 
-    public void download(int start, int episodes) {
-            /*
-                If series is downloaded, reset index to 0
-            */
-        if (SplashScreen.episodeDownloader.currentIndex > SplashScreen.episodeDownloader.episodesTotal) {
-            Logger.log("Resetting episode counter", Logger.LogType.INFO);
-            SplashScreen.episodeDownloader.currentIndex = 0;
-        }
-
-            /*
-            If 0 then configure or reconfigure
-             */
-        if (SplashScreen.episodeDownloader.currentIndex == 0) {
-            SplashScreen.episodeDownloader.currentIndex = start;
-            SplashScreen.episodeDownloader.downloadAID = aid;
-            SplashScreen.episodeDownloader.episodesTotal = episodes;
-        }
-
-        if (start > animeEpisodes) {
-            makeText("All episodes downloaded already");
+    public void downloadEpisode(int start, int countMax, int currentCount) {
+        int[] count = {currentCount, start};
+        if (count[0] >= countMax) {
+            Logger.log("current episode exceeds max / start exceeds max", Logger.LogType.ERROR);
             return;
         }
-
+        /**
+         * Load captcha URL
+         */
         WebView webView = new WebView(getApplicationContext());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(URLHandler.captchaURL);
-
         /**
          * Clear all previous data and Cookies, so no code 400 appears: Cookie too large (yummy ;) )
          */
@@ -208,77 +188,32 @@ public class SelectedAnimeActivity extends AppCompatActivity implements Download
         webView.clearFormData();
         webView.clearHistory();
         webView.clearSslPreferences();
-
-
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                view.evaluateJavascript(ScriptUtil.getRequest(SplashScreen.episodeDownloader.downloadAID, SplashScreen.episodeDownloader.currentIndex), returnJS -> {
-                    if (returnJS.contains("vivo")) {
-                        makeText("Found link for Episode:" + SplashScreen.episodeDownloader.currentIndex);
-                        SplashScreen.episodeDownloader.currentLink = URLUtil.toUrl(StringUtil.removeWindowsChars(returnJS), "https") + StringUtil.splitter + animeName + "::" + SplashScreen.episodeDownloader.currentIndex;
-                        Logger.log("Got vivo link: " + returnJS, Logger.LogType.INFO);
-
-                            /*
-                            Check if script has failed / or series is done downloading
-                             */
-                        if (SplashScreen.episodeDownloader.currentLink.isEmpty() || SplashScreen.episodeDownloader.currentIndex > SplashScreen.episodeDownloader.episodesTotal) {
-                            makeText("Please get links first! / Series download done");
-                            return;
-                        }
-
-                            /*
-                            Load vivo page and run script
-                             */
-                        String[] urlComplete = SplashScreen.episodeDownloader.currentLink.split(StringUtil.splitter);
-                        view.loadUrl(urlComplete[0]);
-
+                view.evaluateJavascript(ScriptUtil.getRequest(aid, count[1]), returnCaptcha -> {
+                    if (returnCaptcha.contains("vivo")) {
+                        Logger.log("Found link for vivo:" + returnCaptcha, Logger.LogType.INFO);
+                        view.loadUrl(URLUtil.toUrl(StringUtil.removeWindowsChars(returnCaptcha), "https"));
                         view.setWebViewClient(new WebViewClient() {
                             @Override
                             public void onPageFinished(WebView view, String url) {
-                                new Handler().postDelayed(() -> {
-                                    view.evaluateJavascript(ScriptUtil.vivoExploit, returnJS -> {
-                                        if (returnJS.contains("node")) {
-                                            /*
-                                            Debug purposes
-                                             */
-                                            Logger.log("Got vivo video url: " + returnJS, Logger.LogType.INFO);
-                                            /*
-                                            Download from Vivo url
-                                             */
-                                            SplashScreen.episodeDownloader.download(returnJS.replaceAll("\"", ""), urlComplete[1], SelectedAnimeActivity.this, "mp4");
-                                            /*
-                                            Destroy old web view
-                                             */
-                                            view.destroy();
-                                            /**
-                                             * Add to index and if button checked then call on click again
-                                             */
-                                            if (SplashScreen.episodeDownloader.currentIndex <= SplashScreen.episodeDownloader.episodesTotal) {
-                                                SplashScreen.episodeDownloader.currentIndex++;
-                                            } else {
-                                                makeText("Anime Downloaded successfully");
-                                            }
-                                        } else {
-                                            /**
-                                             * If the JS return of the vivo page does not equal node (vivo direct video url)
-                                             * then return
-                                             */
-                                            Logger.log(returnJS, Logger.LogType.INFO);
-                                            makeText("Error getting link, returning");
-                                            return;
+                                view.evaluateJavascript(ScriptUtil.vivoExploit, value -> {
+                                    if (value.contains("node")) {
+                                        SplashScreen.episodeDownloader.download(value.replaceAll("\"", ""), animeName + "::" + count[1], SelectedAnimeActivity.this, "mp4");
+                                        view.destroy();
+                                        if (count[0] < countMax) {
+                                            count[0]++;
+                                            count[1]++;
+                                            downloadEpisode(count[1], countMax, count[0]);
                                         }
-                                    });
-                                }, 1000);
+                                    } else makeText("Error getting direct vivo link: " + value);
+                                });
+                                super.onPageFinished(view, url);
                             }
                         });
                     } else {
-                        /**
-                         * If JS return does not equals vivo then return
-                         */
-                        Logger.log("Error getting vivo link: " + returnJS, Logger.LogType.ERROR);
-                        makeText("Error getting Episode:" + SplashScreen.episodeDownloader.currentIndex);
-                        return;
+                        makeText("Error getting vivo link. Anime4you might be down / Anime done downloading");
                     }
                 });
                 super.onPageFinished(view, url);
@@ -293,7 +228,7 @@ public class SelectedAnimeActivity extends AppCompatActivity implements Download
     @Override
     public void applyTexts(String start) {
         try {
-            download(Integer.valueOf(start), 1);
+            downloadEpisode(Integer.valueOf(start), 1, 0);
         } catch (NumberFormatException e) {
             makeText("Not possible to convert number, please check your input");
         }

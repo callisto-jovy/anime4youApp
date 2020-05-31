@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
@@ -29,14 +28,14 @@ import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.extra.CloudList;
 import net.bplaced.abzzezz.animeapp.activities.extra.SettingsActivity;
 import net.bplaced.abzzezz.animeapp.activities.extra.SplashScreen;
-import net.bplaced.abzzezz.animeapp.activities.input.AIDInput;
+import net.bplaced.abzzezz.animeapp.activities.input.InputDialog;
 import net.bplaced.abzzezz.animeapp.util.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.DataBaseSearch;
 
 import java.io.File;
 import java.util.List;
 
-public class AnimeListActivity extends AppCompatActivity implements AIDInput.AIDInputDialogListener {
+public class AnimeListActivity extends AppCompatActivity implements InputDialog.InputDialogListener {
 
     private final DataBaseSearch dataBaseSearch = new DataBaseSearch();
 
@@ -79,8 +78,6 @@ public class AnimeListActivity extends AppCompatActivity implements AIDInput.AID
                         overridePendingTransition(0, 0);
                         startActivity(getIntent());
                         overridePendingTransition(0, 0);
-                    })
-                    .setNegativeButton("No", (dialogInterface, i) -> {
                     }).show();
             return true;
         });
@@ -92,7 +89,7 @@ public class AnimeListActivity extends AppCompatActivity implements AIDInput.AID
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemID = item.getItemId();
         if (itemID == R.id.add_aid_item) {
-            AIDInput input = new AIDInput();
+            InputDialog input = new InputDialog("Aid ");
             input.show(getSupportFragmentManager(), "Enter AID");
         } else if (itemID == R.id.add_series_cloud) {
             Intent intent = new Intent(this, CloudList.class);
@@ -167,7 +164,6 @@ public class AnimeListActivity extends AppCompatActivity implements AIDInput.AID
             ImageView imageView = new ImageView(context);
             Picasso.with(context).load(SplashScreen.saver.getAll(string.get(position))[2]).resize(ImageUtil.dimensions[0], ImageUtil.dimensions[1]).into(imageView);
             imageView.setAdjustViewBounds(true);
-            //imageView.setImageBitmap(ImageUtil.getImageBitmap(SplashScreen.saver.getAll(string.get(position))[2], ImageUtil.dimensions[0], ImageUtil.dimensions[1]));
             return imageView;
         }
 

@@ -21,23 +21,7 @@ import java.io.File;
 
 public class EpisodeDownloader {
 
-    public int currentIndex, episodesTotal, downloadAID;
-    public String currentLink = "";
     private long downloadID;
-    /*
-    Passed on variables
-     */
-    private FloatingActionButton downloadButton;
-
-    private final BroadcastReceiver onDownloadComplete = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            if (downloadID == id) {
-                if (currentIndex <= episodesTotal) downloadButton.callOnClick();
-            }
-        }
-    };
 
     public void download(String url, String fileName, Activity activity, String fileExtension) {
         File outDic = new File(Environment.DIRECTORY_DOWNLOADS, fileName.substring(0, fileName.indexOf("::")));
@@ -48,10 +32,5 @@ public class EpisodeDownloader {
         request.setDestinationInExternalPublicDir(outDic.getAbsolutePath(), fileName + "." + fileExtension);
         DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
         this.downloadID = manager.enqueue(request);
-        activity.registerReceiver(onDownloadComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-    }
-
-    public void setButton(FloatingActionButton downloadButton) {
-        this.downloadButton = downloadButton;
     }
 }
