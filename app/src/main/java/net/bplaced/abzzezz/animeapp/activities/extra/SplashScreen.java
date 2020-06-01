@@ -10,9 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.StrictMode;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -39,10 +37,6 @@ public class SplashScreen extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen);
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
         configureHandlers();
         TextView versionText = findViewById(R.id.version_text);
         versionText.append("v." + AutoUpdater.version);
@@ -58,7 +52,7 @@ public class SplashScreen extends AppCompatActivity {
     private void configureHandlers() {
         BackgroundHolder.setup();
         BackgroundHolder.shuffle();
-        this.saver = new AnimeSaver(getApplicationContext());
+        saver = new AnimeSaver(getApplicationContext());
         saver.load();
         episodeDownloader = new EpisodeDownloader();
         AutoUpdater autoUpdater = new AutoUpdater();
@@ -70,11 +64,6 @@ public class SplashScreen extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.anime_list_toolbar, menu);
         return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

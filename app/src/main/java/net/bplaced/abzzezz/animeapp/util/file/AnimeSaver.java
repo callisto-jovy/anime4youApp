@@ -14,6 +14,7 @@ import ga.abzzezz.util.stringing.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,16 +36,22 @@ public class AnimeSaver {
     }
 
     public void load() {
-        animeList = FileUtil.getFileContentAsList(file);
+        try {
+            animeList = FileUtil.getFileContentAsList(file);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void save() {
-        Logger.log("Saving", Logger.LogType.INFO);
-        if (!animeList.isEmpty()) FileUtil.writeArrayListToFile(animeList, file, false, true);
+        if (!animeList.isEmpty()) {
+            FileUtil.writeArrayListToFile(animeList, file, false, true);
+            Logger.log("Saved list!", Logger.LogType.INFO);
+        }
     }
 
-    public void add(String name, String episode, String url, String aid) {
-        animeList.add(name.replaceAll(":", "") + StringUtil.splitter + episode + StringUtil.splitter + url + StringUtil.splitter + aid);
+    public void add(String[] all) {
+        animeList.add(all[0].replaceAll(":", "") + StringUtil.splitter + all[1] + StringUtil.splitter + all[2] + StringUtil.splitter + all[3]);
     }
 
     public void add(String string) {

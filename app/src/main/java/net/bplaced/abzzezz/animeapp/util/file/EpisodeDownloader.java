@@ -8,14 +8,9 @@ package net.bplaced.abzzezz.animeapp.util.file;
 
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 

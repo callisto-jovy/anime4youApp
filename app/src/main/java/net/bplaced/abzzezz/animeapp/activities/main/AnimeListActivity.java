@@ -56,7 +56,7 @@ public class AnimeListActivity extends AppCompatActivity implements InputDialog.
         gridView.setOnItemClickListener((parent, view, position, id) -> new Handler().postDelayed(() -> {
             Intent intent = new Intent(this, SelectedAnimeActivity.class);
             String[] pass = SplashScreen.saver.getAll(animeAdapter.getString().get(position));
-            String[] dataBase = dataBaseSearch.getAll(Integer.valueOf(pass[3]));
+            String[] dataBase = dataBaseSearch.getAll(pass[3]);
             intent.putExtra("anime_name", pass[0]);
             intent.putExtra("anime_episodes", dataBase[1]);
             intent.putExtra("anime_cover", pass[2]);
@@ -109,16 +109,17 @@ public class AnimeListActivity extends AppCompatActivity implements InputDialog.
 
     @Override
     public void applyTexts(String aid) {
-        String[] all = dataBaseSearch.getAll(Integer.valueOf(aid));
+        String[] all = dataBaseSearch.getAll(aid);
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (prefs.getBoolean("check_existing", false)) {
-            if (!SplashScreen.saver.containsAid(aid)) SplashScreen.saver.add(all[0], all[1], all[2], all[3]);
+            if (!SplashScreen.saver.containsAid(aid)) SplashScreen.saver.add(all);
         } else {
-            SplashScreen.saver.add(all[0], all[1], all[2], all[3]);
+            SplashScreen.saver.add(all);
         }
+
         File animeDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), all[0]);
         if (!animeDirectory.exists()) animeDirectory.mkdir();
-
         SplashScreen.saver.save();
     }
 

@@ -21,12 +21,11 @@ public class DataBaseSearch {
      * @return
      */
 
-    public String getSubstringFromDB(int aid) {
+    public String getSubstringFromDB(String aid) {
         String realSeries = "";
         try {
             String line = URLUtil.getURLContentAsString(new URL(URLHandler.dataBase));
             realSeries = StringUtil.getStringFromLong(line, "\"aid\"" + ":" + "\"" + aid + "\"", "}");
-
         } catch (StringIndexOutOfBoundsException | MalformedURLException e) {
             e.printStackTrace();
             Logger.log("Checking Database: " + e.getMessage(), Logger.LogType.ERROR);
@@ -38,14 +37,12 @@ public class DataBaseSearch {
      * @param aid
      * @return
      */
-    public String[] getAll(int aid) {
+    public String[] getAll(String aid) {
         String realSeries = getSubstringFromDB(aid);
-
         String coverURL = realSeries.isEmpty() ? "0" : StringUtil.getStringFromLong(realSeries, "src=\\\"", "\\\"");
         String episodesString = realSeries.isEmpty() ? "0" : StringUtil.getStringFromLong(realSeries, "\"Letzte\":\"", "\"");
         String seriesName = realSeries.isEmpty() ? "ERROR" : StringUtil.getStringFromLong(realSeries, "\"titel\":\"", "\"");
         String language = realSeries.isEmpty() ? "ERROR" : StringUtil.getStringFromLong(realSeries, "\"Untertitel\":\"", "\"");
-
         return new String[]{seriesName, episodesString, coverURL, String.valueOf(aid), language};
     }
 

@@ -50,8 +50,6 @@
     </style>
 
 
-
-
     <!-- Light theme. -->
     <style name="LightTheme" parent="Theme.AppCompat">
         <!-- Background and itewm colors-->

@@ -16,6 +16,8 @@ public class URLHandler {
     public static final String updateURL = "http://abzzezz.bplaced.net/app/update.apk";
     public static final String dataBase = "https://www.anime4you.one/speedlist.old.txt";
     public static final String checkURL = "http://abzzezz.bplaced.net/app/version.txt";
+    public static final String changelogURL = "http://abzzezz.bplaced.net/app/changelog.txt";
+
 
 }
 

@@ -10,7 +10,6 @@ package net.bplaced.abzzezz.animeapp.util;
 import net.bplaced.abzzezz.animeapp.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 public class BackgroundHolder {

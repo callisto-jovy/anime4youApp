@@ -8,7 +8,6 @@ package net.bplaced.abzzezz.animeapp.util.file;
 
 import android.app.Activity;
 import android.os.Environment;
-import android.widget.Toast;
 import ga.abzzezz.util.data.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.URLHandler;
 

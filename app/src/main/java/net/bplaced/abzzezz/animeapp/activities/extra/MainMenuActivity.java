@@ -18,6 +18,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.main.AnimeListActivity;
 import net.bplaced.abzzezz.animeapp.util.BackgroundHolder;
+import net.bplaced.abzzezz.animeapp.util.scripter.URLHandler;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -26,12 +27,12 @@ public class MainMenuActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         if (prefs.getBoolean("dark_mode", false)) {
             setTheme(R.style.DarkTheme);
         } else {
             setTheme(R.style.LightTheme);
         }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
         ConstraintLayout constraintLayout = findViewById(R.id.main_meu_layout);
@@ -43,7 +44,7 @@ public class MainMenuActivity extends AppCompatActivity {
         });
 
         WebView changelog = findViewById(R.id.changelog_webview);
-        changelog.loadUrl("http://abzzezz.bplaced.net/app/changelog.txt");
+        changelog.loadUrl(URLHandler.changelogURL);
 
         FloatingActionButton changelogButton = findViewById(R.id.changelog_button);
         changelogButton.setOnClickListener(v -> {

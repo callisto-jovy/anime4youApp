@@ -168,6 +168,9 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
 
     public void downloadEpisode(int start, int countMax, int currentCount) {
         int[] count = {currentCount, start};
+        /**
+         * Check if count is bigger than the max episodes to download
+         */
         if (count[0] >= countMax) {
             Logger.log("current episode exceeds max / start exceeds max", Logger.LogType.ERROR);
             return;
@@ -188,13 +191,15 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
         webView.clearFormData();
         webView.clearHistory();
         webView.clearSslPreferences();
+
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 view.evaluateJavascript(ScriptUtil.getRequest(aid, count[1]), returnCaptcha -> {
                     if (returnCaptcha.contains("vivo")) {
                         Logger.log("Found link for vivo:" + returnCaptcha, Logger.LogType.INFO);
-                        view.loadUrl(URLUtil.toUrl(StringUtil.removeWindowsChars(returnCaptcha), "https"));
+                        makeText("Found vivo link");
+                        view.loadUrl(URLUtil.toUrl(StringUtil.removeBadCharacters(returnCaptcha, "\\\\", "\""), "https"));
                         view.setWebViewClient(new WebViewClient() {
                             @Override
                             public void onPageFinished(WebView view, String url) {

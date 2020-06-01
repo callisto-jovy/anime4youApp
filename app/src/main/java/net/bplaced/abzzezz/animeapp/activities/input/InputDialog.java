@@ -20,7 +20,7 @@ public class InputDialog extends AppCompatDialogFragment {
 
     private EditText download_in;
     private InputDialogListener listener;
-    private String hint;
+    private final String hint;
 
     public InputDialog(String hint) {
         this.hint = hint;
