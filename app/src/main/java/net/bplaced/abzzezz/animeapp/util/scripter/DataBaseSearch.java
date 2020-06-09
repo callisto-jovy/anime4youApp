@@ -6,6 +6,7 @@
 
 package net.bplaced.abzzezz.animeapp.util.scripter;
 
+import android.os.AsyncTask;
 import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
 import ga.abzzezz.util.stringing.StringUtil;
@@ -14,8 +15,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public class DataBaseSearch {
+public class DataBaseSearch extends AsyncTask<String, Void, String[]> {
 
+    
     /**
      * @param aid
      * @return
@@ -33,17 +35,19 @@ public class DataBaseSearch {
         return realSeries;
     }
 
-    /**
-     * @param aid
-     * @return
-     */
-    public String[] getAll(String aid) {
-        String realSeries = getSubstringFromDB(aid);
+    @Override
+    protected String[] doInBackground(String... aid) {
+        String realSeries = getSubstringFromDB(aid[0]);
         String coverURL = realSeries.isEmpty() ? "0" : StringUtil.getStringFromLong(realSeries, "src=\\\"", "\\\"");
         String episodesString = realSeries.isEmpty() ? "0" : StringUtil.getStringFromLong(realSeries, "\"Letzte\":\"", "\"");
         String seriesName = realSeries.isEmpty() ? "ERROR" : StringUtil.getStringFromLong(realSeries, "\"titel\":\"", "\"");
         String language = realSeries.isEmpty() ? "ERROR" : StringUtil.getStringFromLong(realSeries, "\"Untertitel\":\"", "\"");
-        return new String[]{seriesName, episodesString, coverURL, String.valueOf(aid), language};
+        return new String[]{seriesName, episodesString, coverURL, String.valueOf(aid[0]), language};
     }
 
+    @Override
+    protected void onCancelled() {
+        Logger.log("Cancelled DataBase Task", Logger.LogType.INFO);
+        super.onCancelled();
+    }
 }

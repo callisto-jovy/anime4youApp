@@ -10,8 +10,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 import com.squareup.picasso.Picasso;
+import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.extra.CloudList;
 import net.bplaced.abzzezz.animeapp.activities.extra.SettingsActivity;
@@ -31,13 +32,20 @@ import net.bplaced.abzzezz.animeapp.activities.extra.SplashScreen;
 import net.bplaced.abzzezz.animeapp.activities.input.InputDialog;
 import net.bplaced.abzzezz.animeapp.util.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.DataBaseSearch;
+import org.apache.commons.net.ftp.FTPClient;
 
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 public class AnimeListActivity extends AppCompatActivity implements InputDialog.InputDialogListener {
 
-    private final DataBaseSearch dataBaseSearch = new DataBaseSearch();
+
+    private AnimeAdapter animeAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,36 +59,44 @@ public class AnimeListActivity extends AppCompatActivity implements InputDialog.
         setContentView(R.layout.activity_anime_list);
         super.onCreate(savedInstanceState);
         GridView gridView = findViewById(R.id.anime_grid);
-        AnimeAdapter animeAdapter = new AnimeAdapter(SplashScreen.saver.getList(), getApplicationContext());
-        gridView.setAdapter(animeAdapter);
-        gridView.setOnItemClickListener((parent, view, position, id) -> new Handler().postDelayed(() -> {
-            Intent intent = new Intent(this, SelectedAnimeActivity.class);
-            String[] pass = SplashScreen.saver.getAll(animeAdapter.getString().get(position));
-            String[] dataBase = dataBaseSearch.getAll(pass[3]);
-            intent.putExtra("anime_name", pass[0]);
-            intent.putExtra("anime_episodes", dataBase[1]);
-            intent.putExtra("anime_cover", pass[2]);
-            intent.putExtra("anime_aid", pass[3]);
-            intent.putExtra("list_position", position);
-            intent.putExtra("anime_language", dataBase[4]);
-            startActivity(intent);
-            finish();
-        }, 100));
 
+        this.animeAdapter = new AnimeAdapter(SplashScreen.saver.getList(), getApplicationContext());
+        gridView.setAdapter(animeAdapter);
+        /**
+         * Set onclick listener, if clicked pass information through to selected anime.
+         */
+        gridView.setOnItemClickListener((parent, view, position, id) -> new Handler().postDelayed(() -> {
+            try {
+                Intent intent = new Intent(this, SelectedAnimeActivity.class);
+                String[] pass = SplashScreen.saver.getAll(position);
+                String[] dataBase = new DataBaseSearch().execute(pass[3]).get();
+                intent.putExtra("anime_name", pass[0]);
+                intent.putExtra("anime_episodes", dataBase[1]);
+                intent.putExtra("anime_cover", pass[2]);
+                intent.putExtra("anime_aid", pass[3]);
+                intent.putExtra("anime_language", dataBase[4]);
+                startActivity(intent);
+                finish();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }, 100));
+        /**
+         * Set on long hold listener, then block the old one
+         */
         gridView.setOnItemLongClickListener((parent, view, position, id) -> {
             new AlertDialog.Builder(AnimeListActivity.this)
                     .setIcon(android.R.drawable.stat_sys_warning)
                     .setTitle("Remove?")
                     .setMessage("Will remove from list")
                     .setPositiveButton("Yes", (dialogInterface, i) -> {
-                        SplashScreen.saver.getList().remove(position);
-                        finish();
-                        overridePendingTransition(0, 0);
-                        startActivity(getIntent());
-                        overridePendingTransition(0, 0);
+                        animeAdapter.removeItem(position);
                     }).show();
             return true;
         });
+        /**
+         * Add toolbar
+         */
         Toolbar toolbar = findViewById(R.id.animelist_toolbar);
         setSupportActionBar(toolbar);
     }
@@ -88,15 +104,24 @@ public class AnimeListActivity extends AppCompatActivity implements InputDialog.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemID = item.getItemId();
-        if (itemID == R.id.add_aid_item) {
-            InputDialog input = new InputDialog("Aid ");
-            input.show(getSupportFragmentManager(), "Enter AID");
-        } else if (itemID == R.id.add_series_cloud) {
-            Intent intent = new Intent(this, CloudList.class);
-            startActivity(intent);
-        } else if (itemID == R.id.menu_options) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
+        switch (itemID) {
+            case R.id.add_aid_item:
+                InputDialog input = new InputDialog("Aid ");
+                input.show(getSupportFragmentManager(), "Enter AID");
+                break;
+            case R.id.add_series_cloud:
+                Intent intent = new Intent(this, CloudList.class);
+                startActivity(intent);
+                break;
+            case R.id.menu_options:
+                Intent intent1 = new Intent(this, SettingsActivity.class);
+                startActivity(intent1);
+                break;
+            case R.id.cloud_save:
+                new FTPGetter().execute();
+                break;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -107,34 +132,19 @@ public class AnimeListActivity extends AppCompatActivity implements InputDialog.
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * add anime to keyset
+     *
+     * @param aid
+     */
     @Override
     public void applyTexts(String aid) {
-        String[] all = dataBaseSearch.getAll(aid);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (prefs.getBoolean("check_existing", false)) {
-            if (!SplashScreen.saver.containsAid(aid)) SplashScreen.saver.add(all);
-        } else {
-            SplashScreen.saver.add(all);
-        }
-
-        File animeDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), all[0]);
-        if (!animeDirectory.exists()) animeDirectory.mkdir();
-        SplashScreen.saver.save();
+        animeAdapter.addItem(aid);
     }
 
-    @Override
-    protected void onDestroy() {
-        SplashScreen.saver.save();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-        SplashScreen.saver.save();
-        super.onBackPressed();
-    }
-
+    /**
+     * Array Picture adapter
+     */
     private class AnimeAdapter extends BaseAdapter {
 
         private final Context context;
@@ -163,13 +173,60 @@ public class AnimeListActivity extends AppCompatActivity implements InputDialog.
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView = new ImageView(context);
-            Picasso.with(context).load(SplashScreen.saver.getAll(string.get(position))[2]).resize(ImageUtil.dimensions[0], ImageUtil.dimensions[1]).into(imageView);
-            imageView.setAdjustViewBounds(true);
+            try {
+                Picasso.with(context).load(SplashScreen.saver.getAll(position)[2]).resize(ImageUtil.dimensions[0], ImageUtil.dimensions[1]).into(imageView);
+                imageView.setAdjustViewBounds(true);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println(position);
+            }
             return imageView;
         }
 
+        public void removeItem(int index) {
+            string.remove(index);
+            SplashScreen.saver.remove(index);
+            notifyDataSetChanged();
+        }
+
+        public void addItem(String item) {
+            try {
+                String[] all = new DataBaseSearch().execute(item).get();
+                string.add(item);
+                SplashScreen.saver.add(all);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+            notifyDataSetChanged();
+        }
+
+
         public List<String> getString() {
             return string;
+        }
+    }
+
+    /**
+     * Debug
+     */
+
+    class FTPGetter extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                FTPClient ftpClient = new FTPClient();
+                ftpClient.connect("abzzezz.bplaced.net");
+                ftpClient.login("abzzezz_client", "AzA33EUSgU7KZvbj");
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                for (String line : SplashScreen.saver.getList()) {
+                    baos.write((line + "\n").getBytes());
+                }
+                byte[] bytes = baos.toByteArray();
+                Logger.log("File uploaded: " + ftpClient.storeFile("/www/lists/" + new Random().nextInt() + ".txt", new ByteArrayInputStream(bytes)), Logger.LogType.INFO);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 }

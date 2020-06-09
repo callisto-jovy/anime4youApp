@@ -7,60 +7,76 @@
 package net.bplaced.abzzezz.animeapp.util.file;
 
 import android.content.Context;
-import ga.abzzezz.util.array.ArrayUtil;
-import ga.abzzezz.util.data.FileUtil;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
 import ga.abzzezz.util.stringing.StringUtil;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 public class AnimeSaver {
 
-    private final File file;
-    private List<String> animeList;
+    /**
+     * Editor and preferences
+     */
+    private final SharedPreferences preferences;
+    private final SharedPreferences.Editor editor;
+    private final SharedPreferences publicPreferences;
+
+    /**
+     * Aids used as keys. The other values stay the same
+     */
 
     public AnimeSaver(Context context) {
-        this.animeList = new ArrayList<>();
-        this.file = new File(context.getFilesDir(), "animes.txt");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+        this.preferences = context.getSharedPreferences("AnimeList", Context.MODE_PRIVATE);
+        this.editor = preferences.edit();
+        this.publicPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Logger.log("Anime Saver set up.", Logger.LogType.INFO);
+        preferences.getAll().entrySet().forEach(System.out::println);
+    }
+
+    /**
+     * Add anime with key and values to preference hashmap
+     * then commit
+     *
+     * @param all
+     */
+    public void add(String... all) {
+        boolean check = publicPreferences.getBoolean("check_existing", false);
+        String add = all[0].replaceAll(":", "") + StringUtil.splitter + all[1] + StringUtil.splitter + all[2] + StringUtil.splitter + all[3];
+        if (check) {
+            if (!containsAid(all[3])) {
+                editor.putString(String.valueOf(preferences.getAll().size()), add);
+                editor.commit();
             }
+        } else {
+            editor.putString(String.valueOf(preferences.getAll().size()), add);
+            editor.commit();
         }
-    }
-
-    public void load() {
-        try {
-            animeList = FileUtil.getFileContentAsList(file);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void save() {
-        if (!animeList.isEmpty()) {
-            FileUtil.writeArrayListToFile(animeList, file, false, true);
-            Logger.log("Saved list!", Logger.LogType.INFO);
-        }
-    }
-
-    public void add(String[] all) {
-        animeList.add(all[0].replaceAll(":", "") + StringUtil.splitter + all[1] + StringUtil.splitter + all[2] + StringUtil.splitter + all[3]);
-    }
-
-    public void add(String string) {
-        String[] split = string.split(StringUtil.splitter);
-        animeList.add(split[0].replaceAll(":", "") + StringUtil.splitter + split[1] + StringUtil.splitter + split[2] + StringUtil.splitter + split[3]);
     }
 
     public boolean containsAid(String aid) {
-        return getList().stream().filter(s -> s.split(StringUtil.splitter)[3].equalsIgnoreCase(aid)).count() > 0;
+        return preferences.getAll().values().stream().filter(o -> o.toString().split(StringUtil.splitter)[3].equals(aid)).count() >= 1;
+    }
+
+    /**
+     * Calls @add
+     *
+     * @param string
+     */
+    public void add(String string) {
+        add(string.split(StringUtil.splitter));
+    }
+
+    /**
+     * Remove key from map then instantly commit
+     *
+     * @param key
+     */
+    public void remove(int key) {
+        editor.remove(String.valueOf(key));
+        editor.apply();
     }
 
     /**
@@ -72,11 +88,17 @@ public class AnimeSaver {
      * @param anime
      * @return
      */
-    public String[] getAll(String anime) {
-        return animeList.get(ArrayUtil.indexOfKey(animeList, anime)).split(StringUtil.splitter);
+    public String[] getAll(int anime) {
+        return preferences.getString(String.valueOf(anime), "NULL").split(StringUtil.splitter);
     }
 
-    public List<String> getList() {
-        return animeList;
+    /**
+     * Return list, same as before
+     *
+     * @return
+     */
+    public ArrayList<String> getList() {
+        return new ArrayList<>((Collection<? extends String>) preferences.getAll().values());
     }
+
 }

@@ -16,6 +16,10 @@ import net.bplaced.abzzezz.animeapp.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    /**
+     * auto generated preferences class
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

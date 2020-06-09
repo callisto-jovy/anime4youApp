@@ -7,6 +7,7 @@
 package net.bplaced.abzzezz.animeapp.util.file;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Environment;
 import ga.abzzezz.util.data.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.URLHandler;
@@ -19,29 +20,30 @@ import java.net.URL;
 /**
  * Checks if the byte (version) is smaller than the Byte value of the String on the host
  */
-public class AutoUpdater {
+public class AutoUpdater extends AsyncTask<Activity, Void, Void> {
 
     /**
      * Version
      */
-    public static float version = 30F;
+    public static float version = 33F;
 
-    /**
-     * @param activity
-     */
-    public void update(Activity activity) {
+    private String checkUpdate() throws MalformedURLException {
+        return URLUtil.getURLContentAsString(new URL(URLHandler.checkURL));
+    }
+
+    @Override
+    protected Void doInBackground(Activity... activities) {
         try {
-            if (version < Float.valueOf(checkUpdate())) {
-                File outDic = new File(Environment.DIRECTORY_DOWNLOADS, "Anime4you-Update");
-                String fileName = "appUpdate Version:" + checkUpdate() + ".apk";
-                Downloader.download(URLHandler.updateURL, outDic, fileName, activity);
+            if (!checkUpdate().equals("NULL")) {
+                if (version < Float.valueOf(checkUpdate())) {
+                    File outDic = new File(Environment.DIRECTORY_DOWNLOADS, "Anime4you-Update");
+                    String fileName = "appUpdate Version:" + checkUpdate() + ".apk";
+                    Downloader.download(URLHandler.updateURL, outDic, fileName, activities[0]);
+                }
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-    }
-
-    private String checkUpdate() throws MalformedURLException {
-        return URLUtil.getURLContentAsString(new URL(URLHandler.checkURL));
+        return null;
     }
 }

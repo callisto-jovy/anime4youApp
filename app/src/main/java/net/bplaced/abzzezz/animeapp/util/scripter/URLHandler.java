@@ -6,6 +6,9 @@
 
 package net.bplaced.abzzezz.animeapp.util.scripter;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 public class URLHandler {
 
 
@@ -18,6 +21,10 @@ public class URLHandler {
     public static final String checkURL = "http://abzzezz.bplaced.net/app/version.txt";
     public static final String changelogURL = "http://abzzezz.bplaced.net/app/changelog.txt";
 
+    public static boolean isOnline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
+    }
 
 }
 

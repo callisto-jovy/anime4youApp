@@ -5,9 +5,10 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:tools="http://schemas.android.com/tools"
+      xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
       tools:context="ga.abzzezz.anime4youapp.net.bplaced.abzzezz.animeapp.MainActivity">
     <item android:title="Add AID" android:id="@+id/add_aid_item"/>
     <item android:title="From Cloud" android:id="@+id/add_series_cloud"/>
     <item android:title="Options" android:id="@+id/menu_options"/>
+    <item android:title="Save to cloud" android:id="@+id/cloud_save"/>
 </menu>

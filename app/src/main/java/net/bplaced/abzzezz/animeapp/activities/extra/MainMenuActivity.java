@@ -24,6 +24,10 @@ public class MainMenuActivity extends AppCompatActivity {
 
     boolean showLog;
 
+    /**
+     * Not explanation needed
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);

@@ -18,10 +18,14 @@ import net.bplaced.abzzezz.animeapp.R;
 
 public class InputDialog extends AppCompatDialogFragment {
 
-    private EditText download_in;
-    private InputDialogListener listener;
     private final String hint;
+    private EditText input;
+    private InputDialogListener listener;
 
+    /**
+     * Prompt dialog
+     * @param hint
+     */
     public InputDialog(String hint) {
         this.hint = hint;
     }
@@ -33,11 +37,11 @@ public class InputDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.dialog_layout, null);
         builder.setView(view).setTitle(getTag()).setNegativeButton("Cancel", (dialogInterface, i) -> {
         }).setPositiveButton("Enter", (dialogInterface, i) -> {
-            String start = download_in.getText().toString();
+            String start = input.getText().toString();
             listener.applyTexts(start);
-        });
-        download_in = view.findViewById(R.id.input_dialog);
-        download_in.setHint(hint);
+        }).setNegativeButton("Cancel", (dialog, which) -> {});
+        input = view.findViewById(R.id.input_dialog);
+        input.setHint(hint);
         return builder.create();
     }
 
@@ -47,8 +51,7 @@ public class InputDialog extends AppCompatDialogFragment {
         try {
             listener = (InputDialogListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() +
-                    "must implement Listener");
+            throw new ClassCastException(context.toString() + "must implement Listener");
         }
     }
 

@@ -17,30 +17,26 @@ import java.io.File;
 
 public class PlayerActivity extends AppCompatActivity {
 
+    /**
+     * No explanation needed
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
         File file = new File(getIntent().getStringExtra("file_path"));
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setDataAndType(FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file), "video/mp4");
+        Intent intent = new Intent(Intent.ACTION_VIEW, FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", file));
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(intent);
     }
 
     @Override
-    protected void onDestroy() {
-        SplashScreen.saver.save();
-        super.onDestroy();
-    }
-
-    @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, AnimeListActivity.class);
-        startActivity(intent);
         finish();
+        Intent intent = new Intent(getApplicationContext(), AnimeListActivity.class);
+        startActivity(intent);
         super.onBackPressed();
     }
 }

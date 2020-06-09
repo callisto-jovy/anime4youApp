@@ -14,6 +14,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,7 +46,7 @@ import java.io.File;
 public class SelectedAnimeActivity extends AppCompatActivity implements InputDialog.InputDialogListener {
 
     private String animeName, animeCover, language;
-    private int position, aid, animeEpisodes;
+    private int aid, animeEpisodes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +58,13 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anime_selected);
+
         /**
          * Get intent varaibles
          */
         this.animeName = getIntent().getStringExtra("anime_name");
         this.animeEpisodes = Integer.valueOf(getIntent().getStringExtra("anime_episodes"));
         this.animeCover = getIntent().getStringExtra("anime_cover");
-        this.position = getIntent().getIntExtra("list_position", -1);
         this.aid = Integer.valueOf(getIntent().getStringExtra("anime_aid"));
         this.language = getIntent().getStringExtra("anime_language");
 
@@ -75,10 +76,13 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
         TextView selected_anime_aid = findViewById(R.id.selected_anime_aid);
         TextView selected_anime_size = findViewById(R.id.anime_directory_size);
         TextView selected_anime_language = findViewById(R.id.selected_anime_language);
+
         selected_anime_aid.append(String.valueOf(aid));
         selected_anime_name.setText(animeName);
         selected_anime_episodes.append(String.valueOf(animeEpisodes));
         selected_anime_language.append(language);
+
+
         /**
          * Toolbar and Image
          */
@@ -93,6 +97,7 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
         GridView episodeGrid = findViewById(R.id.anime_episodes_grid);
         File animeFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), animeName);
         String[] episodes = animeFile.list();
+
         selected_anime_size.append(FileUtil.calculateFileSize(animeFile));
 
         AnimeEpisodeAdapter animeEpisodeAdapter = new AnimeEpisodeAdapter(episodes == null || episodes.length == 0 ? new String[1] : episodes, getApplicationContext());
@@ -110,12 +115,7 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
 
         episodeGrid.setOnItemLongClickListener((parent, view, position, id) -> {
             new AlertDialog.Builder(SelectedAnimeActivity.this).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Delete?").setMessage("Will delete File").setPositiveButton("Yes", (dialogInterface, i) -> {
-                File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + animeName, animeEpisodeAdapter.episodes[position]);
-                Logger.log("Deleted: " + f.delete(), Logger.LogType.INFO);
-                finish();
-                overridePendingTransition(0, 0);
-                startActivity(getIntent());
-                overridePendingTransition(0, 0);
+                animeEpisodeAdapter.deleteItem(position);
             }).show();
             return true;
         });
@@ -124,7 +124,9 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
          * Button
          */
         FloatingActionButton downloadAnime = findViewById(R.id.download_anime_button);
-        int nextStart = (episodes != null && episodes.length != 0) ? StringUtil.extractNumberI(episodes[episodes.length - 1].replaceAll(".mp4", "")) + 1 : 1;
+
+        String episodeString = (episodes != null && episodes.length != 0) ? episodes[episodes.length - 1] : "1";
+        int nextStart = (episodes != null && episodes.length != 0) ? StringUtil.extractNumberI(episodeString.substring(episodeString.indexOf("::") + 2, episodeString.indexOf(".mp4"))) + 1 : 1;
         downloadAnime.setOnClickListener(v -> downloadEpisode(nextStart, animeEpisodes, 0));
     }
 
@@ -138,12 +140,19 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemID = item.getItemId();
         switch (itemID) {
-            case R.id.delete_aid_item:
-                SplashScreen.saver.getList().remove(position);
-                break;
             case R.id.download_specific_episode:
                 InputDialog input = new InputDialog("Episode to download");
                 input.show(getSupportFragmentManager(), "Download specific");
+                break;
+
+            case R.id.download_bound:
+                String[] episodes = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), animeName).list();
+
+                int nextStart = (episodes != null && episodes.length != 0) ? StringUtil.extractNumberI(episodes[episodes.length - 1].replaceAll(".mp4", "")) + 1 : 1;
+                EditText editText = new EditText(this);
+                new AlertDialog.Builder(this).setTitle("Download bound").setMessage("Enter download bound").setPositiveButton("Enter", (dialogInterface, i) -> {
+                    downloadEpisode(nextStart, Integer.parseInt(editText.getText().toString()), 0);
+                }).setView(editText).show();
                 break;
             default:
                 break;
@@ -151,12 +160,6 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    protected void onDestroy() {
-        SplashScreen.saver.save();
-        super.onDestroy();
-    }
 
     @Override
     public void onBackPressed() {
@@ -178,7 +181,7 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
         /**
          * Load captcha URL
          */
-        WebView webView = new WebView(getApplicationContext());
+        final WebView webView = new WebView(getApplicationContext());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(URLHandler.captchaURL);
         /**
@@ -198,7 +201,7 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
                 view.evaluateJavascript(ScriptUtil.getRequest(aid, count[1]), returnCaptcha -> {
                     if (returnCaptcha.contains("vivo")) {
                         Logger.log("Found link for vivo:" + returnCaptcha, Logger.LogType.INFO);
-                        makeText("Found vivo link");
+                        makeText("Found VIVO link");
                         view.loadUrl(URLUtil.toUrl(StringUtil.removeBadCharacters(returnCaptcha, "\\\\", "\""), "https"));
                         view.setWebViewClient(new WebViewClient() {
                             @Override
@@ -206,20 +209,24 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
                                 view.evaluateJavascript(ScriptUtil.vivoExploit, value -> {
                                     if (value.contains("node")) {
                                         SplashScreen.episodeDownloader.download(value.replaceAll("\"", ""), animeName + "::" + count[1], SelectedAnimeActivity.this, "mp4");
+
                                         view.destroy();
-                                        if (count[0] < countMax) {
-                                            count[0]++;
-                                            count[1]++;
-                                            downloadEpisode(count[1], countMax, count[0]);
-                                        }
+                                        new Handler().postDelayed(() -> {
+                                            if (count[0] < countMax) {
+                                                count[0]++;
+                                                count[1]++;
+                                                downloadEpisode(count[1], countMax, count[0]);
+                                            }
+                                            /**
+                                             * Wait
+                                             */
+                                        }, Long.valueOf(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("download_delay", "0")) * 1000);
                                     } else makeText("Error getting direct vivo link: " + value);
                                 });
                                 super.onPageFinished(view, url);
                             }
                         });
-                    } else {
-                        makeText("Error getting vivo link. Anime4you might be down / Anime done downloading");
-                    }
+                    } else makeText("Error getting vivo link. Anime4you might be down / Anime done downloading");
                 });
                 super.onPageFinished(view, url);
             }
@@ -272,6 +279,12 @@ public class SelectedAnimeActivity extends AppCompatActivity implements InputDia
             textView.setText(episodes[position]);
             return textView;
         }
-    }
 
+        public void deleteItem(int index) {
+            File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + animeName, episodes[index]);
+            Logger.log("Deleted: " + f.delete(), Logger.LogType.INFO);
+            episodes[index] = "";
+            notifyDataSetChanged();
+        }
+    }
 }

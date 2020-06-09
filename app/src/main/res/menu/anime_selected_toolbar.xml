@@ -5,8 +5,8 @@
   ~ Last modified: 21.05.20, 12:51
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Delete from list" android:id="@+id/delete_aid_item"/>
     <item android:title="Download specific" android:id="@+id/download_specific_episode"/>
+    <item android:title="Download Bound" android:id="@+id/download_bound"/>
 </menu>
