@@ -13,10 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.*;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -28,11 +25,13 @@ import net.bplaced.abzzezz.animeapp.activities.extra.SplashScreen;
 import net.bplaced.abzzezz.animeapp.activities.main.SelectedAnimeActivity;
 import net.bplaced.abzzezz.animeapp.util.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.DataBaseSearch;
+import net.bplaced.abzzezz.animeapp.util.scripter.URLHandler;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ExecutionException;
@@ -178,6 +177,11 @@ public class AnimeListFragment extends Fragment {
 
         public void addItem(String item) {
             try {
+                if(!URLHandler.isOnline(getActivity())) {
+                    Toast.makeText(context, "You are currently not connected to the internet, returning", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 String[] all = new DataBaseSearch().execute(item).get();
                 string.add(item);
                 SplashScreen.saver.add(all);

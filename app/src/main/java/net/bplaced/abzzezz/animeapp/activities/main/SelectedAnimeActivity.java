@@ -6,7 +6,6 @@
 
 package net.bplaced.abzzezz.animeapp.activities.main;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.content.*;
@@ -32,6 +31,7 @@ import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
+import ga.abzzezz.util.array.ArrayUtil;
 import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
@@ -145,6 +145,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
 
     /**
      * Toolbar
+     *
      * @param menu
      * @return
      */
@@ -156,6 +157,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
 
     /**
      * Items selected
+     *
      * @param item
      * @return
      */
@@ -170,8 +172,9 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                 }).setView(editText).show();
                 break;
             case R.id.download_bound:
-                String[] episodes = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), animeName).list();
-                int nextStart = (episodes != null && episodes.length != 0) ? StringUtil.extractNumberI(episodes[episodes.length - 1].replaceAll(".mp4", "")) + 1 : 1;
+                String[] episodes = new File(getFilesDir(), animeName).list();
+                String episodeString = (episodes != null && episodes.length != 0) ? episodes[episodes.length- 1] : "1";
+                int nextStart = (episodes != null && episodes.length != 0) ? StringUtil.extractNumberI(episodeString.substring(episodeString.indexOf("::") + 2, episodeString.indexOf(".mp4"))) + 1 : 1;
                 new AlertDialog.Builder(this).setTitle("Download bound").setMessage("Enter download bound").setPositiveButton("Enter", (dialogInterface, i) -> {
                     downloadEpisode(nextStart, Integer.parseInt(editText.getText().toString()), 0);
                 }).setView(editText).show();
@@ -195,6 +198,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
 
     /**
      * Download method
+     *
      * @param start
      * @param countMax
      * @param currentCount
@@ -264,6 +268,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
 
     /**
      * Make text
+     *
      * @param text
      */
     public void makeText(String text) {
@@ -272,6 +277,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
 
     /**
      * Get episode file
+     *
      * @param index
      * @return
      */
@@ -284,6 +290,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
 
     /**
      * Download
+     *
      * @param url
      * @param fileName
      */
@@ -309,15 +316,9 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                         File src = new File(Uri.parse(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))).getPath());
                         File newOut = new File(getFilesDir(), fileName.substring(0, fileName.indexOf("::")));
                         if (!newOut.exists()) newOut.mkdir();
-                        moveFile(src, new File(newOut, src.getName()));
+                        FileUtil.copyFile(src, new File(newOut, src.getName()), true);
                     }
-                    /**
-                     * Reload
-                     */
-                    finish();
-                    overridePendingTransition(0, 0);
-                    startActivity(getIntent());
-                    overridePendingTransition(0, 0);
+
                     cursor.close();
                 }
             }
@@ -363,25 +364,6 @@ public class SelectedAnimeActivity extends AppCompatActivity {
             Logger.log("Deleted: " + getEpisodeFile(index).delete(), Logger.LogType.INFO);
             episodes.remove(index);
             notifyDataSetChanged();
-        }
-    }
-
-    private void moveFile(File in, File dest) {
-        try {
-            dest.createNewFile();
-            InputStream inputStream = new BufferedInputStream(new FileInputStream(in));
-            OutputStream out = new BufferedOutputStream(new FileOutputStream(dest));
-            byte[] buffer = new byte[1024];
-            int lengthRead;
-            while ((lengthRead = inputStream.read(buffer)) > 0) {
-                out.write(buffer, 0, lengthRead);
-                out.flush();
-            }
-            inputStream.close();
-            out.close();
-            Files.delete(in.toPath());
-        } catch (IOException var7) {
-            Logger.log(var7.getMessage(), Logger.LogType.ERROR);
         }
     }
 

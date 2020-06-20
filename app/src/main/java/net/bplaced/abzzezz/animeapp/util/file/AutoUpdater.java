@@ -25,7 +25,7 @@ public class AutoUpdater extends AsyncTask<Activity, Void, Void> {
     /**
      * Version
      */
-    public static float version = 35F;
+    public static float version = 36F;
 
     private String checkUpdate() throws MalformedURLException {
         return URLUtil.getURLContentAsString(new URL(URLHandler.checkURL));

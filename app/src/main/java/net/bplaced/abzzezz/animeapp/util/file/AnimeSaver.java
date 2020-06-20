@@ -34,7 +34,6 @@ public class AnimeSaver {
         this.editor = preferences.edit();
         this.publicPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Logger.log("Anime Saver set up.", Logger.LogType.INFO);
-
         //editor.clear().apply();
         if (SplashScreen.isDebugVersion) preferences.getAll().entrySet().forEach(System.out::println);
     }
@@ -46,6 +45,8 @@ public class AnimeSaver {
      * @param all
      */
     public void add(String... all) {
+        if(all[0].equals("ERROR")) return;
+
         boolean check = publicPreferences.getBoolean("check_existing", false);
         String add = all[0].replaceAll(":", "") + StringUtil.splitter + all[1] + StringUtil.splitter + all[2] + StringUtil.splitter + all[3];
         if (check) {
@@ -57,6 +58,8 @@ public class AnimeSaver {
             editor.putString(String.valueOf(preferences.getAll().size()), add);
             editor.commit();
         }
+
+        System.out.println(editor.commit());
     }
 
     public boolean containsAid(String aid) {
