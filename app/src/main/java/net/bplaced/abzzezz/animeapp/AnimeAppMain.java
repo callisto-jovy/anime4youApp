@@ -36,8 +36,8 @@ public class AnimeAppMain {
     private DownloadTracker downloadTracker;
 
     public AnimeAppMain() {
-        this.version = 38;
-        this.debugVersion = true;
+        this.version = 39;
+        this.debugVersion = false;
         this.notificationChannelName = "AnimeChannel";
     }
 

@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
+import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.main.SelectedAnimeActivity;
@@ -62,13 +63,15 @@ public class AnimeListFragment extends Fragment {
          * Set on long hold listener, then block the old one
          */
         gridView.setOnItemLongClickListener((parent, view, position, id) -> {
-            new AlertDialog.Builder(getActivity())
-                    .setIcon(android.R.drawable.stat_sys_warning)
-                    .setTitle("Remove?")
-                    .setMessage("Will remove from list")
-                    .setPositiveButton("Yes", (dialogInterface, i) -> {
+            new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
+                    .setTitleText("Remove file?")
+                    .setContentText("Won't be able to recover this file!")
+                    .setConfirmText("Yes,delete it!")
+                    .setConfirmClickListener(ionAlert -> {
                         animeAdapter.removeItem(position);
-                    }).show();
+                        ionAlert.dismissWithAnimation();
+                    }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
+                    .show();
             return true;
         });
 
