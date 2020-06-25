@@ -27,7 +27,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
@@ -38,6 +37,7 @@ import ga.abzzezz.util.stringing.StringUtil;
 import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
+import net.bplaced.abzzezz.animeapp.activities.extra.PlayerActivity;
 import net.bplaced.abzzezz.animeapp.util.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.ScriptUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.URLHandler;
@@ -128,10 +128,10 @@ public class SelectedAnimeActivity extends AppCompatActivity {
          Configure grid
          */
         episodeGrid.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", getEpisodeFile(position)));
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
+            intent.putExtra("path", getEpisodeFile(position).getAbsolutePath());
             startActivity(intent);
-
+            finish();
         });
         /*
         Set long click listener
@@ -262,16 +262,15 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                                 view.evaluateJavascript(ScriptUtil.vivoExploit, value -> {
                                     if (value.contains("node")) {
                                         //Run new Download Task and download episode
-                                        String[] in = new String[]{value.replaceAll("\"", ""), animeName + "::" + count[1] + ".mp4"};
-                                        new DownloadTask(in).executeAsync();
+                                        new DownloadTask(new String[]{value.replaceAll("\"", ""), animeName + "::" + count[1] + ".mp4"}).executeAsync();
                                         //  download(value.replaceAll("\"", ""), animeName + "::" + count[1]);
-                                        view.destroy();
                                         new Handler(Looper.getMainLooper()).postDelayed(() -> {
                                             if (count[0] < countMax) {
                                                 count[0]++;
                                                 count[1]++;
                                                 downloadEpisode(count[1], countMax, count[0]);
                                             }
+                                            view.destroy();
                                             /**
                                              * Wait
                                              */
