@@ -14,8 +14,8 @@
         <SwitchPreferenceCompat
                 app:key="dark_mode"
                 app:title="@string/dark_mode_toggle" app:summaryOff="Toggle dark theme"
-                app:summaryOn="Dark mode on!"/>
-
+                app:summaryOn="Dark mode on!"
+                app:defaultValue="true"/>
         <SwitchPreferenceCompat
                 app:key="check_existing"
                 app:title="@string/check_list_for_existing"
@@ -28,6 +28,18 @@
                 app:summary="Delay between downloads in seconds"
                 app:defaultValue="0"/>
 
+    </PreferenceCategory>
+    <PreferenceCategory
+            android:title="@string/global_video">
+        <ListPreference
+                android:defaultValue="0"
+                android:title="@string/video_fill_mode" android:entries="@array/video_zoom_entries"
+                android:entryValues="@array/video_zoom_values" android:key="video_stretch_preference"/>
+
+        <ListPreference
+                android:defaultValue="0"
+                android:title="Video player" android:entries="@array/video_player_entries"
+                android:entryValues="@array/video_player_values" android:key="video_player_preference"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

@@ -27,9 +27,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
+import ga.abzzezz.util.array.ArrayUtil;
 import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
@@ -49,10 +51,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 public class SelectedAnimeActivity extends AppCompatActivity {
@@ -116,7 +115,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
         /*
          * Convert file array to list
          */
-        List<String> episodes = Arrays.asList(animeFile.list() == null ? new String[0] : animeFile.list());
+        List<String> episodes = sortWithNumberInName(Arrays.asList(animeFile.list() == null ? new String[0] : animeFile.list()));
 
         selected_anime_size.append(FileUtil.calculateFileSize(animeFile));
         /*
@@ -128,9 +127,18 @@ public class SelectedAnimeActivity extends AppCompatActivity {
          Configure grid
          */
         episodeGrid.setOnItemClickListener((parent, view, position, id) -> {
-            Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
-            intent.putExtra("path", getEpisodeFile(position).getAbsolutePath());
-            startActivity(intent);
+            Intent intent = null;
+            int mode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("video_player_preference", "0"));
+
+            if (mode == 0) {
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", getEpisodeFile(position)), "video/mp4");
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            } else if (mode == 1) {
+                intent = new Intent(getApplicationContext(), PlayerActivity.class);
+                intent.putExtra("path", getEpisodeFile(position).getAbsolutePath());
+            }
+            startActivity(Objects.requireNonNull(intent));
             finish();
         });
         /*
@@ -159,6 +167,13 @@ public class SelectedAnimeActivity extends AppCompatActivity {
          */
         int nextStart = episodes.size() != 0 ? StringUtil.extractNumberI(episodeString.substring(episodeString.indexOf("::") + 2, episodeString.indexOf(".mp4"))) + 1 : 1;
         downloadAnime.setOnClickListener(v -> downloadEpisode(nextStart, animeEpisodes, 0));
+    }
+
+    public static List<String> sortWithNumberInName(List<String> in) {
+        Collections.sort(in, Comparator.comparingInt((o) -> {
+            return StringUtil.extractNumberI(o.substring(o.indexOf("::") + 2, o.indexOf(".mp4")));
+        }));
+        return in;
     }
 
     /**
@@ -223,6 +238,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
      * @param currentCount
      */
     public void downloadEpisode(int start, int countMax, int currentCount) {
+        Logger.log("Next episode: " + start, Logger.LogType.INFO);
         int[] count = {currentCount, start};
         /**
          * Check if count is bigger than the max episodes to download
@@ -415,22 +431,29 @@ New download task
                  */
             Logger.log("Done copying streams, closing stream", Logger.LogType.INFO);
             fileOutputStream.close();
-            return fileOut.getName();
+            return information[1];
         }
 
         @Override
         public void onComplete(String result) {
+            //Cancel notification
             notificationManagerCompat.cancel(notifyID);
+            //Add to download tracker
             AnimeAppMain.getInstance().getDownloadTracker().submitTrack("Downloaded Episode: " + result);
             Toast.makeText(SelectedAnimeActivity.this, "Done downloading anime episode: " + result, Toast.LENGTH_SHORT).show();
-            animeEpisodeAdapter = new SelectedAnimeActivity.AnimeEpisodeAdapter(Arrays.asList(animeFile.list()), getApplicationContext());
-            episodeGrid.setAdapter(animeEpisodeAdapter);
-            animeEpisodeAdapter.notifyDataSetChanged();
             notification = new NotificationCompat.Builder(getApplicationContext(), AnimeAppMain.NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.information).setColor(Color.GREEN).setContentText("Episode-download done")
-                    .setContentTitle("Done downloading episode: " + animeName)
+                    .setContentTitle("Done downloading episode: " + result)
                     .setPriority(NotificationCompat.PRIORITY_MAX);
             notificationManagerCompat.notify(notifyID, notification.build());
+            /**
+             * Reset adapter
+             */
+            animeEpisodeAdapter = new AnimeEpisodeAdapter(sortWithNumberInName(Arrays.asList(animeFile.list())), getApplicationContext());
+            episodeGrid.setAdapter(animeEpisodeAdapter);
+            animeEpisodeAdapter.notifyDataSetChanged();
+
+
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 if (count[0] < count[2]) {
                     count[0]++;

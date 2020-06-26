@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.widget.Toast;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.util.file.AnimeSaver;
@@ -42,7 +43,7 @@ public class AnimeAppMain {
     private DownloadTracker downloadTracker;
 
     public AnimeAppMain() {
-        this.version = 40;
+        this.version = 41;
         this.debugVersion = false;
         this.notificationChannelName = "AnimeChannel";
     }
@@ -81,6 +82,9 @@ public class AnimeAppMain {
             channel.setLightColor(Color.MAGENTA);
             NotificationManager notificationManager = application.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+            NotificationManagerCompat managerCompat = NotificationManagerCompat.from(application);
+            managerCompat.cancelAll();
+
         }
     }
 

@@ -15,7 +15,6 @@
 
     <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/ep_video_view"
-            app:resize_mode="zoom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

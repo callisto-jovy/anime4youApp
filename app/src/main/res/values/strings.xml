@@ -17,8 +17,8 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
     <string name="global_options">Options</string>
+    <string name="global_video">Video</string>
 
     <!-- Messages Preferences -->
     <string name="download_delay">Download delay (seconds)</string>
@@ -26,6 +26,7 @@
     <!-- Sync Preferences -->
     <string name="dark_mode_toggle">Use Dark Mode</string>
     <string name="check_list_for_existing">Check list for existing Anime</string>
+    <string name="video_fill_mode">Video stretch mode</string>
     <string name="attachment_summary_on">Checks if Anime already exists. Still accepts sub/dub</string>
     <string name="attachment_summary_off">Does not check. Entries can be duplicated</string>
     <string name="title_activity_drawer_main_menu">DrawerMainMenu</string>

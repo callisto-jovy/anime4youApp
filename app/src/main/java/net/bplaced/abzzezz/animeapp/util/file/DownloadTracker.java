@@ -29,16 +29,6 @@ public class DownloadTracker {
         this.preferences = context.getSharedPreferences("DownloadTracker", Context.MODE_PRIVATE);
         this.editor = preferences.edit();
         Logger.log("Download Tracker set up", Logger.LogType.INFO);
-        String[] array = new String[20];
-
-        for (int i = 0; i < array.length; i++) {
-            array[i] = "Test" + i + String.valueOf(Math.random());
-        }
-
-        for (int i = 0; i < array.length; i++) {
-            editor.putString(String.valueOf(i), array[i]);
-        }
-        editor.apply();
     }
 
     public void submitTrack(String information) {
