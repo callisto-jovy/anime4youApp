@@ -22,7 +22,7 @@ public class DownloadTrackerFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.cloud_download_layout, container, false);
+        View root = inflater.inflate(R.layout.simplelist_layout, container, false);
         ListView listView = root.findViewById(R.id.cloud_list_view);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
         arrayAdapter.addAll(AnimeAppMain.getInstance().getDownloadTracker().getList());

@@ -55,7 +55,7 @@ public class ChangelogFragment extends Fragment {
         protected ArrayList<String> doInBackground(Void... voids) {
             ArrayAdapter arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
             try {
-                URLUtil.getURLContentAsArray(new URL(URLHandler.changelogURL)).forEach(arrayAdapter::add);
+                URLUtil.getURLContentAsArray(new URL(URLHandler.APP_CHANGELOG_TXT)).forEach(arrayAdapter::add);
                 getActivity().runOnUiThread(() -> {
                     ListView listView = getActivity().findViewById(R.id.changelog_list_view);
                     listView.setAdapter(arrayAdapter);

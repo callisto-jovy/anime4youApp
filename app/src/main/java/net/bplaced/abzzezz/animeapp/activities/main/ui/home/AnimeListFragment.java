@@ -33,8 +33,8 @@ import java.util.List;
 
 public class AnimeListFragment extends Fragment {
 
-    private AnimeAdapter animeAdapter;
     private final DataBaseSearch dataBaseSearch = new DataBaseSearch();
+    private AnimeAdapter animeAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.anime_list_layout, container, false);

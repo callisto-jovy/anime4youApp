@@ -50,7 +50,7 @@ public class SplashScreen extends AppCompatActivity {
         Check version
          */
 
-        new TaskExecutor().executeAsync(() -> AnimeAppMain.getInstance().getVersion() < Float.parseFloat(URLUtil.getURLContentAsString(new URL(URLHandler.checkURL))), new TaskExecutor.Callback<Boolean>() {
+        new TaskExecutor().executeAsync(() -> AnimeAppMain.getInstance().getVersion() < Float.parseFloat(URLUtil.getURLContentAsString(new URL(URLHandler.APP_VERSION_TXT))), new TaskExecutor.Callback<Boolean>() {
             @Override
             public void preExecute() {
             }
@@ -60,7 +60,7 @@ public class SplashScreen extends AppCompatActivity {
                 if (result) {
                     File outDic = new File(Environment.DIRECTORY_DOWNLOADS, "Anime4you-Update");
                     String fileName = "AutoUpdate.apk";
-                    Downloader.download(URLHandler.updateURL, outDic, fileName, getParent());
+                    Downloader.download(URLHandler.NET_APP_UPDATE_APK, outDic, fileName, getParent());
                     Toast.makeText(SplashScreen.this, "New update available. Please install the new version.", Toast.LENGTH_LONG).show();
                 }
             }

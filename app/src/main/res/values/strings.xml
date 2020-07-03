@@ -18,7 +18,10 @@
     <!-- Preference Titles -->
     <string name="global_options">Options</string>
     <string name="global_video">Video</string>
-    <!-- Messages Preferences -->
+    <string name="global_notifications">Notifications</string>
+
+
+    <!-- Preferences -->
     <string name="download_delay">Download delay (seconds)</string>
     <string name="offline_mode">Offline mode</string>
     <string name="offline_mode_attachment_summary_on">Anime covers and information will be stored in storage, maybe
@@ -28,9 +31,13 @@
     <string name="offline_mode_attachment_summary_off">Images will only be cached. If cache is cleared and device is not
         connected to the internet, no images will be loaded.
     </string>
+    <string name="dark_mode_toggle">Use Dark Mode</string>
+
+    <string name="anime_notifications_manage">Manage Anime notifications</string>
+
+
 
     <!-- Sync Preferences -->
-    <string name="dark_mode_toggle">Use Dark Mode</string>
     <string name="check_list_for_existing">Check list for existing Anime</string>
     <string name="video_fill_mode">Video stretch mode</string>
     <string name="attachment_summary_on">Checks if Anime already exists. Still accepts sub/dub</string>
@@ -41,6 +48,6 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_changelog">Changelog</string>
 
-    <string name="shortcut_last_watched">Last Watched</string>
+    <string name="anime_notification_service_description">Service checks every 4 hours if a new episode of your selected anime is available.</string>
 
 </resources>

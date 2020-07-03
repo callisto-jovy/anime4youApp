@@ -56,12 +56,16 @@ import java.util.concurrent.Callable;
 
 public class SelectedAnimeActivity extends AppCompatActivity {
 
+    public AnimeEpisodeAdapter animeEpisodeAdapter;
     private String animeName;
     private int aid, animeEpisodes;
     private File animeFile;
-
     private GridView episodeGrid;
-    public AnimeEpisodeAdapter animeEpisodeAdapter;
+
+    public static List<String> sortWithNumberInName(List<String> in) {
+        in.sort(Comparator.comparingInt((o) -> StringUtil.extractNumberI(o.substring(o.indexOf("::") + 2, o.indexOf(".mp4")))));
+        return in;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,11 +179,6 @@ public class SelectedAnimeActivity extends AppCompatActivity {
         downloadAnime.setOnClickListener(v -> downloadEpisode(getLatestEpisode(), animeEpisodes, 0));
     }
 
-    public static List<String> sortWithNumberInName(List<String> in) {
-        in.sort(Comparator.comparingInt((o) -> StringUtil.extractNumberI(o.substring(o.indexOf("::") + 2, o.indexOf(".mp4")))));
-        return in;
-    }
-
     /**
      * Toolbar
      *
@@ -193,7 +192,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
     }
 
     public int getLatestEpisode() {
-        if(animeFile.list() != null) {
+        if (animeFile.list() != null) {
             OptionalInt highest = Arrays.stream(animeFile.list()).map(s -> StringUtil.extractNumberI(s.substring(s.indexOf("::") + 2, s.indexOf(".mp4")))).mapToInt(integer -> integer).max();
             if (highest.isPresent())
                 return highest.getAsInt() + 1;
@@ -226,14 +225,10 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                 inputDialogBuilder.showInput("Download spefic", "Enter episode to download", this);
                 break;
             case R.id.download_bound:
-                String[] episodes = new File(getFilesDir(), animeName).list();
-                String episodeString = (episodes != null && episodes.length != 0) ? episodes[episodes.length - 1] : "1";
-                int nextStart = (episodes != null && episodes.length != 0) ? StringUtil.extractNumberI(episodeString.substring(episodeString.indexOf("::") + 2, episodeString.indexOf(".mp4"))) + 1 : 1;
-
                 InputDialogBuilder dialogBuilder = new InputDialogBuilder(new InputDialogBuilder.InputDialogListener() {
                     @Override
                     public void onDialogInput(String text) {
-                        downloadEpisode(nextStart, Integer.parseInt(text), 0);
+                        downloadEpisode(getLatestEpisode(), Integer.parseInt(text), 0);
                     }
 
                     @Override
@@ -241,6 +236,10 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                     }
                 });
                 dialogBuilder.showInput("Download bound", "Enter bound", this);
+                break;
+            case R.id.toogle_notifications_anime:
+                //Add to notification manager
+                AnimeAppMain.getInstance().getAnimeNotifications().add(animeName + StringUtil.splitter + aid, String.valueOf(animeEpisodes));
                 break;
             default:
                 break;
@@ -281,7 +280,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
          */
         final WebView webView = new WebView(getApplicationContext());
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(URLHandler.captchaURL);
+        webView.loadUrl(URLHandler.HTTPS_CAPTCHA_ANIME_4_YOU_ONE);
         /**
          * Clear all previous data and Cookies, so no code 400 appears: Cookie too large (yummy ;) )
          */
@@ -426,10 +425,10 @@ New download task
     class DownloadTask extends TaskExecutor implements Callable<String>, TaskExecutor.Callback<String> {
 
         private final String[] information;
+        private final int[] count;
         private NotificationManagerCompat notificationManagerCompat;
         private NotificationCompat.Builder notification;
         private int notifyID;
-        private final int[] count;
 
 
         public DownloadTask(final String[] information, final int[] count) {
@@ -443,21 +442,22 @@ New download task
 
         @Override
         public String call() throws Exception {
-            Logger.log("New download thread started, ID:", Logger.LogType.INFO);
+            Logger.log("New download thread started" + notifyID, Logger.LogType.INFO);
             final File outDir = new File(getFilesDir(), information[1].substring(0, information[1].indexOf("::")));
             if (!outDir.exists()) outDir.mkdir();
             final File fileOut = new File(outDir, information[1]);
+
             //Open new URL connection
             URLConnection urlConnection = new URL(information[0]).openConnection();
+            //Connect using a mac user agent
+            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9");
             urlConnection.connect();
             //Open Stream
             FileOutputStream fileOutputStream = new FileOutputStream(fileOut);
             ReadableByteChannel readableByteChannel = Channels.newChannel(urlConnection.getInputStream());
             //Copy from channel to channel
             fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
-                /*
-                Close and flush streams
-                 */
+            //Close stream
             Logger.log("Done copying streams, closing stream", Logger.LogType.INFO);
             fileOutputStream.close();
             return information[1];
@@ -469,20 +469,20 @@ New download task
             notificationManagerCompat.cancel(notifyID);
             //Add to download tracker
             AnimeAppMain.getInstance().getDownloadTracker().submitTrack("Downloaded Episode: " + result);
+            //Make toast text
             Toast.makeText(SelectedAnimeActivity.this, "Done downloading anime episode: " + result, Toast.LENGTH_SHORT).show();
-            notification = new NotificationCompat.Builder(getApplicationContext(), AnimeAppMain.NOTIFICATION_CHANNEL_ID)
+
+            this.notification = new NotificationCompat.Builder(getApplicationContext(), AnimeAppMain.NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.information).setColor(Color.GREEN).setContentText("Episode-download done")
                     .setContentTitle("Done downloading episode: " + result)
                     .setPriority(NotificationCompat.PRIORITY_MAX);
+            //Notify, reuse old id
             notificationManagerCompat.notify(notifyID, notification.build());
-            /**
-             * Reset adapter
-             */
+            //Reset adapter
             animeEpisodeAdapter = new AnimeEpisodeAdapter(sortWithNumberInName(Arrays.asList(animeFile.list())), getApplicationContext());
             episodeGrid.setAdapter(animeEpisodeAdapter);
             animeEpisodeAdapter.notifyDataSetChanged();
-
-
+            //Delay and start
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 if (count[0] < count[2]) {
                     count[0]++;
@@ -494,6 +494,7 @@ New download task
 
         @Override
         public void preExecute() {
+            //Create notification
             this.notifyID = (int) System.currentTimeMillis() % 10000;
             this.notificationManagerCompat = NotificationManagerCompat.from(getApplication());
             this.notification = new NotificationCompat.Builder(getApplication(), AnimeAppMain.NOTIFICATION_CHANNEL_ID)

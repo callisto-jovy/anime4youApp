@@ -13,8 +13,8 @@ import java.util.concurrent.Callable;
 
 public class DataBaseTask implements Callable<String[]> {
 
-    private String aid;
-    private DataBaseSearch dataBaseSearch;
+    private final String aid;
+    private final DataBaseSearch dataBaseSearch;
 
     public DataBaseTask(final String aid, final DataBaseSearch dataBaseSearch) {
         this.aid = aid;
@@ -29,6 +29,6 @@ public class DataBaseTask implements Callable<String[]> {
         String episodesString = realSeries.isEmpty() ? "0" : StringUtil.getStringFromLong(realSeries, "\"Letzte\":\"", "\"");
         String seriesName = realSeries.isEmpty() ? "ERROR" : StringUtil.getStringFromLong(realSeries, "\"titel\":\"", "\"");
         String language = realSeries.isEmpty() ? "ERROR" : StringUtil.getStringFromLong(realSeries, "\"Untertitel\":\"", "\"");
-        return new String[]{seriesName, episodesString, coverURL, String.valueOf(aid), language};
+        return new String[]{seriesName, episodesString, coverURL, aid, language};
     }
 }

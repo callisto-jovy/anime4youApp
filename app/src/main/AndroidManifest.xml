@@ -9,13 +9,16 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
 
     <application
-            android:allowBackup="true"
             android:icon="@mipmap/appimage"
             android:installLocation="preferExternal"
             android:label="@string/app_name"
-            android:requestLegacyExternalStorage="true"
             android:roundIcon="@mipmap/appimage"
             android:supportsRtl="true"
             android:theme="@style/DarkTheme"
@@ -37,6 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}.provider"
@@ -49,6 +53,30 @@
         <meta-data
                 android:name="preloaded_fonts"
                 android:resource="@array/preloaded_fonts"/>
-    </application>
 
+        <receiver
+                android:name=".util.BootReceiver"
+                android:enabled="true"
+                android:exported="true"
+                android:label="BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:enabled="true"
+                  android:exported="true" android:name=".util.animenotifications.Alarm">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <service
+                android:label="Anime Notification Service"
+                android:description="@string/anime_notification_service_description"
+                android:enabled="true" android:exported="true"
+                android:name=".util.animenotifications.AnimeNotificationService"
+        />
+
+    </application>
 </manifest>

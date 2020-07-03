@@ -49,9 +49,17 @@
                 android:title="@string/offline_mode" android:key="offline_mode"
                 android:summaryOn="@string/offline_mode_attachment_summary_on"
                 android:summaryOff="@string/offline_mode_attachment_summary_off"/>
+
         <Preference android:title="Clear offline images"
                     android:key="clear_offline_images_button"
                     android:summary="Clear all offline images"/>
+        <PreferenceCategory
+                android:title="@string/global_notifications">
+
+            <Preference android:title="@string/anime_notifications_manage"
+                        android:key="manage_anime_notifications"/>
+
+        </PreferenceCategory>
     </PreferenceCategory>
 
 </PreferenceScreen>

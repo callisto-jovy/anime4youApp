@@ -32,6 +32,10 @@
                 android:icon="@drawable/format_list_bulleted"
                 android:title="Download Tracker"/>
 
+        <item
+                android:id="@+id/anime_notification"
+                android:icon="@drawable/information"
+                android:title="Anime Notifications"/>
 
     </group>
 </menu>

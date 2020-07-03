@@ -30,7 +30,7 @@
             android:id="@+id/cloud_download"
             android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.cloud.CloudListFragment"
             android:label="Cloud Download"
-            tools:layout="@layout/cloud_download_layout">
+            tools:layout="@layout/simplelist_layout">
         <action android:id="@+id/action_cloud_download_to_download_tracker" app:destination="@id/download_tracker"/>
     </fragment>
 
@@ -46,7 +46,16 @@
             android:id="@+id/download_tracker"
             android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.tracker.DownloadTrackerFragment"
             android:label="Download Tracker"
-            tools:layout="@layout/cloud_download_layout">
+            tools:layout="@layout/simplelist_layout">
         <action android:id="@+id/action_download_tracker_to_nav_changelog" app:destination="@id/nav_changelog"/>
     </fragment>
+
+    <fragment
+            android:id="@+id/anime_notification"
+            android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.settings.AnimeNotificationsFragment"
+            android:label="@string/anime_notifications_manage"
+            tools:layout="@layout/simplelist_layout">
+        <action android:id="@+id/action_download_tracker_to_nav_changelog" app:destination="@id/nav_changelog"/>
+    </fragment>
+
 </navigation>
