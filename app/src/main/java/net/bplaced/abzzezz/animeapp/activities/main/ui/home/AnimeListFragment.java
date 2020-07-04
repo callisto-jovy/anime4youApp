@@ -19,6 +19,7 @@ import androidx.preference.PreferenceManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import ga.abzzezz.util.logging.Logger;
+import ga.abzzezz.util.stringing.StringUtil;
 import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
@@ -91,23 +92,22 @@ public class AnimeListFragment extends Fragment {
 
     private void getInformation(String[] savedInformation, Intent intent) {
         String[] information = new String[6];
-
+        /**
+         * Add basic, file based, non changing information
+         */
         information[0] = savedInformation[0];
         information[2] = savedInformation[2];
         information[3] = savedInformation[3];
-        //Add basic information from file
-/*
-        if (PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("offline_mode", false)) {
-            extra = pass;
-            }
- */
+        //Run new database task
         new TaskExecutor().executeAsync(new DataBaseTask(savedInformation[3], dataBaseSearch, "\"Letzte\":\"", "\"Untertitel\":\"", "\"Jahr\":\""), new TaskExecutor.Callback<String[]>() {
             @Override
             public void onComplete(String[] result) {
+                //Transfer
                 information[1] = result[0];
                 information[4] = result[1];
                 information[5] = result[2];
 
+                //Pass to intent
                 intent.putExtra("anime_name", information[0]);
                 intent.putExtra("anime_episodes", information[1]);
                 intent.putExtra("anime_cover", information[2]);
@@ -154,15 +154,18 @@ public class AnimeListFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView = new ImageView(context);
             String imageURL = AnimeAppMain.getInstance().getAnimeSaver().getAll(position)[2];
+            //If offline mode is enabled, load offline bitmap into imageview
             if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("offline_mode", false)) {
                 OfflineImageLoader.loadImage(imageURL, AnimeAppMain.getInstance().getAnimeSaver().getAll(position)[3], imageView, getContext());
             } else {
+                //Load image from url into imageview using picasso. (Cache images)
                 try {
                     Picasso.with(context).load(imageURL).resize(ImageUtil.dimensions[0], ImageUtil.dimensions[1]).into(imageView);
                 } catch (ArrayIndexOutOfBoundsException e) {
                     System.out.println(position);
                 }
             }
+            //Set view bounds
             imageView.setAdjustViewBounds(true);
             return imageView;
         }
@@ -174,17 +177,19 @@ public class AnimeListFragment extends Fragment {
         }
 
         public void addItem(String item) {
+            //Return if not connected to internet
             if (!URLHandler.isOnline(getActivity())) {
                 Toast.makeText(context, "You are currently not connected to the internet, returning", Toast.LENGTH_LONG).show();
                 return;
             }
-
-            new TaskExecutor().executeAsync(new DataBaseTask(item, dataBaseSearch, "src=\\\"", "\"Letzte\":\"", "\"titel\":\""), new TaskExecutor.Callback<String[]>() {
+            //Create new database request. get episodes, imageURL, name
+            new TaskExecutor().executeAsync(new DataBaseTask(item, dataBaseSearch, "\"titel\":\"", "\"Letzte\":\"", "src=\\\""), new TaskExecutor.Callback<String[]>() {
                 @Override
                 public void onComplete(String[] result) {
                     string.add(item);
-                    String[] information = new String[] {result[2], result[1], result[0].replaceAll("\\\\", ""), item};
-                    AnimeAppMain.getInstance().getAnimeSaver().add(information);
+                    //Format so it can be saved #
+                    //Name, Episodes, ImageURL, AID
+                    AnimeAppMain.getInstance().getAnimeSaver().add(result[0], result[1], StringUtil.removeBadCharacters(result[2], "\\\\"), item);
                     notifyDataSetChanged();
                 }
 

@@ -50,7 +50,7 @@ public class AnimeAppMain {
 
     public AnimeAppMain() {
         this.version = 44;
-        this.debugVersion = true;
+        this.debugVersion = false;
         this.notificationChannelName = "AnimeChannel";
     }
 
@@ -67,7 +67,6 @@ public class AnimeAppMain {
         this.animeNotifications = new AnimeNotifications(application);
         this.imageStorage = new File(application.getDataDir(), "StoredImagesOffline");
         if (!imageStorage.exists()) Logger.log("Image file created: " + imageStorage.mkdir(), Logger.LogType.INFO);
-
         this.darkMode = PreferenceManager.getDefaultSharedPreferences(application).getBoolean("dark_mode", true);
         if (darkMode)
             this.themeID = R.style.DarkTheme;

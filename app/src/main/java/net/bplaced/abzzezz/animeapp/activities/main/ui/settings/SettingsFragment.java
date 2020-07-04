@@ -48,13 +48,15 @@ public class SettingsFragment extends Fragment {
                         .show();
                 return true;
             });
-
+            /*
             Preference manageAnimeNotifications = findPreference("manage_anime_notifications");
             Fragment newFragment = new AnimeNotificationsFragment();
             manageAnimeNotifications.setOnPreferenceClickListener(preference -> {
                 getActivity().getSupportFragmentManager().beginTransaction().add(R.id.simple_list_layout, newFragment).commit();
                 return true;
             });
+
+             */
         }
     }
 

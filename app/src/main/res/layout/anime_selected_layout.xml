@@ -59,10 +59,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/selected_anime_episodes"
             app:layout_constraintStart_toEndOf="@+id/anime_cover_image" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/selected_anime_name" android:layout_marginTop="8dp"
             app:layout_constraintHorizontal_bias="0.0" android:alpha="0.87"
-            app:layout_constraintBottom_toTopOf="@+id/selected_anime_aid" app:layout_constraintVertical_bias="1.0"/>
-
+            app:layout_constraintTop_toBottomOf="@+id/selected_anime_aid"
+            app:layout_constraintBottom_toBottomOf="@+id/anime_cover_image" app:layout_constraintVertical_bias="0.0"/>
     <GridView
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -87,7 +86,7 @@
             app:layout_constraintBottom_toTopOf="@+id/anime_episodes_grid" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            android:alpha="0.87"/>
+            android:alpha="0.87" android:id="@+id/textView"/>
     <TextView
             android:text="AID:"
             android:layout_width="wrap_content"
@@ -96,7 +95,7 @@
             app:layout_constraintStart_toEndOf="@+id/anime_cover_image"
             app:layout_constraintHorizontal_bias="0.0"
             android:alpha="0.87" app:layout_constraintBottom_toBottomOf="@+id/anime_cover_image"
-            app:layout_constraintTop_toTopOf="@+id/anime_cover_image" app:layout_constraintVertical_bias="0.6"/>
+            app:layout_constraintTop_toBottomOf="@+id/selected_anime_name" app:layout_constraintVertical_bias="0.3"/>
     <TextView
             android:text="Language:"
             android:layout_width="wrap_content"
@@ -104,7 +103,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/anime_cover_image" app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintBottom_toBottomOf="@+id/anime_cover_image"
-            app:layout_constraintTop_toTopOf="@+id/anime_cover_image" app:layout_constraintVertical_bias="0.8"/>
+            app:layout_constraintTop_toBottomOf="@+id/selected_anime_episodes"
+            app:layout_constraintVertical_bias="0.0"/>
     <TextView
             android:text="Size:"
             android:layout_width="wrap_content"
@@ -121,5 +121,6 @@
             app:layout_constraintStart_toEndOf="@+id/anime_cover_image" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintBottom_toBottomOf="@+id/anime_cover_image"
-            app:layout_constraintTop_toTopOf="@+id/anime_cover_image" app:layout_constraintVertical_bias="1.0"/>
+            app:layout_constraintTop_toBottomOf="@+id/selected_anime_language"
+            app:layout_constraintVertical_bias="0.0"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

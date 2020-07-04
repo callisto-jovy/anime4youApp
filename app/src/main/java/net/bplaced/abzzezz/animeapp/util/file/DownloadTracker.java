@@ -6,6 +6,7 @@
 
 package net.bplaced.abzzezz.animeapp.util.file;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.logging.Logger;
@@ -14,29 +15,34 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Date;
 
 public class DownloadTracker {
 
     private final File trackerFile;
-    private final Context context;
 
-    public DownloadTracker(Context context) {
-        this.context = context;
+    public DownloadTracker(final Context context) {
         this.trackerFile = new File(context.getFilesDir(), "DownloadTracker.xml");
-
         Logger.log("Download Tracker set up", Logger.LogType.INFO);
+        clearTrack();
     }
 
-    public void submitTrack(String information) {
-        String track = information + "\n";
+    public void submitTrack(final String information) {
+        @SuppressLint("SimpleDateFormat") String time = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z").format(new Date(System.currentTimeMillis()));
+        String track = time + "\n" + information + "\n";
+
         try (FileOutputStream fos = new FileOutputStream(trackerFile, true)) {
             fos.write(track.getBytes());
             fos.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void clearTrack() {
+        Logger.log("Clearing track: " + trackerFile.delete(), Logger.LogType.INFO);
     }
 
     /**

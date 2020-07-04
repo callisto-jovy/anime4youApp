@@ -14,6 +14,7 @@ import ga.abzzezz.util.stringing.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collector;
 
 public class AnimeSaver {
 
@@ -60,7 +61,7 @@ public class AnimeSaver {
     }
 
     public boolean containsAid(String aid) {
-        return preferences.getAll().values().stream().filter(o -> o.toString().split(StringUtil.splitter)[3].equals(aid)).count() >= 1;
+        return preferences.getAll().values().stream().anyMatch(o -> o.toString().split(StringUtil.splitter)[3].equals(aid));
     }
 
     /**
@@ -78,6 +79,7 @@ public class AnimeSaver {
      * @param key
      */
     public void remove(int key) {
+        //Remove key (int)
         editor.remove(String.valueOf(key));
         /*
         Move all upcoming entries one down
@@ -86,6 +88,7 @@ public class AnimeSaver {
             editor.putString(String.valueOf(i), preferences.getString(String.valueOf(i + /* Next one */ 1), "NULL"));
             editor.remove(String.valueOf(i + 1));
         }
+        //Apply to file
         editor.apply();
     }
 
@@ -95,11 +98,11 @@ public class AnimeSaver {
      * ImageURL: 2
      * AID: 3
      *
-     * @param anime
+     * @param index
      * @return
      */
-    public String[] getAll(int anime) {
-        return preferences.getString(String.valueOf(anime), "NULL").split(StringUtil.splitter);
+    public String[] getAll(int index) {
+        return preferences.getString(String.valueOf(index), "NULL").split(StringUtil.splitter);
     }
 
     /**
