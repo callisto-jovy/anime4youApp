@@ -43,7 +43,7 @@ import java.util.stream.IntStream;
 
 public class SelectedAnimeActivity extends AppCompatActivity {
 
-    public transient AnimeEpisodeAdapter animeEpisodeAdapter;
+    public AnimeEpisodeAdapter animeEpisodeAdapter;
     private String animeName;
     private int aid, animeEpisodes;
     private File animeFile;
@@ -110,7 +110,8 @@ public class SelectedAnimeActivity extends AppCompatActivity {
          * Fill episode list
          */
         final List<String> episodes = new ArrayList<>();
-        IntStream.range(0, animeEpisodes).forEach(i -> episodes.add(animeName + "::" + (i + 1) + ".mp4"));
+
+        IntStream.range(0, animeEpisodes).forEach(i -> episodes.add(animeName + "::" + i + ".mp4"));
 
         selected_anime_size.append(FileUtil.calculateFileSize(animeFile));
         /*
@@ -121,7 +122,6 @@ public class SelectedAnimeActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             final boolean isDownloaded = isEpisodeDownloaded((String) adapterView.getItemAtPosition(i));
-            System.out.println(i);
             new IonAlert(SelectedAnimeActivity.this, IonAlert.NORMAL_TYPE)
                     .setConfirmText("Stream")
                     .setConfirmClickListener(ionAlert -> streamEpisode(i))
@@ -371,9 +371,16 @@ public class SelectedAnimeActivity extends AppCompatActivity {
      * @param index
      * @return
      */
-    public File getEpisodeFile(int index) {
-        File animeFile = new File(getFilesDir(), animeName);
-        return new File(animeFile, Objects.requireNonNull(animeFile.list())[index]);
+    public File getEpisodeFile(final int index) {
+        if (animeFile.listFiles() != null) {
+            Arrays.stream(animeFile.listFiles()).forEach(file -> {
+                System.out.println(index);
+                System.out.println( file.getName().substring(file.getName().indexOf("::") + 2, file.getName().lastIndexOf(".")));
+                System.out.println(file.getName().substring(file.getName().indexOf("::") + 2, file.getName().lastIndexOf(".")).equals(String.valueOf(index)));
+            });
+            return Arrays.stream(animeFile.listFiles()).filter(file -> file.getName().substring(file.getName().indexOf("::") + 2, file.getName().lastIndexOf(".")).equals(String.valueOf(index))).findFirst().get();
+        }
+        return null;
     }
 
     /*
