@@ -6,7 +6,18 @@
 
 package net.bplaced.abzzezz.animeapp.util.scripter;
 
+import ga.abzzezz.util.logging.Logger;
+import ga.abzzezz.util.stringing.StringUtil;
+import net.bplaced.abzzezz.animeapp.AnimeAppMain;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class ScriptUtil {
 
@@ -55,20 +66,19 @@ public class ScriptUtil {
      * @return
      */
     public static String getRequest(int aid, int episode) {
-        String script = "cal();\n" +
-                "function cal() {\n" +
-                "var vivo = $.ajax({\n" +
-                "type: 'POST',\n" +
-                " url: '/check_hoster.php',\n" +
-                "dataType: \"JSON\",\n" +
-                " success: function(data){},\n" +
-                " async: false, \n" +
-                " data: {epi:" + (episode + 1) + ",aid:" + aid + ",act:1,vkey:'" + generateRandomKey() + "',username:\"\"}}).responseText;" +
-                " var index = vivo.search(\"vivo.sx\"); \n" +
-                " var re = vivo.substring(index, index + 19); \n" +
-                " return re; \n" +
-                " }";
-        return script;
-
+        try {
+            final URL url = new URL("http://abzzezz.bplaced.net/app/request.php");
+            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.addRequestProperty("User-Agent", (episode + 1) + StringUtil.splitter + aid + StringUtil.splitter + generateRandomKey());
+            connection.addRequestProperty("Referer", AnimeAppMain.getInstance().getAndroidId());
+            connection.connect();
+            final InputStream inputStream = connection.getInputStream();
+            return new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining());
+        } catch (IOException e) {
+            Logger.log("Something went wrong", Logger.LogType.ERROR);
+            e.printStackTrace();
+            return "-1";
+        }
     }
 }

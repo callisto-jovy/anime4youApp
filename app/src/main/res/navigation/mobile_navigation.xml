@@ -27,6 +27,15 @@
     </fragment>
 
     <fragment
+            android:id="@+id/nav_settings"
+            android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.settings.SettingsFragment"
+            android:label="@string/action_settings"
+            tools:layout="@layout/settings_layout">
+        <action android:id="@+id/action_nav_changelog_to_nav_anime_list" app:destination="@id/nav_anime_list"/>
+    </fragment>
+
+
+    <fragment
             android:id="@+id/download_tracker"
             android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.tracker.DownloadTrackerFragment"
             android:label="Download Tracker"

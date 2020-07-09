@@ -7,30 +7,45 @@
 package net.bplaced.abzzezz.animeapp;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.provider.Settings;
 import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
+import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.util.animenotifications.AnimeNotificationService;
 import net.bplaced.abzzezz.animeapp.util.file.AnimeNotifications;
 import net.bplaced.abzzezz.animeapp.util.file.AnimeSaver;
 import net.bplaced.abzzezz.animeapp.util.file.DownloadTracker;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
+import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 
 //TODO: Recode project
 public class AnimeAppMain {
 
     public static final String NOTIFICATION_CHANNEL_ID = "Anime Channel";
+    public String androidId;
     /**
      * Version and variables
      */
@@ -62,7 +77,9 @@ public class AnimeAppMain {
     /**
      * Configures the handlers and gets a random background
      */
+    @SuppressLint("HardwareIds")
     public void configureHandlers(final Application application) {
+        this.androidId = Settings.Secure.getString(application.getContentResolver(), Settings.Secure.ANDROID_ID);
         this.animeSaver = new AnimeSaver(application);
         this.downloadTracker = new DownloadTracker(application);
         this.animeNotifications = new AnimeNotifications(application);
@@ -77,7 +94,42 @@ public class AnimeAppMain {
         Intent animeAlarm = new Intent(application, AnimeNotificationService.class);
         animeAlarm.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         application.startService(animeAlarm);
+    }
 
+    public void checkRequest(final Context context) {
+        new TaskExecutor().executeAsync(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                URL url = new URL("http://abzzezz.bplaced.net/app/user.php");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.addRequestProperty("Referer", androidId);
+                connection.connect();
+                final InputStream inputStream = connection.getInputStream();
+                final String response = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining());
+                return response.equals("200");
+            }
+        }, new TaskExecutor.Callback<Boolean>() {
+            @Override
+            public void onComplete(Boolean result) throws Exception {
+                if (!result) {
+                    Logger.log("Unregistered device", Logger.LogType.INFO);
+                    new IonAlert(context).setTitleText("You are not registered").setContentText("You are not registered. Please contact the developer and give him your clipboard id").setConfirmText("Exit").setConfirmClickListener(new IonAlert.ClickListener() {
+                        @Override
+                        public void onClick(IonAlert ionAlert) {
+                            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData clip = ClipData.newPlainText("ID", androidId);
+                            clipboard.setPrimaryClip(clip);
+                            System.exit(0);
+                        }
+                    }).show();
+                }
+            }
+
+            @Override
+            public void preExecute() {
+            }
+        });
     }
 
     /**
@@ -107,6 +159,10 @@ public class AnimeAppMain {
             NotificationManagerCompat managerCompat = NotificationManagerCompat.from(application);
             managerCompat.cancelAll();
         }
+    }
+
+    public String getAndroidId() {
+        return androidId;
     }
 
     public File getImageStorage() {

@@ -28,5 +28,6 @@ public class StringHandler {
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
+
 }
 

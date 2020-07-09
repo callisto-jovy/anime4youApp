@@ -44,6 +44,9 @@ public class AnimeListFragment extends Fragment {
     private AnimeAdapter animeAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //
+        AnimeAppMain.getInstance().checkRequest(getActivity());
+
         View root = inflater.inflate(R.layout.anime_list_layout, container, false);
         GridView gridView = root.findViewById(R.id.anime_grid);
         this.animeAdapter = new AnimeAdapter(AnimeAppMain.getInstance().getAnimeSaver().getList(), getActivity());

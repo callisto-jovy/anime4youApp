@@ -35,7 +35,7 @@ public class AnimeSaver {
         this.editor = preferences.edit();
         this.publicPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Logger.log("Anime Saver set up.", Logger.LogType.INFO);
-
+        //TODO: Remove for next version
         preferences.getAll().values().forEach(o -> {
             if (o.toString().contains(StringUtil.splitter)) {
                 editor.clear().commit();

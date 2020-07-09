@@ -70,7 +70,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
             this.animeFile = new File(getFilesDir(), animeName);
 
             //Set text etc.
-            ((TextView) findViewById(R.id.selected_anime_name)).append(animeName);
+            ((TextView) findViewById(R.id.selected_anime_name)).setText(animeName);
             ((TextView) findViewById(R.id.selected_anime_episodes)).append(String.valueOf(animeEpisodes));
             ((TextView) findViewById(R.id.selected_anime_aid)).append(String.valueOf(aid));
             ((TextView) findViewById(R.id.selected_anime_language)).append(inf.getString("language"));
