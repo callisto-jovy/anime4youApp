@@ -6,17 +6,23 @@
 
 package net.bplaced.abzzezz.animeapp.util.scripter;
 
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
 import ga.abzzezz.util.stringing.StringUtil;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
+import net.bplaced.abzzezz.animeapp.activities.main.SelectedAnimeActivity;
+import net.bplaced.abzzezz.animeapp.util.tasks.DownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 public class ScriptUtil {
@@ -58,27 +64,5 @@ public class ScriptUtil {
                 " 9279f337c793d716f1161e526705f8477a29bcda9a97da51",
                 " 5c599f8defdaf2529f0c9e9931f0baf0bd684aea64d8a163"};
         return keys[new Random().nextInt(keys.length)];
-    }
-
-    /**
-     * @param aid
-     * @param episode
-     * @return
-     */
-    public static String getRequest(int aid, int episode) {
-        try {
-            final URL url = new URL("http://abzzezz.bplaced.net/app/request.php");
-            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.addRequestProperty("User-Agent", (episode + 1) + StringUtil.splitter + aid + StringUtil.splitter + generateRandomKey());
-            connection.addRequestProperty("Referer", AnimeAppMain.getInstance().getAndroidId());
-            connection.connect();
-            final InputStream inputStream = connection.getInputStream();
-            return new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining());
-        } catch (IOException e) {
-            Logger.log("Something went wrong", Logger.LogType.ERROR);
-            e.printStackTrace();
-            return "-1";
-        }
     }
 }

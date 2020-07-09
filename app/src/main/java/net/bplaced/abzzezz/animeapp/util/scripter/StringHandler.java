@@ -15,7 +15,7 @@ public class StringHandler {
     /*
     Just for the purpose of keeping the code clean and organized ;)
      */
-    public static final String HTTPS_CAPTCHA_ANIME_4_YOU_ONE = "https://captcha.anime4you.one/";
+    public static final String HTTPS_CAPTCHA_ANIME_4_YOU_ONE = "https://captcha.anime4you.one";
     public static final String NET_APP_UPDATE_APK = "http://abzzezz.bplaced.net/app/update.apk";
     public static final String APP_VERSION_TXT = "http://abzzezz.bplaced.net/app/version.txt";
     public static final String APP_CHANGELOG_TXT = "http://abzzezz.bplaced.net/app/changelog.txt";

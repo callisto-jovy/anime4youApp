@@ -162,7 +162,6 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
         try {
             fileOutputStream.flush();
             fileOutputStream.close();
-            outFile.delete();
             application.resetAdapter();
         } catch (IOException e) {
             Logger.log("Error closing task stream", Logger.LogType.ERROR);
@@ -171,5 +170,6 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
         //Set canceled true
         this.cancel = true;
         Logger.log("Task cancelled, Streams flushed", Logger.LogType.INFO);
+        outFile.delete();
     }
 }

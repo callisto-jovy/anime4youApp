@@ -37,6 +37,8 @@ import net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader;
 import net.bplaced.abzzezz.animeapp.util.scripter.ScriptUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.DownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
+import net.bplaced.abzzezz.animeapp.util.tasks.VideoFindTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -219,15 +221,11 @@ public class SelectedAnimeActivity extends AppCompatActivity {
             Logger.log("current episode exceeds max / start exceeds max", Logger.LogType.ERROR);
             return;
         }
-        /**
-         * Load captcha URL
-         */
+
         final WebView webView = new WebView(getApplicationContext());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(StringHandler.HTTPS_CAPTCHA_ANIME_4_YOU_ONE);
-        /**
-         * Clear all previous data and Cookies, so no code 400 appears: Cookie too large (yummy ;) )
-         */
+
         WebStorage.getInstance().deleteAllData();
         CookieManager.getInstance().removeAllCookies(null);
         CookieManager.getInstance().flush();
@@ -236,38 +234,47 @@ public class SelectedAnimeActivity extends AppCompatActivity {
         webView.clearHistory();
         webView.clearSslPreferences();
 
-        webView.setWebViewClient(new WebViewClient() {
+        new VideoFindTask(aid, count[1], this).executeAsync(new TaskExecutor.Callback<String>() {
             @Override
-            public void onPageFinished(WebView view, String url) {
-                view.evaluateJavascript(ScriptUtil.getRequest(aid, count[1]), returnCaptcha -> {
-                    if (returnCaptcha.contains("vivo")) {
-                        Logger.log("Found link for vivo:" + returnCaptcha, Logger.LogType.INFO);
-                        makeText("Found VIVO link");
-                        view.loadUrl(URLUtil.toUrl(StringUtil.removeBadCharacters(returnCaptcha, "\\\\", "\""), "https"));
-                        view.setWebViewClient(new WebViewClient() {
-                            @Override
-                            public void onPageFinished(WebView view, String url) {
-                                view.evaluateJavascript(ScriptUtil.VIVO_EXPLOIT, value -> {
-                                    if (value.contains("node")) {
-                                        //Run new Download Task and download episode
-                                        new DownloadTask(SelectedAnimeActivity.this, value.replaceAll("\"", ""), animeName, new int[]{count[0], count[1], countMax}).executeAsync();
-                                        view.destroy();
-                                        webView.destroy();
-                                    } else makeText("Error getting direct vivo link: " + value);
+            public void onComplete(String result) throws Exception {
+                webView.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        System.out.println(result);
+                        view.evaluateJavascript(result, returnCaptcha -> {
+                            if (returnCaptcha.contains("vivo")) {
+                                Logger.log("Found link for vivo:" + returnCaptcha, Logger.LogType.INFO);
+                                makeText("Found VIVO link");
+                                view.loadUrl(URLUtil.toUrl(StringUtil.removeBadCharacters(returnCaptcha, "\\\\", "\""), "https"));
+                                view.setWebViewClient(new WebViewClient() {
+                                    @Override
+                                    public void onPageFinished(WebView view, String url) {
+                                        view.evaluateJavascript(ScriptUtil.VIVO_EXPLOIT, value -> {
+                                            if (value.contains("node")) {
+                                                new DownloadTask(SelectedAnimeActivity.this, value.replaceAll("\"", ""), animeName, new int[]{count[0], count[1], countMax}).executeAsync();
+                                                view.destroy();
+                                                webView.destroy();
+                                            } else makeText("Error getting direct vivo link: " + value);
+                                        });
+                                        super.onPageFinished(view, url);
+                                    }
                                 });
-                                super.onPageFinished(view, url);
+                            } else {
+                                makeText("Error getting vivo link. Anime4you might be down / Anime done downloading");
+                                Logger.log(returnCaptcha, Logger.LogType.WARNING);
                             }
                         });
-                    } else {
-                        makeText("Error getting vivo link. Anime4you might be down / Anime done downloading");
-                        Logger.log(returnCaptcha, Logger.LogType.WARNING);
+                        super.onPageFinished(view, url);
                     }
                 });
-                super.onPageFinished(view, url);
+            }
+
+            @Override
+            public void preExecute() {
+
             }
         });
     }
-
     /**
      * Get download link then stream
      *
@@ -283,9 +290,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
         final WebView webView = new WebView(getApplicationContext());
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(StringHandler.HTTPS_CAPTCHA_ANIME_4_YOU_ONE);
-        /**
-         * Clear all previous data and Cookies, so no code 400 appears: Cookie too large (yummy ;) )
-         */
+
         WebStorage.getInstance().deleteAllData();
         CookieManager.getInstance().removeAllCookies(null);
         CookieManager.getInstance().flush();
@@ -294,33 +299,61 @@ public class SelectedAnimeActivity extends AppCompatActivity {
         webView.clearHistory();
         webView.clearSslPreferences();
 
-        webView.setWebViewClient(new WebViewClient() {
+        new VideoFindTask(aid, episode, this).executeAsync(new TaskExecutor.Callback<String>() {
             @Override
-            public void onPageFinished(WebView view, String url) {
-                view.evaluateJavascript(ScriptUtil.getRequest(aid, episode), returnCaptcha -> {
-                    if (returnCaptcha.contains("vivo")) {
-                        view.loadUrl(URLUtil.toUrl(StringUtil.removeBadCharacters(returnCaptcha, "\\\\", "\""), "https"));
-                        view.setWebViewClient(new WebViewClient() {
-                            @Override
-                            public void onPageFinished(WebView view, String url) {
-                                view.evaluateJavascript(ScriptUtil.VIVO_EXPLOIT, s -> {
-                                    Intent intent = new Intent(SelectedAnimeActivity.this, StreamPlayer.class);
-                                    intent.putExtra("stream", s.replaceAll("\"", ""));
-                                    startActivity(intent);
-                                    finish();
-                                    webView.destroy();
-                                    view.destroy();
+            public void onComplete(String result) throws Exception {
+                webView.getSettings().setJavaScriptEnabled(true);
+                /*
+                 * Clear all previous data and Cookies, so no code 400 appears: Cookie too large (yummy ;) )
+                 */
+                WebStorage.getInstance().deleteAllData();
+                CookieManager.getInstance().removeAllCookies(null);
+                CookieManager.getInstance().flush();
+                webView.clearCache(true);
+                webView.clearFormData();
+                webView.clearHistory();
+                webView.clearSslPreferences();
+                webView.loadUrl(StringHandler.HTTPS_CAPTCHA_ANIME_4_YOU_ONE);
+                webView.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        view.evaluateJavascript(result, returnCaptcha -> {
+                            if (returnCaptcha.contains("vivo")) {
+                                Logger.log("Found link for vivo:" + returnCaptcha, Logger.LogType.INFO);
+                                makeText("Found VIVO link");
+                                view.loadUrl(URLUtil.toUrl(StringUtil.removeBadCharacters(returnCaptcha, "\\\\", "\""), "https"));
+                                view.setWebViewClient(new WebViewClient() {
+                                    @Override
+                                    public void onPageFinished(WebView view, String url) {
+                                        view.evaluateJavascript(ScriptUtil.VIVO_EXPLOIT, s -> {
+                                            if (s.contains("node")) {
+                                                final Intent intent = new Intent(SelectedAnimeActivity.this, StreamPlayer.class);
+                                                intent.putExtra("stream", s.replaceAll("\"", ""));
+                                                startActivity(intent);
+                                                finish();
+                                                webView.destroy();
+                                                view.destroy();
+                                            } else makeText("Error getting direct vivo link: " + s);
+                                        });
+                                        super.onPageFinished(view, url);
+                                    }
                                 });
-                                super.onPageFinished(view, url);
+                            } else {
+                                makeText("Error getting vivo link. Anime4you might be down / Anime done downloading");
+                                Logger.log(returnCaptcha, Logger.LogType.WARNING);
                             }
                         });
-                    } else {
-                        Logger.log("Could not find vivo link" + returnCaptcha, Logger.LogType.WARNING);
+                        super.onPageFinished(view, url);
                     }
                 });
-                super.onPageFinished(view, url);
+            }
+
+            @Override
+            public void preExecute() {
+
             }
         });
+
     }
 
     /**
