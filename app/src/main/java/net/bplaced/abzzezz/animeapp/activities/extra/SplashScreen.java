@@ -60,7 +60,7 @@ public class SplashScreen extends AppCompatActivity {
                 if (result) {
                     File outDic = new File(Environment.DIRECTORY_DOWNLOADS, "Anime4you-Update");
                     String fileName = "AutoUpdate.apk";
-                    Downloader.download(StringHandler.NET_APP_UPDATE_APK, outDic, fileName, getParent());
+                    Downloader.download(StringHandler.UPDATE_APK, outDic, fileName, getParent());
                     Toast.makeText(SplashScreen.this, "New update available. Please install the new version.", Toast.LENGTH_LONG).show();
                 }
             }

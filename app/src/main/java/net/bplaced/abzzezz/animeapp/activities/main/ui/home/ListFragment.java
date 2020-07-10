@@ -25,7 +25,6 @@ import ga.abzzezz.util.logging.Logger;
 import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
-import net.bplaced.abzzezz.animeapp.activities.main.SelectedAnimeActivity;
 import net.bplaced.abzzezz.animeapp.util.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.InputDialogBuilder;
 import net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader;
@@ -38,7 +37,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class AnimeListFragment extends Fragment {
+public class ListFragment extends Fragment {
 
     private final DataBaseSearch dataBaseSearch = new DataBaseSearch();
     private AnimeAdapter animeAdapter;
@@ -47,7 +46,7 @@ public class AnimeListFragment extends Fragment {
         //
         AnimeAppMain.getInstance().checkRequest(getActivity());
 
-        View root = inflater.inflate(R.layout.anime_list_layout, container, false);
+        View root = inflater.inflate(R.layout.list_fragment_layout, container, false);
         GridView gridView = root.findViewById(R.id.anime_grid);
         this.animeAdapter = new AnimeAdapter(AnimeAppMain.getInstance().getAnimeSaver().getList(), getActivity());
         gridView.setAdapter(animeAdapter);
@@ -56,7 +55,7 @@ public class AnimeListFragment extends Fragment {
          */
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             try {
-                getInformation(AnimeAppMain.getInstance().getAnimeSaver().getAll(position), new Intent(getActivity(), SelectedAnimeActivity.class));
+                getInformation(AnimeAppMain.getInstance().getAnimeSaver().getAll(position), new Intent(getActivity(), SelectedActivity.class));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -98,7 +97,7 @@ public class AnimeListFragment extends Fragment {
 
     private void getInformation(JSONObject savedInformation, Intent intent) throws JSONException {
         if (!StringHandler.isOnline(getActivity().getApplicationContext())) {
-            intent.putExtra("anime_details", savedInformation.toString());
+            intent.putExtra("details", savedInformation.toString());
             startActivity(intent);
             getActivity().finish();
             return;
@@ -107,7 +106,7 @@ public class AnimeListFragment extends Fragment {
         new TaskExecutor().executeAsync(new DataBaseTask(savedInformation.getString("id"), dataBaseSearch), new TaskExecutor.Callback<JSONObject>() {
             @Override
             public void onComplete(JSONObject result) {
-                intent.putExtra("anime_details", result.toString());
+                intent.putExtra("details", result.toString());
                 startActivity(intent);
                 getActivity().finish();
             }

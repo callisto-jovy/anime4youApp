@@ -18,7 +18,7 @@ import ga.abzzezz.util.logging.Logger;
 import ga.abzzezz.util.stringing.StringUtil;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
-import net.bplaced.abzzezz.animeapp.util.file.AnimeNotifications;
+import net.bplaced.abzzezz.animeapp.util.file.ShowNotifications;
 import net.bplaced.abzzezz.animeapp.util.scripter.DataBaseSearch;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.DataBaseTask;
@@ -30,7 +30,7 @@ public class Alarm extends BroadcastReceiver {
 
     //Databasesearch instance
     private final DataBaseSearch dataBaseSearch = new DataBaseSearch();
-    private final AnimeNotifications animeNotifications = AnimeAppMain.getInstance().getAnimeNotifications();
+    private final ShowNotifications showNotifications = AnimeAppMain.getInstance().getAnimeNotifications();
     //Alarm ID
     private final int alarmID = 1337;
 
@@ -50,14 +50,14 @@ public class Alarm extends BroadcastReceiver {
 
         if (AnimeAppMain.getInstance().isDebugVersion()) sendNotification(context);
         Logger.log("Checking for new episodes", Logger.LogType.INFO);
-        animeNotifications.getPreferences().getAll().forEach((key, o) ->
+        showNotifications.getPreferences().getAll().forEach((key, o) ->
                 new TaskExecutor().executeAsync(new DataBaseTask(key.split(StringUtil.splitter)[1], dataBaseSearch),
                         new TaskExecutor.Callback<JSONObject>() {
                             @Override
                             public void onComplete(JSONObject result) throws Exception {
                                 int newNumber = result.getInt("episodes");
-                                if (newNumber > Integer.parseInt(animeNotifications.getPreferences().getString(key, "1"))) {
-                                    animeNotifications.updateKey(key, newNumber);
+                                if (newNumber > Integer.parseInt(showNotifications.getPreferences().getString(key, "1"))) {
+                                    showNotifications.updateKey(key, newNumber);
                                     sendNotification(context, result);
                                 }
                             }

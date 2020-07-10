@@ -18,9 +18,9 @@ import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
-import net.bplaced.abzzezz.animeapp.activities.main.SelectedAnimeActivity;
+import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.IntentHelper;
-import net.bplaced.abzzezz.animeapp.util.receiver.StopDownloadingReceiver;
+import net.bplaced.abzzezz.animeapp.util.receiver.StopDownloadReceiver;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 
 import java.io.File;
@@ -34,7 +34,7 @@ import java.util.concurrent.Callable;
 
 public class DownloadTask extends TaskExecutor implements Callable<String>, TaskExecutor.Callback<String> {
 
-    private final SelectedAnimeActivity application;
+    private final SelectedActivity application;
     private final int[] count;
     private NotificationManagerCompat notificationManagerCompat;
     private NotificationCompat.Builder notification;
@@ -46,7 +46,7 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
     private final String name;
 
 
-    public DownloadTask(final SelectedAnimeActivity application, final String url, final String name, final int[] count) {
+    public DownloadTask(final SelectedActivity application, final String url, final String name, final int[] count) {
         this.application = application;
         this.name = name;
         this.url = url;
@@ -84,7 +84,7 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
         //Close stream
         Logger.log("Done copying streams, closing stream", Logger.LogType.INFO);
         fileOutputStream.close();
-        return name + count[1];
+        return name.concat(": ") + count[1];
     }
 
     @Override
@@ -132,7 +132,7 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
         this.notifyID = (int) System.currentTimeMillis() % 10000;
         this.notificationManagerCompat = NotificationManagerCompat.from(application);
 
-        final Intent notificationActionIntent = new Intent(application, StopDownloadingReceiver.class);
+        final Intent notificationActionIntent = new Intent(application, StopDownloadReceiver.class);
         notificationActionIntent.setData(Uri.parse("" + notifyID));
         Logger.log("Assigned thread id:" + notifyID, Logger.LogType.INFO);
         //Put object key
@@ -142,7 +142,7 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
                 .setSmallIcon(R.drawable.download)
                 .setContentText("Currently downloading episode: " + count[1])
                 .setContentTitle("Episode Download")
-                .setPriority(NotificationCompat.PRIORITY_HIGH).addAction(R.drawable.ic_cancel, "Stop downloading", stopDownloadingPendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH).addAction(R.drawable.cancel, "Stop downloading", stopDownloadingPendingIntent)
                 .setOngoing(true);
         this.notificationManagerCompat.notify(notifyID, notification.build());
     }

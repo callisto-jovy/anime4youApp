@@ -14,7 +14,7 @@ import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.util.IntentHelper;
 import net.bplaced.abzzezz.animeapp.util.tasks.DownloadTask;
 
-public class StopDownloadingReceiver extends BroadcastReceiver {
+public class StopDownloadReceiver extends BroadcastReceiver {
 
     /**
      * Gets called if stop download is triggered

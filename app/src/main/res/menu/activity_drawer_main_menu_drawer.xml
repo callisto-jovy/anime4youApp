@@ -12,10 +12,10 @@
     <group android:checkableBehavior="single">
         <item
                 android:id="@+id/nav_anime_list"
-                android:title="@string/menu_anime_list" android:icon="@drawable/format_list_bulleted"/>
+                android:title="@string/menu_anime_list" android:icon="@drawable/list"/>
         <item
                 android:id="@+id/nav_settings"
-                android:icon="@drawable/cog_outline"
+                android:icon="@drawable/settings"
                 android:title="@string/menu_settings"/>
         <item
                 android:id="@+id/nav_changelog"
@@ -25,7 +25,7 @@
 
         <item
                 android:id="@+id/download_tracker"
-                android:icon="@drawable/format_list_bulleted"
+                android:icon="@drawable/list"
                 android:title="@string/download_tracker"/>
 
         <item

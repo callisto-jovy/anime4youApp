@@ -14,7 +14,7 @@ import ga.abzzezz.util.logging.Logger;
  * Keeps track of all animes marked with notifications. Every hour the list gets checked for a new episode
  */
 
-public class AnimeNotifications {
+public class ShowNotifications {
 
 
     /**
@@ -27,7 +27,7 @@ public class AnimeNotifications {
      * Aids used as keys. The other values stay the same
      */
 
-    public AnimeNotifications(final Context context) {
+    public ShowNotifications(final Context context) {
         this.preferences = context.getSharedPreferences("AnimeNotifications", Context.MODE_PRIVATE);
         this.editor = preferences.edit();
         Logger.log("Anime Notifications set up.", Logger.LogType.INFO);

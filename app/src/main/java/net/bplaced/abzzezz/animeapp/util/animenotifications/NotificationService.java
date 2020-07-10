@@ -14,7 +14,7 @@ import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.util.receiver.Alarm;
 
 
-public class AnimeNotificationService extends Service {
+public class NotificationService extends Service {
 
     private final Alarm alarm = new Alarm();
 

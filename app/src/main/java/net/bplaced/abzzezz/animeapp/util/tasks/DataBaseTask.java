@@ -31,7 +31,7 @@ public class DataBaseTask implements Callable<JSONObject> {
         inf.put("id", id);
         inf.put("image_url", StringUtil.getStringFromLong(realSeries, "src=\\\"", "\\\""));
         inf.put("episodes", StringUtil.getStringFromLong(realSeries, "\"Letzte\":\"", "\""));
-        inf.put("name", StringUtil.getStringFromLong(realSeries, "\"titel\":\"", "\""));
+        inf.put("title", StringUtil.getStringFromLong(realSeries, "\"titel\":\"", "\""));
         inf.put("language", StringUtil.getStringFromLong(realSeries, "\"Untertitel\":\"", "\""));
         inf.put("year", StringUtil.getStringFromLong(realSeries, "\"Jahr\":\"", "\""));
         return inf;

@@ -25,9 +25,9 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
 import id.ionbit.ionalert.IonAlert;
-import net.bplaced.abzzezz.animeapp.util.animenotifications.AnimeNotificationService;
-import net.bplaced.abzzezz.animeapp.util.file.AnimeNotifications;
-import net.bplaced.abzzezz.animeapp.util.file.AnimeSaver;
+import net.bplaced.abzzezz.animeapp.util.animenotifications.NotificationService;
+import net.bplaced.abzzezz.animeapp.util.file.ShowNotifications;
+import net.bplaced.abzzezz.animeapp.util.file.ShowSaver;
 import net.bplaced.abzzezz.animeapp.util.file.DownloadTracker;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
@@ -38,7 +38,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 //TODO: Recode project
@@ -60,9 +59,9 @@ public class AnimeAppMain {
     /**
      * Handlers
      */
-    private AnimeSaver animeSaver;
+    private ShowSaver animeSaver;
     private DownloadTracker downloadTracker;
-    private AnimeNotifications animeNotifications;
+    private ShowNotifications animeNotifications;
 
     public AnimeAppMain() {
         this.version = 47;
@@ -80,9 +79,9 @@ public class AnimeAppMain {
     @SuppressLint("HardwareIds")
     public void configureHandlers(final Application application) {
         this.androidId = Settings.Secure.getString(application.getContentResolver(), Settings.Secure.ANDROID_ID);
-        this.animeSaver = new AnimeSaver(application);
+        this.animeSaver = new ShowSaver(application);
         this.downloadTracker = new DownloadTracker(application);
-        this.animeNotifications = new AnimeNotifications(application);
+        this.animeNotifications = new ShowNotifications(application);
         this.imageStorage = new File(application.getDataDir(), "StoredImagesOffline");
         if (!imageStorage.exists()) Logger.log("Image file created: " + imageStorage.mkdir(), Logger.LogType.INFO);
         this.darkMode = PreferenceManager.getDefaultSharedPreferences(application).getBoolean("dark_mode", true);
@@ -91,27 +90,24 @@ public class AnimeAppMain {
         else
             this.themeID = R.style.LightTheme;
 
-        Intent animeAlarm = new Intent(application, AnimeNotificationService.class);
+        Intent animeAlarm = new Intent(application, NotificationService.class);
         animeAlarm.setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         application.startService(animeAlarm);
     }
 
     public void checkRequest(final Context context) {
-        new TaskExecutor().executeAsync(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                URL url = new URL("http://abzzezz.bplaced.net/app/user.php");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.addRequestProperty("Referer", androidId);
-                connection.connect();
-                final InputStream inputStream = connection.getInputStream();
-                final String response = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining());
-                return response.equals("200");
-            }
+        new TaskExecutor().executeAsync(() -> {
+            URL url = new URL(StringHandler.USER_URL);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.addRequestProperty("Referer", androidId);
+            connection.connect();
+            final InputStream inputStream = connection.getInputStream();
+            final String response = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining());
+            return response.equals("200");
         }, new TaskExecutor.Callback<Boolean>() {
             @Override
-            public void onComplete(Boolean result) throws Exception {
+            public void onComplete(Boolean result) {
                 if (!result) {
                     Logger.log("Unregistered device", Logger.LogType.INFO);
                     new IonAlert(context).setTitleText("You are not registered").setContentText("You are not registered. Please contact the developer and give him your clipboard id").setConfirmText("Exit").setConfirmClickListener(new IonAlert.ClickListener() {
@@ -177,11 +173,11 @@ public class AnimeAppMain {
         return downloadTracker;
     }
 
-    public AnimeNotifications getAnimeNotifications() {
+    public ShowNotifications getAnimeNotifications() {
         return animeNotifications;
     }
 
-    public AnimeSaver getAnimeSaver() {
+    public ShowSaver getAnimeSaver() {
         return animeSaver;
     }
 

@@ -38,7 +38,7 @@
                 android:name=".activities.main.DrawerMainMenu"
                 android:label="@string/title_activity_drawer_main_menu"
                 android:theme="@style/DarkTheme.NoActionBar"/>
-        <activity android:name=".activities.main.SelectedAnimeActivity"/>
+        <activity android:name=".activities.main.ui.home.SelectedActivity"/>
 
         <activity
                 android:name=".activities.extra.SplashScreen"
@@ -84,9 +84,9 @@
                 android:label="Anime Notification Service"
                 android:description="@string/anime_notification_service_description"
                 android:enabled="true" android:exported="true"
-                android:name=".util.animenotifications.AnimeNotificationService"
+                android:name=".util.animenotifications.NotificationService"
         />
-        <receiver android:name=".util.receiver.StopDownloadingReceiver"/>
+        <receiver android:name=".util.receiver.StopDownloadReceiver"/>
         <!-- Receiver and Service -->
     </application>
 </manifest>

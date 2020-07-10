@@ -6,24 +6,7 @@
 
 package net.bplaced.abzzezz.animeapp.util.scripter;
 
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import ga.abzzezz.util.data.URLUtil;
-import ga.abzzezz.util.logging.Logger;
-import ga.abzzezz.util.stringing.StringUtil;
-import net.bplaced.abzzezz.animeapp.AnimeAppMain;
-import net.bplaced.abzzezz.animeapp.activities.main.SelectedAnimeActivity;
-import net.bplaced.abzzezz.animeapp.util.tasks.DownloadTask;
-import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 
 public class ScriptUtil {
 

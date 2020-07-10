@@ -26,7 +26,7 @@ public class Downloader {
     public static void download(String url, File outDir, String outFileName, Activity activity) {
         if (!outDir.exists()) outDir.mkdir();
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.setDescription("Downloading File: " + outFileName);
+        request.setDescription("Downloading File: ".concat(outFileName));
         request.setTitle(outFileName);
 
         request.setDestinationInExternalPublicDir(outDir.getAbsolutePath(), outFileName);

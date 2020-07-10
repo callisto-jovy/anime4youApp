@@ -1,10 +1,10 @@
 /*
  * Copyright (c) 2020. Roman P.
  * All code is owned by Roman P. APIs are mentioned.
- * Last modified: 25.06.20, 15:37
+ * Last modified: 10.07.20, 15:22
  */
 
-package net.bplaced.abzzezz.animeapp.activities.main;
+package net.bplaced.abzzezz.animeapp.activities.main.ui.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.data.URLUtil;
@@ -30,6 +29,7 @@ import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.extra.PlayerActivity;
 import net.bplaced.abzzezz.animeapp.activities.extra.StreamPlayer;
+import net.bplaced.abzzezz.animeapp.activities.main.DrawerMainMenu;
 import net.bplaced.abzzezz.animeapp.util.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.InputDialogBuilder;
 import net.bplaced.abzzezz.animeapp.util.InputDialogBuilder.InputDialogListener;
@@ -47,49 +47,49 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.OptionalInt;
 
-public class SelectedAnimeActivity extends AppCompatActivity {
+public class SelectedActivity extends AppCompatActivity {
 
-    public AnimeEpisodeAdapter animeEpisodeAdapter;
-    private String animeName;
-    private int aid, animeEpisodes;
-    private File animeFile;
+    public EpisodeAdapter episodeAdapter;
+    private String title;
+    private int id, episodes;
+    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(AnimeAppMain.getInstance().getThemeID());
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.anime_selected_layout);
+        setContentView(R.layout.selected_show_layout);
 
         /*
          * Get intent varaibles
          */
         try {
-            final JSONObject inf = new JSONObject(getIntent().getStringExtra("anime_details"));
-            this.animeName = inf.getString("name");
-            this.animeEpisodes = inf.getInt("episodes");
-            this.aid = inf.getInt("id");
-            final String animeCover = inf.getString("image_url");
-            this.animeFile = new File(getFilesDir(), animeName);
+            final JSONObject inf = new JSONObject(getIntent().getStringExtra("details"));
+            this.title = inf.getString("title");
+            this.episodes = inf.getInt("episodes");
+            this.id = inf.getInt("id");
+            this.file = new File(getFilesDir(), title);
+            final String coverUrl = inf.getString("image_url");
 
             //Set text etc.
-            ((TextView) findViewById(R.id.selected_anime_name)).setText(animeName);
-            ((TextView) findViewById(R.id.selected_anime_episodes)).append(String.valueOf(animeEpisodes));
-            ((TextView) findViewById(R.id.selected_anime_aid)).append(String.valueOf(aid));
+            ((TextView) findViewById(R.id.selected_anime_name)).setText(title);
+            ((TextView) findViewById(R.id.selected_anime_episodes)).append(String.valueOf(episodes));
+            ((TextView) findViewById(R.id.selected_anime_aid)).append(String.valueOf(id));
             ((TextView) findViewById(R.id.selected_anime_language)).append(inf.getString("language"));
             ((TextView) findViewById(R.id.selected_anime_year)).append(inf.getString("year"));
-            ((TextView) findViewById(R.id.anime_directory_size)).append(FileUtil.calculateFileSize(animeFile));
+            ((TextView) findViewById(R.id.anime_directory_size)).append(FileUtil.calculateFileSize(file));
 
             final ImageView cover = findViewById(R.id.anime_cover_image);
             final Toolbar toolbar = findViewById(R.id.selected_anime_toolbar);
             setSupportActionBar(toolbar);
-            getSupportActionBar().setTitle(animeName);
+            getSupportActionBar().setTitle(title);
             /*
              * If offline mode is enabled use image offline loader
              */
             if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("offline_mode", false))
-                OfflineImageLoader.loadImage(animeCover, String.valueOf(aid), cover, this);
+                OfflineImageLoader.loadImage(coverUrl, String.valueOf(id), cover, this);
             else
-                Picasso.with(getApplicationContext()).load(animeCover).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(cover);
+                Picasso.with(getApplicationContext()).load(coverUrl).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(cover);
 
 
             final ListView listView = findViewById(R.id.anime_episodes_grid);
@@ -97,12 +97,12 @@ public class SelectedAnimeActivity extends AppCompatActivity {
             /*
              * Set Adapter
              */
-            this.animeEpisodeAdapter = new AnimeEpisodeAdapter(animeEpisodes, getApplicationContext());
+            this.episodeAdapter = new EpisodeAdapter(episodes, getApplicationContext());
 
-            listView.setAdapter(animeEpisodeAdapter);
+            listView.setAdapter(episodeAdapter);
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
                 final boolean isDownloaded = isEpisodeDownloaded(i);
-                new IonAlert(SelectedAnimeActivity.this, IonAlert.NORMAL_TYPE)
+                new IonAlert(SelectedActivity.this, IonAlert.NORMAL_TYPE)
                         .setConfirmText("Stream")
                         .setConfirmClickListener(ionAlert -> streamEpisode(i))
                         .setCancelText(isDownloaded ? "Play downloaded" : "Cancel")
@@ -114,15 +114,9 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                         }).show();
             });
 
-            /*
-             * Button
-             */
-            FloatingActionButton downloadAnime = findViewById(R.id.download_anime_button);
-        /*
-        "Calculate" next start
-         */
-            downloadAnime.setOnClickListener(v -> downloadEpisode(getLatestEpisode(), animeEpisodes, 0));
+            findViewById(R.id.download_anime_button).setOnClickListener(v -> downloadEpisode(getLatestEpisode(), episodes, 0));
         } catch (JSONException e) {
+            Logger.log("Error parsing JSON", Logger.LogType.INFO);
             e.printStackTrace();
         }
     }
@@ -141,21 +135,20 @@ public class SelectedAnimeActivity extends AppCompatActivity {
     }
 
     public int getLatestEpisode() {
-        if (animeFile.list() != null) {
-            final OptionalInt highest = Arrays.stream(animeFile.list()).map(s -> StringUtil.extractNumberI(s.substring(0, s.lastIndexOf(".")))).mapToInt(integer -> integer).max();
-            if (highest.isPresent())
-                return highest.getAsInt() + 1;
+        if (file.list() != null) {
+            final OptionalInt highest = Arrays.stream(file.list()).map(s -> StringUtil.extractNumberI(s.substring(0, s.lastIndexOf(".")))).mapToInt(integer -> integer).max();
+            if (highest.isPresent()) return highest.getAsInt() + 1;
         }
-        return 1;
+        return 0;
     }
 
     public void resetAdapter() {
-        animeEpisodeAdapter.notifyDataSetChanged();
+        episodeAdapter.notifyDataSetChanged();
     }
 
     private boolean isEpisodeDownloaded(final int index) {
-        if (animeFile.list() != null) {
-            return Arrays.stream(animeFile.list()).anyMatch(s -> s.substring(0, s.lastIndexOf(".")).equals(String.valueOf(index)));
+        if (file.list() != null) {
+            return Arrays.stream(file.list()).anyMatch(s -> s.substring(0, s.lastIndexOf(".")).equals(String.valueOf(index)));
         }
         return false;
     }
@@ -185,7 +178,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                 break;
             case R.id.toogle_notifications_anime:
                 //Add to notification manager
-                AnimeAppMain.getInstance().getAnimeNotifications().add(animeName + StringUtil.splitter + aid, String.valueOf(animeEpisodes));
+                AnimeAppMain.getInstance().getAnimeNotifications().add(title.concat(StringUtil.splitter) + id, String.valueOf(episodes));
                 break;
             default:
                 break;
@@ -224,7 +217,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
 
         final WebView webView = new WebView(getApplicationContext());
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(StringHandler.HTTPS_CAPTCHA_ANIME_4_YOU_ONE);
+        webView.loadUrl(StringHandler.CAPTCHA_ANIME_4_YOU_ONE);
 
         WebStorage.getInstance().deleteAllData();
         CookieManager.getInstance().removeAllCookies(null);
@@ -234,7 +227,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
         webView.clearHistory();
         webView.clearSslPreferences();
 
-        new VideoFindTask(aid, count[1], this).executeAsync(new TaskExecutor.Callback<String>() {
+        new VideoFindTask(id, count[1]).executeAsync(new TaskExecutor.Callback<String>() {
             @Override
             public void onComplete(String result) throws Exception {
                 webView.setWebViewClient(new WebViewClient() {
@@ -251,7 +244,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                                     public void onPageFinished(WebView view, String url) {
                                         view.evaluateJavascript(ScriptUtil.VIVO_EXPLOIT, value -> {
                                             if (value.contains("node")) {
-                                                new DownloadTask(SelectedAnimeActivity.this, value.replaceAll("\"", ""), animeName, new int[]{count[0], count[1], countMax}).executeAsync();
+                                                new DownloadTask(SelectedActivity.this, value.replaceAll("\"", ""), title, new int[]{count[0], count[1], countMax}).executeAsync();
                                                 view.destroy();
                                                 webView.destroy();
                                             } else makeText("Error getting direct vivo link: " + value);
@@ -289,7 +282,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
     public void streamEpisode(final int episode) {
         final WebView webView = new WebView(getApplicationContext());
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(StringHandler.HTTPS_CAPTCHA_ANIME_4_YOU_ONE);
+        webView.loadUrl(StringHandler.CAPTCHA_ANIME_4_YOU_ONE);
 
         WebStorage.getInstance().deleteAllData();
         CookieManager.getInstance().removeAllCookies(null);
@@ -299,9 +292,9 @@ public class SelectedAnimeActivity extends AppCompatActivity {
         webView.clearHistory();
         webView.clearSslPreferences();
 
-        new VideoFindTask(aid, episode, this).executeAsync(new TaskExecutor.Callback<String>() {
+        new VideoFindTask(id, episode).executeAsync(new TaskExecutor.Callback<String>() {
             @Override
-            public void onComplete(String result) throws Exception {
+            public void onComplete(String result) {
                 webView.getSettings().setJavaScriptEnabled(true);
                 /*
                  * Clear all previous data and Cookies, so no code 400 appears: Cookie too large (yummy ;) )
@@ -313,7 +306,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                 webView.clearFormData();
                 webView.clearHistory();
                 webView.clearSslPreferences();
-                webView.loadUrl(StringHandler.HTTPS_CAPTCHA_ANIME_4_YOU_ONE);
+                webView.loadUrl(StringHandler.CAPTCHA_ANIME_4_YOU_ONE);
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
@@ -327,7 +320,7 @@ public class SelectedAnimeActivity extends AppCompatActivity {
                                     public void onPageFinished(WebView view, String url) {
                                         view.evaluateJavascript(ScriptUtil.VIVO_EXPLOIT, s -> {
                                             if (s.contains("node")) {
-                                                final Intent intent = new Intent(SelectedAnimeActivity.this, StreamPlayer.class);
+                                                final Intent intent = new Intent(SelectedActivity.this, StreamPlayer.class);
                                                 intent.putExtra("stream", s.replaceAll("\"", ""));
                                                 startActivity(intent);
                                                 finish();
@@ -393,8 +386,8 @@ public class SelectedAnimeActivity extends AppCompatActivity {
      * @return
      */
     public File getEpisodeFile(final int index) {
-        if (animeFile.listFiles() != null) {
-            return Arrays.stream(animeFile.listFiles()).filter(file -> file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index))).findFirst().get();
+        if (file.listFiles() != null) {
+            return Arrays.stream(file.listFiles()).filter(file -> file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index))).findFirst().get();
         }
         return null;
     }
@@ -443,12 +436,12 @@ public class SelectedAnimeActivity extends AppCompatActivity {
     /**
      * Episode adapter
      */
-    class AnimeEpisodeAdapter extends BaseAdapter {
+    class EpisodeAdapter extends BaseAdapter {
 
         private final Context context;
         private final int episodes;
 
-        public AnimeEpisodeAdapter(int episodes, Context context) {
+        public EpisodeAdapter(int episodes, Context context) {
             this.episodes = episodes;
             this.context = context;
         }
@@ -472,20 +465,22 @@ public class SelectedAnimeActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null)
-                convertView = LayoutInflater.from(context).inflate(R.layout.episode_layout, parent, false);
+                convertView = LayoutInflater.from(context).inflate(R.layout.episode_item_layout, parent, false);
+
             final TextView textView = convertView.findViewById(R.id.episode_name);
             final ImageView actionButton = convertView.findViewById(R.id.download_button);
             textView.setText("Episode: " + position);
+
             if (isEpisodeDownloaded(position)) {
                 textView.setTextColor(0xFF30475e);
                 actionButton.setImageResource(R.drawable.delete);
                 actionButton.setOnClickListener(view ->
-                        new IonAlert(SelectedAnimeActivity.this, IonAlert.WARNING_TYPE)
+                        new IonAlert(SelectedActivity.this, IonAlert.WARNING_TYPE)
                                 .setTitleText("Delete file?")
                                 .setContentText("Won't be able to recover this file!")
                                 .setConfirmText("Yes, delete it!")
                                 .setConfirmClickListener(ionAlert -> {
-                                    animeEpisodeAdapter.deleteItem(position);
+                                    episodeAdapter.deleteItem(position);
                                     ionAlert.dismissWithAnimation();
                                 }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
                                 .show());

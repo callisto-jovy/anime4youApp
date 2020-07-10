@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class AnimeSaver {
+public class ShowSaver {
 
     /**
      * Editor and preferences
@@ -30,18 +30,11 @@ public class AnimeSaver {
      * Aids used as keys. The other values stay the same
      */
 
-    public AnimeSaver(final Context context) {
-        this.preferences = context.getSharedPreferences("AnimeList", Context.MODE_PRIVATE);
+    public ShowSaver(final Context context) {
+        this.preferences = context.getSharedPreferences("List", Context.MODE_PRIVATE);
         this.editor = preferences.edit();
         this.publicPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        Logger.log("Anime Saver set up.", Logger.LogType.INFO);
-        //TODO: Remove for next version
-        preferences.getAll().values().forEach(o -> {
-            if (o.toString().contains(StringUtil.splitter)) {
-                editor.clear().commit();
-            }
-        });
-
+        Logger.log("Saver set up.", Logger.LogType.INFO);
     }
 
     /**
@@ -89,13 +82,9 @@ public class AnimeSaver {
     }
 
     /**
-     * Name: 0
-     * Episodes: 1
-     * ImageURL: 2
-     * AID: 3
      *
      * @param index key
-     * @return
+     * @return new JSON object
      */
     public JSONObject getAll(final int index) {
         try {

@@ -12,9 +12,9 @@
             app:startDestination="@+id/nav_anime_list">
     <fragment
             android:id="@+id/nav_anime_list"
-            android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.home.AnimeListFragment"
+            android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.home.ListFragment"
             android:label="@string/app_name"
-            tools:layout="@layout/anime_list_layout">
+            tools:layout="@layout/list_fragment_layout">
         <action android:id="@+id/action_nav_anime_list_to_nav_settings" app:destination="@id/nav_anime_list"/>
     </fragment>
 
@@ -45,7 +45,7 @@
 
     <fragment
             android:id="@+id/anime_notification"
-            android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.settings.AnimeNotificationsFragment"
+            android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.settings.NotificationsFragment"
             android:label="@string/anime_notifications_manage"
             tools:layout="@layout/simplelist_layout">
         <action android:id="@+id/action_download_tracker_to_nav_changelog" app:destination="@id/nav_changelog"/>
