@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 public class InputDialogBuilder {
 
-    private InputDialogListener dialogListener;
+    private final InputDialogListener dialogListener;
     private EditText editText;
 
     public InputDialogBuilder(InputDialogListener listener) {
@@ -25,10 +25,6 @@ public class InputDialogBuilder {
                 .setTitle(title)
                 .setMessage(text)
                 .setPositiveButton("Enter", (dialogInterface, i) -> dialogListener.onDialogInput(editText.getText().toString())).setNegativeButton("Cancel", (dialogInterface, i) -> dialogListener.onDialogDenied()).setView(editText).show();
-    }
-
-    public void setDialogListener(InputDialogListener dialogListener) {
-        this.dialogListener = dialogListener;
     }
 
     public interface InputDialogListener {

@@ -35,7 +35,7 @@ import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
+import java.io.File;
 
 public class ListFragment extends Fragment {
 
@@ -43,19 +43,19 @@ public class ListFragment extends Fragment {
     private AnimeAdapter animeAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //
-        AnimeAppMain.getInstance().checkRequest(getActivity());
+        AnimeAppMain.getInstance().checkPermission(getActivity());
+        final View root = inflater.inflate(R.layout.list_fragment_layout, container, false);
 
-        View root = inflater.inflate(R.layout.list_fragment_layout, container, false);
-        GridView gridView = root.findViewById(R.id.anime_grid);
-        this.animeAdapter = new AnimeAdapter(AnimeAppMain.getInstance().getAnimeSaver().getList(), getActivity());
+        final GridView gridView = root.findViewById(R.id.anime_grid);
+        this.animeAdapter = new AnimeAdapter(AnimeAppMain.getInstance().getShowSaver().getShowSize(), getActivity());
+
         gridView.setAdapter(animeAdapter);
         /*
          * Set onclick listener, if clicked pass information through to selected anime.
          */
         gridView.setOnItemClickListener((parent, view, position, id) -> {
             try {
-                getInformation(AnimeAppMain.getInstance().getAnimeSaver().getAll(position), new Intent(getActivity(), SelectedActivity.class));
+                getInformation(position, new Intent(getActivity(), SelectedActivity.class));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -76,9 +76,9 @@ public class ListFragment extends Fragment {
             return true;
         });
 
-        FloatingActionButton addAidButton = root.findViewById(R.id.add_aid);
+        final FloatingActionButton addAidButton = root.findViewById(R.id.add_aid);
         addAidButton.setOnClickListener(v -> {
-            InputDialogBuilder inputDialogBuilder = new InputDialogBuilder(new InputDialogBuilder.InputDialogListener() {
+            final InputDialogBuilder inputDialogBuilder = new InputDialogBuilder(new InputDialogBuilder.InputDialogListener() {
                 @Override
                 public void onDialogInput(String text) {
                     animeAdapter.addItem(text);
@@ -90,15 +90,15 @@ public class ListFragment extends Fragment {
             });
             inputDialogBuilder.showInput("Enter AID", "Enter AID to add anime", getActivity());
         });
-
         return root;
     }
 
 
-    private void getInformation(JSONObject savedInformation, Intent intent) throws JSONException {
+    private void getInformation(final int index, final Intent intent) throws JSONException {
+        JSONObject savedInformation = AnimeAppMain.getInstance().getShowSaver().getShow(index);
+
         if (!StringHandler.isOnline(getActivity().getApplicationContext())) {
-            intent.putExtra("details", savedInformation.toString());
-            startActivity(intent);
+            startActivity(intent.putExtra("details", savedInformation.toString()));
             getActivity().finish();
             return;
         }
@@ -106,8 +106,7 @@ public class ListFragment extends Fragment {
         new TaskExecutor().executeAsync(new DataBaseTask(savedInformation.getString("id"), dataBaseSearch), new TaskExecutor.Callback<JSONObject>() {
             @Override
             public void onComplete(JSONObject result) {
-                intent.putExtra("details", result.toString());
-                startActivity(intent);
+                startActivity(intent.putExtra("details", result.toString()));
                 getActivity().finish();
             }
 
@@ -121,21 +120,21 @@ public class ListFragment extends Fragment {
     class AnimeAdapter extends BaseAdapter {
 
         private final Context context;
-        private final List<String> string;
+        private int size;
 
-        public AnimeAdapter(List<String> string, Context context) {
-            this.string = string;
+        public AnimeAdapter(int size, Context context) {
+            this.size = size;
             this.context = context;
         }
 
         @Override
         public int getCount() {
-            return string.size();
+            return size;
         }
 
         @Override
         public Object getItem(int position) {
-            return string.get(position);
+            return AnimeAppMain.getInstance().getShowSaver().getShow(position);
         }
 
         @Override
@@ -145,32 +144,42 @@ public class ListFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView = new ImageView(context);
+            final ImageView coverImage = new ImageView(context);
             try {
-                JSONObject jsonObject = new JSONObject(string.get(position));
-                String imageURL = jsonObject.getString("image_url");
-                //If offline mode is enabled, load offline bitmap into imageview
+                final JSONObject jsonObject = AnimeAppMain.getInstance().getShowSaver().getShow(position);
+                final String imageURL = jsonObject.getString("image_url");
                 if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("offline_mode", false)) {
-                    OfflineImageLoader.loadImage(imageURL, jsonObject.getString("id"), imageView, getContext());
+                    OfflineImageLoader.loadImage(imageURL, jsonObject.getString("id"), coverImage, getContext());
                 } else {
-                    //Load image from url into imageview using picasso. (Cache images)
-                    try {
-                        Picasso.with(context).load(imageURL).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(imageView);
-                    } catch (ArrayIndexOutOfBoundsException e) {
-                        System.out.println(position);
-                    }
+                    Picasso.with(context).load(imageURL).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(coverImage);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //Set view bounds
-            imageView.setAdjustViewBounds(true);
-            return imageView;
+            coverImage.setAdjustViewBounds(true);
+            return coverImage;
         }
 
         public void removeItem(final int index) {
-            string.remove(index);
-            AnimeAppMain.getInstance().getAnimeSaver().remove(index);
+            this.size--;
+            try {
+                final File dir = new File(getActivity().getFilesDir(), ((JSONObject) getItem(index)).getString("title"));
+                if (dir.listFiles() != null && dir.listFiles().length > 0) {
+                    new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
+                            .setTitleText("Delete all remaining episodes?")
+                            .setContentText("Won't be able to recover the files!")
+                            .setConfirmText("Yes, delete!")
+                            .setConfirmClickListener(ionAlert -> {
+                                for (final File file : dir.listFiles()) {
+                                    Logger.log("Deleting file: " + file.delete(), Logger.LogType.INFO);
+                                }
+                            }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
+                            .show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            AnimeAppMain.getInstance().getShowSaver().remove(index);
             notifyDataSetChanged();
         }
 
@@ -183,8 +192,8 @@ public class ListFragment extends Fragment {
             new TaskExecutor().executeAsync(new DataBaseTask(item, dataBaseSearch), new TaskExecutor.Callback<JSONObject>() {
                 @Override
                 public void onComplete(JSONObject result) throws Exception {
-                    string.add(result.toString());
-                    AnimeAppMain.getInstance().getAnimeSaver().add(result);
+                    size++;
+                    AnimeAppMain.getInstance().getShowSaver().addShow(result);
                     notifyDataSetChanged();
                 }
 
@@ -192,10 +201,6 @@ public class ListFragment extends Fragment {
                 public void preExecute() {
                 }
             });
-        }
-
-        public List<String> getString() {
-            return string;
         }
     }
 }

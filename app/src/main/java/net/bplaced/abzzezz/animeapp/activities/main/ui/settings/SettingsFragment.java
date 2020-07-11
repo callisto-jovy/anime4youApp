@@ -35,6 +35,8 @@ public class SettingsFragment extends Fragment {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
             Preference clearOfflineImages = findPreference("clear_offline_images_button");
+            Preference clearTacker = findPreference("clear_tracker");
+
             clearOfflineImages.setOnPreferenceClickListener(preference -> {
                 new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
                         .setTitleText("Delete all offline images?")
@@ -43,6 +45,19 @@ public class SettingsFragment extends Fragment {
                         .setConfirmClickListener(ionAlert -> {
                             for (File imageFile : AnimeAppMain.getInstance().getImageStorage().listFiles())
                                 Logger.log("Deleting file: " + imageFile.getName() + "- Success: " + imageFile.delete(), Logger.LogType.INFO);
+                            ionAlert.dismissWithAnimation();
+                        }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
+                        .show();
+                return true;
+            });
+
+            clearTacker.setOnPreferenceClickListener(preference -> {
+                new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
+                        .setTitleText("Clear download tracker?")
+                        .setContentText("Your log will be deleted.")
+                        .setConfirmText("Yes, delete!")
+                        .setConfirmClickListener(ionAlert -> {
+                            AnimeAppMain.getInstance().getDownloadTracker().clearTrack();
                             ionAlert.dismissWithAnimation();
                         }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
                         .show();

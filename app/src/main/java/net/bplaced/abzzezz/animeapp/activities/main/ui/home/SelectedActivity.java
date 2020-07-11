@@ -56,7 +56,7 @@ public class SelectedActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(AnimeAppMain.getInstance().getThemeID());
+        setTheme(AnimeAppMain.getInstance().getThemeId());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.selected_show_layout);
 
@@ -142,7 +142,7 @@ public class SelectedActivity extends AppCompatActivity {
         return 0;
     }
 
-    public void resetAdapter() {
+    public void refreshAdapter() {
         episodeAdapter.notifyDataSetChanged();
     }
 

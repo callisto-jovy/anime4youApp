@@ -34,12 +34,12 @@ public class PlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        Uri uri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", new File(getIntent().getStringExtra("path")));
+        final Uri uri = FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", new File(getIntent().getStringExtra("path")));
 
-        PlayerView playerView = findViewById(R.id.ep_video_view);
+        final PlayerView playerView = findViewById(R.id.ep_video_view);
         simpleExoPlayer = new SimpleExoPlayer.Builder(this).build();
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getApplicationContext(), Util.getUserAgent(getApplicationContext(), "Anime4you"));
-        MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
+        final DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getApplicationContext(), Util.getUserAgent(getApplicationContext(), "Anime4you"));
+        final MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(uri);
 
         playerView.setResizeMode(Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("video_stretch_preference", "0")));
         playerView.setPlayer(simpleExoPlayer);

@@ -27,7 +27,7 @@ public class DrawerMainMenu extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(AnimeAppMain.getInstance().getThemeID());
+        setTheme(AnimeAppMain.getInstance().getThemeId());
 
         setContentView(R.layout.drawer_layout);
         Toolbar toolbar = findViewById(R.id.fragmenthost_toolbar);

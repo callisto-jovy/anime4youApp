@@ -26,11 +26,11 @@ public class StopDownloadReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        DownloadTask downloadTask = (DownloadTask) IntentHelper.getObjectForKey(intent.getData().toString());
-        if (!downloadTask.isCancelled()) {
+        final DownloadTask trigger = (DownloadTask) IntentHelper.getObjectForKey(intent.getData().toString());
+        if (!trigger.isCancelled()) {
             Logger.log("Further downloading cancelled", Logger.LogType.INFO);
             Toast.makeText(context, "Download cancelled", Toast.LENGTH_SHORT).show();
-            downloadTask.cancel();
+            trigger.cancel();
         }
     }
 }

@@ -17,7 +17,7 @@ public class DataBaseTask implements Callable<JSONObject> {
     private final String id;
     private final DataBaseSearch dataBaseSearch;
 
-    public DataBaseTask(final String aid, final DataBaseSearch dataBaseSearch) {
+    public DataBaseTask(String aid, DataBaseSearch dataBaseSearch) {
         this.id = aid;
         this.dataBaseSearch = dataBaseSearch;
     }
@@ -25,9 +25,9 @@ public class DataBaseTask implements Callable<JSONObject> {
 
     @Override
     public JSONObject call() throws Exception {
-        String realSeries = dataBaseSearch.getSubstringFromDB(id);
+        final String realSeries = dataBaseSearch.getSubstringFromDB(id);
         if (realSeries.isEmpty()) return null;
-        JSONObject inf = new JSONObject();
+        final JSONObject inf = new JSONObject();
         inf.put("id", id);
         inf.put("image_url", StringUtil.getStringFromLong(realSeries, "src=\\\"", "\\\""));
         inf.put("episodes", StringUtil.getStringFromLong(realSeries, "\"Letzte\":\"", "\""));

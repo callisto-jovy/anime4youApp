@@ -22,7 +22,7 @@ public class IntentHelper {
     }
 
     private static IntentHelper getInstance() {
-        if(_instance==null) {
+        if (_instance == null) {
             _instance = new IntentHelper();
         }
         return _instance;
@@ -33,8 +33,8 @@ public class IntentHelper {
     }
 
     public static Object getObjectForKey(String key) {
-        IntentHelper helper = getInstance();
-        Object data = helper._hash.get(key);
+        final IntentHelper helper = getInstance();
+        final Object data = helper._hash.get(key);
         helper._hash.remove(key);
         return data;
     }

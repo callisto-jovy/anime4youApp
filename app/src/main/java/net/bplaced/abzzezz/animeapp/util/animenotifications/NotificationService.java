@@ -20,6 +20,7 @@ public class NotificationService extends Service {
 
     /**
      * Start alarm, cancel if set and debugging is enabled
+     *
      * @param intent
      * @param flags
      * @param startId
@@ -43,7 +44,6 @@ public class NotificationService extends Service {
     }
 
     /**
-     *
      * @param intent
      * @return
      */

@@ -26,7 +26,6 @@ public class StringHandler {
     public static String dataBase = "https://www.anime4you.one/speedlist.old.txt";
 
 
-
     public static boolean isOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();

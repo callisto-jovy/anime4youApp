@@ -23,7 +23,7 @@ public class VideoFindTask extends TaskExecutor implements Callable<String> {
     private final int aid;
     private final int episode;
 
-    public VideoFindTask(final int aid, final int episode) {
+    public VideoFindTask(int aid, int episode) {
         this.aid = aid;
         this.episode = (episode + 1);
     }

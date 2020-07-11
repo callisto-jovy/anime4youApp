@@ -44,8 +44,8 @@ public class Alarm extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         if (!StringHandler.isOnline(context)) return;
 
-        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Anime4you:tag");
+        final PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        final PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Anime4you:tag");
         wl.acquire();
 
         if (AnimeAppMain.getInstance().isDebugVersion()) sendNotification(context);
@@ -73,11 +73,11 @@ public class Alarm extends BroadcastReceiver {
     For debug purposes
      */
     private void sendNotification(final Context context) {
-        NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(context, AnimeAppMain.NOTIFICATION_CHANNEL_ID)
+        final NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(context, AnimeAppMain.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.information).setContentText("Alarmmanager fired")
                 .setContentTitle("Alarm executed")
                 .setPriority(NotificationCompat.PRIORITY_MAX);
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        final NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(14534, notificationCompat.build());
     }
 
@@ -88,11 +88,11 @@ public class Alarm extends BroadcastReceiver {
      * @param result  Anime information
      */
     private void sendNotification(final Context context, final JSONObject result) throws JSONException {
-        NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(context, AnimeAppMain.NOTIFICATION_CHANNEL_ID)
+        final NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(context, AnimeAppMain.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.information).setContentText("New episode for anime: " + result.getString("Name") + " available!")
                 .setContentTitle("New episode available!")
                 .setPriority(NotificationCompat.PRIORITY_MAX);
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+        final NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(result.getInt("episode"), notificationCompat.build());
     }
 
@@ -103,9 +103,9 @@ public class Alarm extends BroadcastReceiver {
      */
     public void setAlarm(final Context context) {
         Logger.log("Alarm set", Logger.LogType.INFO);
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, Alarm.class);
-        PendingIntent pi = PendingIntent.getBroadcast(context, alarmID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        final Intent intent = new Intent(context, Alarm.class);
+        final PendingIntent pi = PendingIntent.getBroadcast(context, alarmID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         //Triggers every two hours (eg. 12x a day)
         am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), 1000 * 60 * 60 * 2, pi);
     }
@@ -117,9 +117,9 @@ public class Alarm extends BroadcastReceiver {
      */
     public void cancelAlarm(final Context context) {
         Logger.log("Alarm cancelled", Logger.LogType.INFO);
-        Intent intent = new Intent(context, Alarm.class);
-        PendingIntent sender = PendingIntent.getBroadcast(context, alarmID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        final Intent intent = new Intent(context, Alarm.class);
+        final PendingIntent sender = PendingIntent.getBroadcast(context, alarmID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
     }
 }

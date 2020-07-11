@@ -32,7 +32,7 @@ public class ScriptUtil {
             "}";
 
     public static String generateRandomKey() {
-        String[] keys = {"2fe519479de544f68a46f5284a9e94dac6bc36f0fcee744312f92a77616bb790e705f8b0c03c582d",
+        final String[] keys = {"2fe519479de544f68a46f5284a9e94dac6bc36f0fcee744312f92a77616bb790e705f8b0c03c582d",
                 "c19efb70201627778f8a3aa678d61b2c482503e75d470fc3357a837011e9a2c2b2a9c9815f854501",
                 "7291ce814dae8d8948f7ff07e994ecb5d8147364d9ebce3c",
                 " 456b2436b2eeecadb765fd07767a977c914eb59059a3e888",

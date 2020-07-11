@@ -10,12 +10,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
-import ga.abzzezz.util.stringing.StringUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Collection;
 
 public class ShowSaver {
 
@@ -43,11 +39,9 @@ public class ShowSaver {
      *
      * @param all
      */
-    public void add(final JSONObject all) throws JSONException {
+    public void addShow(final JSONObject all) throws JSONException {
         if (publicPreferences.getBoolean("check_existing", false) && containsID(all.getString("id"))) return;
-
-        String key = String.valueOf(preferences.getAll().size());
-        editor.putString(key, all.toString());
+        editor.putString(String.valueOf(preferences.getAll().size()), all.toString());
         editor.commit();
     }
 
@@ -82,11 +76,10 @@ public class ShowSaver {
     }
 
     /**
-     *
      * @param index key
      * @return new JSON object
      */
-    public JSONObject getAll(final int index) {
+    public JSONObject getShow(final int index) {
         try {
             return new JSONObject(preferences.getString(String.valueOf(index), "-1"));
         } catch (JSONException e) {
@@ -95,13 +88,8 @@ public class ShowSaver {
         }
     }
 
-    /**
-     * Return list, same as before
-     *
-     * @return
-     */
-    public ArrayList<String> getList() {
-        return new ArrayList<>((Collection<? extends String>) preferences.getAll().values());
+    public int getShowSize() {
+        return preferences.getAll().size();
     }
 
 }

@@ -30,17 +30,9 @@ public class SplashScreen extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        /**
-         * Set theme
-         */
-        setTheme(AnimeAppMain.getInstance().getThemeID());
-
+        setTheme(AnimeAppMain.getInstance().getThemeId());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen_layout);
-        /**
-         * Check permissions. If not given prompt to do so
-         */
-
         AnimeAppMain.getInstance().createNotificationChannel(getApplication());
         AnimeAppMain.getInstance().checkPermissions(this);
         //Configure handlers
@@ -49,7 +41,6 @@ public class SplashScreen extends AppCompatActivity {
         /*
         Check version
          */
-
         new TaskExecutor().executeAsync(() -> AnimeAppMain.getInstance().getVersion() < Float.parseFloat(URLUtil.getURLContentAsString(new URL(StringHandler.APP_VERSION_TXT))), new TaskExecutor.Callback<Boolean>() {
             @Override
             public void preExecute() {
@@ -58,24 +49,18 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onComplete(Boolean result) {
                 if (result) {
-                    File outDic = new File(Environment.DIRECTORY_DOWNLOADS, "Anime4you-Update");
-                    String fileName = "AutoUpdate.apk";
-                    Downloader.download(StringHandler.UPDATE_APK, outDic, fileName, getParent());
+                    Downloader.download(StringHandler.UPDATE_APK, new File(Environment.DIRECTORY_DOWNLOADS, "Anime4you-Update"), "AutoUpdate.apk", getParent());
                     Toast.makeText(SplashScreen.this, "New update available. Please install the new version.", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
-
         //Set version text
-        TextView versionText = findViewById(R.id.version_text);
-        versionText.append("v." + AnimeAppMain.getInstance().getVersion());
-        /**
-         * Start new intent
-         */
+        ((TextView) findViewById(R.id.version_text)).append("v." + AnimeAppMain.getInstance().getVersion());
+
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Intent intent = new Intent(this, DrawerMainMenu.class);
-            startActivity(intent);
+            //Start menu
+            startActivity(new Intent(this, DrawerMainMenu.class));
             finish();
         }, AnimeAppMain.getInstance().isDebugVersion() ? 10 : 2500);
     }

@@ -54,10 +54,10 @@
                     android:key="clear_offline_images_button"
                     android:summary="Clear all offline images"/>
         <PreferenceCategory
-                android:title="@string/global_notifications">
+                android:title="@string/download_tracker">
 
-            <Preference android:title="@string/anime_notifications_manage"
-                        android:key="manage_anime_notifications"/>
+            <Preference android:title="Clear tracker"
+                        android:key="clear_tracker"/>
 
         </PreferenceCategory>
     </PreferenceCategory>

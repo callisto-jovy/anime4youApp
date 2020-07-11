@@ -22,29 +22,23 @@ public class OfflineImageLoader {
 
     public static void loadImage(String url, String aid, ImageView imageView, Context context) {
         //Get image Bitmap file
-        File imageBitmap = new File(AnimeAppMain.getInstance().getImageStorage(), aid);
+        final File imageBitmap = new File(AnimeAppMain.getInstance().getImageStorage(), aid);
         if (!imageBitmap.exists()) {
             //Create new task
             new TaskExecutor().executeAsync(() -> {
-                FileOutputStream fileOutputStream = new FileOutputStream(imageBitmap);
-                //Get imagebitmap and save to file
-                Logger.log("Getting image bitmap", Logger.LogType.INFO);
-                //Compress
-                Picasso.with(context).load(url).get().compress(Bitmap.CompressFormat.JPEG, 70, fileOutputStream);
-                //Close stream
-                fileOutputStream.close();
+                //Load image bitmap into new file, compress etc.
+                Picasso.with(context).load(url).get().compress(Bitmap.CompressFormat.JPEG, 50, new FileOutputStream(imageBitmap));
                 return null;
             }, new TaskExecutor.Callback<Object>() {
                 @Override
                 public void onComplete(Object result) {
-                    /*
-                     * If thread is done load image in
-                     */
+                    //Load image in
                     Picasso.with(context).load(imageBitmap).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(imageView);
                 }
 
                 @Override
                 public void preExecute() {
+                    Logger.log("Offline image is being downloaded.", Logger.LogType.INFO);
                 }
             });
         } else {

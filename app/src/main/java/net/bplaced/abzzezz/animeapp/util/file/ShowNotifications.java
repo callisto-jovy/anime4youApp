@@ -48,6 +48,7 @@ public class ShowNotifications {
 
     /**
      * Update given key
+     *
      * @param key
      * @param newCount
      */
@@ -58,7 +59,6 @@ public class ShowNotifications {
     }
 
     /**
-     *
      * @return
      */
     public SharedPreferences getPreferences() {

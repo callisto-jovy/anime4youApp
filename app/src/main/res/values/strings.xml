@@ -20,24 +20,17 @@
     <string name="global_video">Video</string>
     <string name="global_notifications">Notifications</string>
 
-
-    <!-- Preferences -->
     <string name="download_delay">Download delay (seconds)</string>
     <string name="offline_mode">Offline mode</string>
-    <string name="offline_mode_attachment_summary_on">Anime covers and information will be stored in storage, maybe
-        resulting in higher storage usage.
-        Image load-times will be longer
+    <string name="offline_mode_attachment_summary_on">Show covers and information will be stored in storage, thus
+        resulting in higher storage usage. In addition image load-times will be slower.
     </string>
     <string name="offline_mode_attachment_summary_off">Images will only be cached. If cache is cleared and device is not
         connected to the internet, no images will be loaded.
     </string>
     <string name="dark_mode_toggle">Use Dark Mode</string>
-
     <string name="anime_notifications_manage">Manage Anime notifications</string>
 
-
-
-    <!-- Sync Preferences -->
     <string name="check_list_for_existing">Check list for existing Anime</string>
     <string name="video_fill_mode">Video stretch mode</string>
     <string name="attachment_summary_on">Checks if Anime already exists. Still accepts sub/dub</string>

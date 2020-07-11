@@ -23,20 +23,25 @@ public class DownloadTracker {
 
     private final File trackerFile;
 
-    public DownloadTracker(final Context context) {
+    public DownloadTracker(Context context) {
         this.trackerFile = new File(context.getFilesDir(), "DownloadTracker.xml");
         Logger.log("Download Tracker set up", Logger.LogType.INFO);
+        try {
+            trackerFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * Submit track to tracker list
+     *
      * @param information string to add
      */
     public void submitTrack(final String information) {
-        @SuppressLint("SimpleDateFormat") String time = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z").format(new Date(System.currentTimeMillis()));
-        String track = time + "\n" + information + "\n";
-
-        try (FileOutputStream fos = new FileOutputStream(trackerFile, true)) {
+        @SuppressLint("SimpleDateFormat") final String time = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z").format(new Date(System.currentTimeMillis()));
+        final String track = time + "\n" + information + "\n";
+        try (final FileOutputStream fos = new FileOutputStream(trackerFile, true)) {
             fos.write(track.getBytes());
             fos.flush();
         } catch (IOException e) {
@@ -46,6 +51,11 @@ public class DownloadTracker {
 
     public void clearTrack() {
         Logger.log("Clearing track: " + trackerFile.delete(), Logger.LogType.INFO);
+        try {
+            trackerFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

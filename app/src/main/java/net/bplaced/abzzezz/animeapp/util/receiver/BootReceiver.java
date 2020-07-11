@@ -16,14 +16,14 @@ public class BootReceiver extends BroadcastReceiver {
 
     /**
      * Gets triggered whenever the phone is restarted, restarts alarm
+     *
      * @param context
      * @param intent
      */
     @Override
     public void onReceive(Context context, Intent intent) {
         if ("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
-            Intent serviceIntent = new Intent(context, NotificationService.class);
-            context.startService(serviceIntent);
+            context.startService(new Intent(context, NotificationService.class));
             Toast.makeText(context, "Anime Notification service has started", Toast.LENGTH_SHORT).show();
         }
     }

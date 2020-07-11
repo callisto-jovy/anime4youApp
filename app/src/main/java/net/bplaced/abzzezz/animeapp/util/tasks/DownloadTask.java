@@ -36,17 +36,17 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
 
     private final SelectedActivity application;
     private final int[] count;
+    private final String url;
+    private final String name;
     private NotificationManagerCompat notificationManagerCompat;
     private NotificationCompat.Builder notification;
     private int notifyID;
     private boolean cancel;
     private FileOutputStream fileOutputStream;
     private File outFile;
-    private final String url;
-    private final String name;
 
 
-    public DownloadTask(final SelectedActivity application, final String url, final String name, final int[] count) {
+    public DownloadTask(SelectedActivity application, String url, String name, int[] count) {
         this.application = application;
         this.name = name;
         this.url = url;
@@ -91,21 +91,17 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
     public void onComplete(String result) {
         //Cancel notification
         notificationManagerCompat.cancel(notifyID);
-        //Add to download tracker
-        if (!isCancelled())
-            AnimeAppMain.getInstance().getDownloadTracker().submitTrack("Downloaded Episode: " + result);
 
-        this.notification = new NotificationCompat.Builder(application, AnimeAppMain.NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.information).setColor(Color.GREEN).setContentText("Episode-download done")
-                .setContentTitle("Done downloading episode: " + result)
-                .setPriority(NotificationCompat.PRIORITY_MAX);
-
-        //Notify, reuse old id
-        if (!isCancelled()) notificationManagerCompat.notify(notifyID, notification.build());
-        //Reset adapter
-        application.resetAdapter();
-        //Delay and start if not cancelled
         if (!isCancelled()) {
+            AnimeAppMain.getInstance().getDownloadTracker().submitTrack("Downloaded Episode: " + result);
+            //Create new "download-done" notification
+            this.notification = new NotificationCompat.Builder(application, AnimeAppMain.NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.information).setColor(Color.GREEN).setContentText("Episode-download done")
+                    .setContentTitle("Done downloading episode: " + result)
+                    .setPriority(NotificationCompat.PRIORITY_MAX);
+            //Notify, reuse old id
+            notificationManagerCompat.notify(notifyID, notification.build());
+            //Increase count
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 if (count[0] < count[2]) {
                     count[0]++;
@@ -114,9 +110,9 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
                 }
             }, Long.parseLong(PreferenceManager.getDefaultSharedPreferences(application).getString("download_delay", "0")) * 1000);
         }
-        /*
-         * Check if stopped
-         */
+
+        application.refreshAdapter();
+        //Set cancelled to false
         if (isCancelled()) {
             Logger.log("Threading was stopped. Cancelled stop, after further downloading was stopped", Logger.LogType.INFO);
             cancel = false;
@@ -134,7 +130,7 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
 
         final Intent notificationActionIntent = new Intent(application, StopDownloadReceiver.class);
         notificationActionIntent.setData(Uri.parse("" + notifyID));
-        Logger.log("Assigned thread id:" + notifyID, Logger.LogType.INFO);
+        Logger.log("Assigned thread id: " + notifyID, Logger.LogType.INFO);
         //Put object key
         IntentHelper.addObjectForKey(this, String.valueOf(notifyID));
         final PendingIntent stopDownloadingPendingIntent = PendingIntent.getBroadcast(application, 1, notificationActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -162,12 +158,12 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
         try {
             fileOutputStream.flush();
             fileOutputStream.close();
-            application.resetAdapter();
+            application.refreshAdapter();
         } catch (IOException e) {
             Logger.log("Error closing task stream", Logger.LogType.ERROR);
             e.printStackTrace();
         }
-        //Set canceled true
+        //Set cancelled true
         this.cancel = true;
         Logger.log("Task cancelled, Streams flushed", Logger.LogType.INFO);
         outFile.delete();
