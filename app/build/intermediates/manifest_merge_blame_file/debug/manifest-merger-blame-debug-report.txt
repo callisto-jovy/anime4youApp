@@ -1,0 +1,202 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="net.bplaced.abzzezz.animeapp"
+4    android:versionCode="12"
+5    android:versionName="12" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="25"
+8-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="30" />
+9-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml
+10
+11    <!-- Permissions -->
+12    <uses-permission android:name="android.permission.INTERNET" />
+12-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:6:5-66
+12-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:6:22-64
+13    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+13-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:7:5-79
+13-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:7:22-77
+14    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+14-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:8:5-80
+14-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:8:22-78
+15    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+15-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:9:5-78
+15-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:9:22-76
+16    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+16-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:10:5-75
+16-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:10:22-73
+17    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+17-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:9:5-78
+17-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:9:22-76
+18    <uses-permission android:name="android.permission.BLUETOOTH" />
+18-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:12:5-67
+18-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:12:22-65
+19    <uses-permission android:name="android.permission.WAKE_LOCK" />
+19-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:13:5-67
+19-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:13:22-65
+20    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+20-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:14:5-77
+20-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:14:22-75
+21    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+21-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:15:5-80
+21-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:15:22-78
+22    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+22-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:16:5-76
+22-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:16:22-74
+23    <!-- Permissions -->
+24    <!-- Application tag -->
+25    <application
+25-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:20:5-91:19
+26        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+26-->[androidx.core:core:1.3.0] E:\Code\gradle\caches\transforms-2\files-2.1\329481cfff2cdb40b031ea3d3ebd361c\core-1.3.0\AndroidManifest.xml:24:18-86
+27        android:debuggable="true"
+28        android:extractNativeLibs="false"
+29        android:icon="@mipmap/appimage"
+29-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:21:13-44
+30        android:installLocation="preferExternal"
+30-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:22:13-53
+31        android:label="@string/app_name"
+31-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:23:13-45
+32        android:roundIcon="@mipmap/appimage"
+32-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:24:13-49
+33        android:supportsRtl="true"
+33-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:25:13-39
+34        android:testOnly="true"
+35        android:theme="@style/DarkTheme"
+35-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:26:13-45
+36        android:usesCleartextTraffic="true" >
+36-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:27:13-48
+37
+38        <!-- Activities -->
+39        <activity
+39-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:29:9-31:20
+40            android:name="net.bplaced.abzzezz.animeapp.activities.extra.PlayerActivity"
+40-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:29:19-66
+41            android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection" >
+41-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:30:19-96
+42        </activity>
+43        <activity
+43-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:33:9-35:20
+44            android:name="net.bplaced.abzzezz.animeapp.activities.extra.StreamPlayer"
+44-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:33:19-64
+45            android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection" >
+45-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:34:19-96
+46        </activity>
+47        <activity
+47-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:37:9-40:63
+48            android:name="net.bplaced.abzzezz.animeapp.activities.main.DrawerMainMenu"
+48-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:38:17-63
+49            android:label="@string/title_activity_drawer_main_menu"
+49-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:39:17-72
+50            android:theme="@style/DarkTheme.NoActionBar" />
+50-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:40:17-61
+51        <activity android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity" />
+51-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:41:9-77
+51-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:41:19-75
+52        <activity
+52-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:43:9-50:20
+53            android:name="net.bplaced.abzzezz.animeapp.activities.extra.SplashScreen"
+53-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:44:17-62
+54            android:label="@string/app_name" >
+54-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:45:17-49
+55            <intent-filter>
+55-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:46:13-49:29
+56                <action android:name="android.intent.action.MAIN" />
+56-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:47:17-68
+56-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:47:25-66
+57
+58                <category android:name="android.intent.category.LAUNCHER" />
+58-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:48:17-76
+58-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:48:27-74
+59            </intent-filter>
+60        </activity>
+61        <!-- Providers -->
+62        <provider
+63            android:name="androidx.core.content.FileProvider"
+63-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:53:17-66
+64            android:authorities="net.bplaced.abzzezz.animeapp.provider"
+64-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:54:17-64
+65            android:exported="false"
+65-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:55:17-41
+66            android:grantUriPermissions="true" >
+66-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:56:17-51
+67            <meta-data
+67-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:57:13-59:61
+68                android:name="android.support.FILE_PROVIDER_PATHS"
+68-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:58:21-71
+69                android:resource="@xml/provider_paths" />
+69-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:59:21-59
+70        </provider>
+71        <!-- Font -->
+72        <meta-data
+72-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:62:9-64:60
+73            android:name="preloaded_fonts"
+73-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:63:17-47
+74            android:resource="@array/preloaded_fonts" />
+74-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:64:17-58
+75
+76        <!-- Receiver and service -->
+77        <receiver
+77-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:67:9-75:20
+78            android:name="net.bplaced.abzzezz.animeapp.util.receiver.BootReceiver"
+78-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:68:17-59
+79            android:enabled="true"
+79-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:69:17-39
+80            android:exported="true"
+80-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:70:17-40
+81            android:label="BootReceiver" >
+81-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:71:17-45
+82            <intent-filter>
+82-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:72:13-74:29
+83                <action android:name="android.intent.action.BOOT_COMPLETED" />
+83-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:73:17-78
+83-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:73:25-76
+84            </intent-filter>
+85        </receiver>
+86        <receiver
+86-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:77:9-82:20
+87            android:name="net.bplaced.abzzezz.animeapp.util.receiver.Alarm"
+87-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:78:43-78
+88            android:enabled="true"
+88-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:77:19-41
+89            android:exported="true" >
+89-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:78:19-42
+90            <intent-filter>
+90-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:72:13-74:29
+91                <action android:name="android.intent.action.BOOT_COMPLETED" />
+91-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:73:17-78
+91-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:73:25-76
+92            </intent-filter>
+93        </receiver>
+94
+95        <service
+95-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:83:9-88:11
+96            android:name="net.bplaced.abzzezz.animeapp.util.animenotifications.NotificationService"
+96-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:87:17-76
+97            android:description="@string/anime_notification_service_description"
+97-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:85:17-85
+98            android:enabled="true"
+98-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:86:17-39
+99            android:exported="true"
+99-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:86:40-63
+100            android:label="Anime Notification Service" />
+100-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:84:17-59
+101
+102        <receiver android:name="net.bplaced.abzzezz.animeapp.util.receiver.StopDownloadReceiver" />
+102-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:89:9-71
+102-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:89:19-69
+103        <!-- Receiver and Service -->
+104        <provider
+104-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:25:9-29:43
+105            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
+105-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:26:13-79
+106            android:authorities="net.bplaced.abzzezz.animeapp.lifecycle-process"
+106-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:27:13-69
+107            android:exported="false"
+107-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:28:13-37
+108            android:multiprocess="true" />
+108-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:29:13-40
+109    </application>
+110
+111</manifest>

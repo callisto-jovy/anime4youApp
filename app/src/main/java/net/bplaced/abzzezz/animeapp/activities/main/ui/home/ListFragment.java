@@ -76,8 +76,8 @@ public class ListFragment extends Fragment {
             return true;
         });
 
-        final FloatingActionButton addAidButton = root.findViewById(R.id.add_aid);
-        addAidButton.setOnClickListener(v -> {
+        final FloatingActionButton addButton = root.findViewById(R.id.add_aid);
+        addButton.setOnClickListener(v -> {
             final InputDialogBuilder inputDialogBuilder = new InputDialogBuilder(new InputDialogBuilder.InputDialogListener() {
                 @Override
                 public void onDialogInput(String text) {

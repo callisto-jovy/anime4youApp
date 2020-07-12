@@ -57,8 +57,8 @@ public class Alarm extends BroadcastReceiver {
                             public void onComplete(JSONObject result) throws Exception {
                                 int newNumber = result.getInt("episodes");
                                 if (newNumber > Integer.parseInt(showNotifications.getPreferences().getString(key, "1"))) {
-                                    showNotifications.updateKey(key, newNumber);
                                     sendNotification(context, result);
+                                    showNotifications.updateKey(key, newNumber);
                                 }
                             }
 
@@ -88,12 +88,12 @@ public class Alarm extends BroadcastReceiver {
      * @param result  Anime information
      */
     private void sendNotification(final Context context, final JSONObject result) throws JSONException {
+        Logger.log("New episode available", Logger.LogType.INFO);
         final NotificationCompat.Builder notificationCompat = new NotificationCompat.Builder(context, AnimeAppMain.NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.information).setContentText("New episode for anime: " + result.getString("Name") + " available!")
+                .setSmallIcon(R.drawable.information).setContentText("New episode for anime: " + result.getString("title") + " available!")
                 .setContentTitle("New episode available!")
                 .setPriority(NotificationCompat.PRIORITY_MAX);
-        final NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(result.getInt("episode"), notificationCompat.build());
+        NotificationManagerCompat.from(context).notify((int) (System.currentTimeMillis() % 1000), notificationCompat.build());
     }
 
     /**

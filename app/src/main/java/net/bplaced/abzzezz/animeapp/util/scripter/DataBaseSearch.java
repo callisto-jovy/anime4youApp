@@ -8,7 +8,8 @@ package net.bplaced.abzzezz.animeapp.util.scripter;
 
 import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
-import ga.abzzezz.util.stringing.StringUtil;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,15 +23,31 @@ public class DataBaseSearch {
      * @return
      */
 
-    public String getSubstringFromDB(final String aid) {
-        String realSeries = "";
+    public JSONObject getShowDetails(final String aid) {
+        final String search = "{\"aid\":\"" + aid + "\"";
         try {
-            final String line = URLUtil.getURLContentAsString(new URL(StringHandler.dataBase));
-            realSeries = StringUtil.getStringFromLong(line, "\"aid\"" + ":" + "\"" + aid + "\"", "}");
-        } catch (StringIndexOutOfBoundsException | MalformedURLException e) {
+            return new JSONObject(getShowDetails(search, StringHandler.DATABASE));
+        } catch (StringIndexOutOfBoundsException | MalformedURLException | JSONException e) {
             Logger.log("Checking Database: " + e.getMessage(), Logger.LogType.ERROR);
-            StringHandler.dataBase = "http://abzzezz.bplaced.net/list.txt";
+            try {
+                return new JSONObject(getShowDetails(search, StringHandler.BACKUP_DATABASE));
+            } catch (JSONException | MalformedURLException jsonException) {
+                jsonException.printStackTrace();
+                return null;
+            }
         }
-        return realSeries;
+    }
+
+    /**
+     *
+     * @param search
+     * @param url
+     * @return
+     * @throws MalformedURLException
+     */
+    private String getShowDetails(final String search, final String url) throws MalformedURLException {
+        final StringBuilder builder = new StringBuilder(URLUtil.getURLContentAsString(new URL(url)));
+        final int start = builder.indexOf(search);
+        return builder.substring(start, builder.indexOf("}", start) + 1);
     }
 }
