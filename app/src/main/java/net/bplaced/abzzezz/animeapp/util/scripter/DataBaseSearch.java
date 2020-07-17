@@ -6,47 +6,31 @@
 
 package net.bplaced.abzzezz.animeapp.util.scripter;
 
-import ga.abzzezz.util.data.URLUtil;
-import ga.abzzezz.util.logging.Logger;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.stream.Collectors;
 
 
 public class DataBaseSearch {
 
 
     /**
-     * @param aid
-     * @return
-     */
-
-    public JSONObject getShowDetails(final String aid) {
-        final String search = "{\"aid\":\"" + aid + "\"";
-        try {
-            return new JSONObject(getShowDetails(search, StringHandler.DATABASE));
-        } catch (StringIndexOutOfBoundsException | MalformedURLException | JSONException e) {
-            Logger.log("Checking Database: " + e.getMessage(), Logger.LogType.ERROR);
-            try {
-                return new JSONObject(getShowDetails(search, StringHandler.BACKUP_DATABASE));
-            } catch (JSONException | MalformedURLException jsonException) {
-                jsonException.printStackTrace();
-                return null;
-            }
-        }
-    }
-
-    /**
-     *
      * @param search
      * @param url
      * @return
      * @throws MalformedURLException
      */
-    private String getShowDetails(final String search, final String url) throws MalformedURLException {
-        final StringBuilder builder = new StringBuilder(URLUtil.getURLContentAsString(new URL(url)));
+    public final String getShowDetails(final String search, final String url) throws IOException {
+        final HttpsURLConnection urlConnection = (HttpsURLConnection) new URL(url).openConnection();
+        urlConnection.addRequestProperty("User-Agent", StringHandler.USER_AGENT);
+        urlConnection.setConnectTimeout(4000);
+        urlConnection.connect();
+
+        final StringBuilder builder = new StringBuilder(new BufferedReader(new InputStreamReader(urlConnection.getInputStream())).lines().collect(Collectors.joining()));
         final int start = builder.indexOf(search);
         return builder.substring(start, builder.indexOf("}", start) + 1);
     }

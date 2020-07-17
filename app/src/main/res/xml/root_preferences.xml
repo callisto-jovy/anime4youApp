@@ -42,7 +42,7 @@
                 android:entryValues="@array/video_player_values" android:key="video_player_preference"/>
     </PreferenceCategory>
     <PreferenceCategory
-            android:title="Offline">
+            android:title="Storage">
 
         <SwitchPreference
                 android:defaultValue="false"
@@ -53,6 +53,11 @@
         <Preference android:title="Clear offline images"
                     android:key="clear_offline_images_button"
                     android:summary="Clear all offline images"/>
+
+        <Preference android:title="Copy files to sd card"
+                    android:key="copy_sd_card"/>
+
+
         <PreferenceCategory
                 android:title="@string/download_tracker">
 

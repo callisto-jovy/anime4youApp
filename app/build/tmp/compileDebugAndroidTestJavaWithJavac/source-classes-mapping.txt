@@ -1,0 +1,2 @@
+net/bplaced/abzzezz/animeapp/test/BuildConfig.java
+ net.bplaced.abzzezz.animeapp.test.BuildConfig

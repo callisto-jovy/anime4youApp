@@ -66,7 +66,7 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
      */
     @Override
     public String call() throws Exception {
-        Logger.log("New download thread started" + notifyID, Logger.LogType.INFO);
+        Logger.log("New download thread started: " + notifyID, Logger.LogType.INFO);
         final File outDir = new File(application.getFilesDir(), name);
 
         if (!outDir.exists()) outDir.mkdir();

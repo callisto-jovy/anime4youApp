@@ -103,7 +103,7 @@ public class ListFragment extends Fragment {
             return;
         }
 
-        new TaskExecutor().executeAsync(new DataBaseTask(savedInformation.getString("id"), dataBaseSearch), new TaskExecutor.Callback<JSONObject>() {
+        new TaskExecutor().executeAsync(new DataBaseTask(savedInformation, dataBaseSearch), new TaskExecutor.Callback<JSONObject>() {
             @Override
             public void onComplete(JSONObject result) {
                 startActivity(intent.putExtra("details", result.toString()));
