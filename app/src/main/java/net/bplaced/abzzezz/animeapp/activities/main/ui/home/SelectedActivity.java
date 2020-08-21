@@ -45,6 +45,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 public class SelectedActivity extends AppCompatActivity {
@@ -65,11 +66,11 @@ public class SelectedActivity extends AppCompatActivity {
          */
         try {
             final JSONObject inf = new JSONObject(getIntent().getStringExtra("details"));
-            this.title = inf.getString("title");
-            this.episodes = inf.getInt("episodes");
-            this.id = inf.getInt("id");
+            this.title = inf.getString(StringHandler.SHOW_TITLE);
+            this.episodes = inf.getInt(StringHandler.SHOW_EPISODES_COUNT);
+            this.id = inf.getInt(StringHandler.SHOW_ID);
             this.file = new File(getFilesDir(), title);
-            final String coverUrl = inf.getString("image_url");
+            final String coverUrl = inf.getString(StringHandler.SHOW_IMAGE_URL);
 
             //Set text etc.
             ((TextView) findViewById(R.id.selected_anime_name)).setText(title);
@@ -129,7 +130,7 @@ public class SelectedActivity extends AppCompatActivity {
      * @return
      */
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.anime_selected_toolbar, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -160,13 +161,13 @@ public class SelectedActivity extends AppCompatActivity {
      * @return
      */
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         int itemID = item.getItemId();
         switch (itemID) {
             case R.id.download_bound:
                 final InputDialogBuilder dialogBuilder = new InputDialogBuilder(new InputDialogListener() {
                     @Override
-                    public void onDialogInput(String text) {
+                    public void onDialogInput(final String text) {
                         downloadEpisode(getLatestEpisode(), Integer.parseInt(text), 0);
                     }
 
@@ -176,7 +177,7 @@ public class SelectedActivity extends AppCompatActivity {
                 });
                 dialogBuilder.showInput("Download bound", "Enter bound", this);
                 break;
-            case R.id.toogle_notifications_anime:
+            case R.id.toogle_notifications_show:
                 //Add to notification manager
                 AnimeAppMain.getInstance().getAnimeNotifications().add(title.concat(StringUtil.splitter) + id, String.valueOf(episodes));
                 break;
@@ -228,7 +229,7 @@ public class SelectedActivity extends AppCompatActivity {
 
         new VideoFindTask(id, count[1]).executeAsync(new TaskExecutor.Callback<String>() {
             @Override
-            public void onComplete(String result) throws Exception {
+            public void onComplete(String result) {
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
@@ -355,18 +356,20 @@ public class SelectedActivity extends AppCompatActivity {
      */
     private void playEpisodeFromSave(final int index) {
         Intent intent = null;
-        final File file = getEpisodeFile(index);
-        int mode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("video_player_preference", "0"));
-        if (mode == 0) {
-            intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", file), "video/mp4");
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        } else if (mode == 1) {
-            intent = new Intent(getApplicationContext(), PlayerActivity.class);
-            intent.putExtra("path", file.getAbsolutePath());
+        final Optional<File> videoFile = getEpisodeFile(index);
+
+        if (videoFile.isPresent()) {
+            final int mode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("video_player_preference", "0"));
+            if (mode == 0) {
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", videoFile.get()), "video/mp4");
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            } else if (mode == 1) {
+                intent = new Intent(getApplicationContext(), PlayerActivity.class);
+                intent.putExtra("path", videoFile.get().getAbsolutePath());
+            }
+            startActivity(Objects.requireNonNull(intent));
         }
-        startActivity(Objects.requireNonNull(intent));
-        finish();
     }
 
     /**
@@ -384,53 +387,13 @@ public class SelectedActivity extends AppCompatActivity {
      * @param index
      * @return
      */
-    public File getEpisodeFile(final int index) {
+    public Optional<File> getEpisodeFile(final int index) {
         if (file.listFiles() != null) {
-            return Arrays.stream(file.listFiles()).filter(file -> file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index))).findFirst().get();
+            return Arrays.stream(file.listFiles()).filter(file -> file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index))).findFirst();
         }
-        return null;
+        return Optional.empty();
     }
 
-    /*
-    Method no longer needed
-    public static List<String> sortWithNumberInName(List<String> in) {
-        in.sort(Comparator.comparingInt((o) -> StringUtil.extractNumberI(o.substring(o.indexOf("::") + 2, o.indexOf(".mp4")))));
-        return in;
-    }
-
-     */
-
-    /*
-    private BroadcastReceiver broadcastReceiver;
-    public void download(String url, String fileName) {
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        File file = new File(Environment.DIRECTORY_DOWNLOADS, "Move");
-        request.setDescription("Downloading File: " + fileName);
-        request.setTitle(fileName);
-        request.setDestinationInExternalPublicDir(file.getAbsolutePath(), fileName + ".mp4");
-        DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-        downloadManager.enqueue(request);
-        this.broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if (action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
-                    long downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-                    Cursor cursor = downloadManager.query(new DownloadManager.Query().setFilterById(downloadId));
-                    if (cursor.moveToFirst()) {
-                        File src = new File(Uri.parse(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI))).getPath());
-                        File newOut = new File(getFilesDir(), fileName.substring(0, fileName.indexOf("::")));
-                        if (!newOut.exists()) newOut.mkdir();
-                        FileUtil.copyFile(src, new File(newOut, src.getName()), true);
-                    }
-
-                    cursor.close();
-                }
-            }
-        };
-        registerReceiver(broadcastReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-    }
-    */
 
     /**
      * Episode adapter
@@ -440,7 +403,7 @@ public class SelectedActivity extends AppCompatActivity {
         private final Context context;
         private final int episodes;
 
-        public EpisodeAdapter(int episodes, Context context) {
+        public EpisodeAdapter(final int episodes, final Context context) {
             this.episodes = episodes;
             this.context = context;
         }
@@ -497,8 +460,11 @@ public class SelectedActivity extends AppCompatActivity {
          * @param index
          */
         public void deleteItem(final int index) {
-            Logger.log("Deleted: " + getEpisodeFile(index).delete(), Logger.LogType.INFO);
-            notifyDataSetChanged();
+            final Optional<File> videoFile = getEpisodeFile(index);
+            if (videoFile.isPresent()) {
+                Logger.log("Deleted: " + videoFile.get(), Logger.LogType.INFO);
+                notifyDataSetChanged();
+            }
         }
     }
 }

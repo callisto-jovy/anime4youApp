@@ -9,7 +9,7 @@
         android:background="@color/primaryColorDark">
 
     <PreferenceCategory
-            app:title="@string/global_options">
+            app:title="@string/global_settings">
 
         <SwitchPreferenceCompat
                 app:key="dark_mode"
@@ -27,6 +27,11 @@
                 app:useSimpleSummaryProvider="true"
                 app:summary="Delay between downloads in seconds"
                 app:defaultValue="0"/>
+
+        <SeekBarPreference
+                app:key="image_compression"
+                app:title="@string/image_compression_strength"
+                app:defaultValue="50"/>
 
     </PreferenceCategory>
     <PreferenceCategory

@@ -55,7 +55,7 @@ public class Alarm extends BroadcastReceiver {
                         new TaskExecutor.Callback<JSONObject>() {
                             @Override
                             public void onComplete(JSONObject result) throws Exception {
-                                int newNumber = result.getInt("episodes");
+                                int newNumber = result.getInt(StringHandler.SHOW_EPISODES_COUNT);
                                 if (newNumber > Integer.parseInt(showNotifications.getPreferences().getString(key, "1"))) {
                                     sendNotification(context, result);
                                     showNotifications.updateKey(key, newNumber);

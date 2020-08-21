@@ -22,7 +22,6 @@ import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 public class ChangelogFragment extends Fragment {
 
@@ -30,12 +29,7 @@ public class ChangelogFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.simplelist_layout, container, false);
-        new TaskExecutor().executeAsync(new Callable<ArrayList<String>>() {
-            @Override
-            public ArrayList<String> call() throws Exception {
-                return URLUtil.getURLContentAsArray(new URL(StringHandler.APP_CHANGELOG_TXT));
-            }
-        }, new TaskExecutor.Callback<ArrayList<String>>() {
+        new TaskExecutor().executeAsync(() -> URLUtil.getURLContentAsArray(new URL(StringHandler.APP_CHANGELOG_TXT)), new TaskExecutor.Callback<ArrayList<String>>() {
             @Override
             public void onComplete(ArrayList<String> result) {
                 getActivity().runOnUiThread(() -> {

@@ -36,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.Optional;
 
 public class ListFragment extends Fragment {
 
@@ -53,13 +54,7 @@ public class ListFragment extends Fragment {
         /*
          * Set onclick listener, if clicked pass information through to selected anime.
          */
-        gridView.setOnItemClickListener((parent, view, position, id) -> {
-            try {
-                getInformation(position, new Intent(getActivity(), SelectedActivity.class));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
+        gridView.setOnItemClickListener((parent, view, position, id) -> getInformation(position, new Intent(getActivity(), SelectedActivity.class)));
         /*
          * Set on long hold listener, then block the old one
          */
@@ -90,12 +85,24 @@ public class ListFragment extends Fragment {
             });
             inputDialogBuilder.showInput("Enter AID", "Enter AID to add anime", getActivity());
         });
+
+        if (AnimeAppMain.getInstance().isVersionOutdated()) {
+            new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
+                    .setTitleText("Outdated version")
+                    .setContentText("Your app-version is outdated, please update it now!")
+                    .setCancelText("Close").setCancelClickListener(IonAlert::dismissWithAnimation)
+                    .show();
+        }
         return root;
     }
 
-
-    private void getInformation(final int index, final Intent intent) throws JSONException {
-        JSONObject savedInformation = AnimeAppMain.getInstance().getShowSaver().getShow(index);
+    /**
+     * Get shows information from index
+     * @param index show index
+     * @param intent intent
+     */
+    private void getInformation(final int index, final Intent intent) {
+        final Optional<JSONObject> savedInformation = AnimeAppMain.getInstance().getShowSaver().getShow(index);
 
         if (!StringHandler.isOnline(getActivity().getApplicationContext())) {
             startActivity(intent.putExtra("details", savedInformation.toString()));
@@ -103,9 +110,10 @@ public class ListFragment extends Fragment {
             return;
         }
 
-        new TaskExecutor().executeAsync(new DataBaseTask(savedInformation, dataBaseSearch), new TaskExecutor.Callback<JSONObject>() {
+        savedInformation.ifPresent(jsonObject -> new TaskExecutor().executeAsync(new DataBaseTask(jsonObject, dataBaseSearch), new TaskExecutor.Callback<JSONObject>() {
             @Override
             public void onComplete(JSONObject result) {
+                AnimeAppMain.getInstance().getShowSaver().refreshShow(result, index);
                 startActivity(intent.putExtra("details", result.toString()));
                 getActivity().finish();
             }
@@ -114,7 +122,7 @@ public class ListFragment extends Fragment {
             public void preExecute() {
                 Logger.log("Fetching anime information", Logger.LogType.INFO);
             }
-        });
+        }));
     }
 
     class AnimeAdapter extends BaseAdapter {
@@ -122,7 +130,7 @@ public class ListFragment extends Fragment {
         private final Context context;
         private int size;
 
-        public AnimeAdapter(int size, Context context) {
+        public AnimeAdapter(int size, final Context context) {
             this.size = size;
             this.context = context;
         }
@@ -146,12 +154,15 @@ public class ListFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             final ImageView coverImage = new ImageView(context);
             try {
-                final JSONObject jsonObject = AnimeAppMain.getInstance().getShowSaver().getShow(position);
-                final String imageURL = jsonObject.getString("image_url");
-                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("offline_mode", false)) {
-                    OfflineImageLoader.loadImage(imageURL, jsonObject.getString("id"), coverImage, getContext());
-                } else {
-                    Picasso.with(context).load(imageURL).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(coverImage);
+                final Optional<JSONObject> optionalJSONObject = AnimeAppMain.getInstance().getShowSaver().getShow(position);
+                if (optionalJSONObject.isPresent()) {
+                    final String imageURL = optionalJSONObject.get().getString(StringHandler.SHOW_IMAGE_URL);
+
+                    if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("offline_mode", false)) {
+                        OfflineImageLoader.loadImage(imageURL, optionalJSONObject.get().getString(StringHandler.SHOW_ID), coverImage, getContext());
+                    } else {
+                        Picasso.with(context).load(imageURL).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(coverImage);
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -173,10 +184,12 @@ public class ListFragment extends Fragment {
                                 for (final File file : dir.listFiles()) {
                                     Logger.log("Deleting file: " + file.delete(), Logger.LogType.INFO);
                                 }
+                                Toast.makeText(context, "Remaining files deleted.", Toast.LENGTH_SHORT).show();
+                                ionAlert.dismissWithAnimation();
                             }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
                             .show();
                 }
-            } catch (JSONException e) {
+            } catch (final JSONException e) {
                 e.printStackTrace();
             }
             AnimeAppMain.getInstance().getShowSaver().remove(index);
@@ -185,13 +198,13 @@ public class ListFragment extends Fragment {
 
         public void addItem(final String item) {
             if (!StringHandler.isOnline(getActivity())) {
-                Toast.makeText(context, "You are currently not connected to the internet, returning", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "You are currently not connected to the internet", Toast.LENGTH_LONG).show();
                 return;
             }
             //Create new database request. get episodes, imageURL, name
             new TaskExecutor().executeAsync(new DataBaseTask(item, dataBaseSearch), new TaskExecutor.Callback<JSONObject>() {
                 @Override
-                public void onComplete(JSONObject result) throws Exception {
+                public void onComplete(final JSONObject result) throws Exception {
                     size++;
                     AnimeAppMain.getInstance().getShowSaver().addShow(result);
                     notifyDataSetChanged();

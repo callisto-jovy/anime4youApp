@@ -7,6 +7,6 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Toggle notifications for new episodes" android:id="@+id/toogle_notifications_anime"/>
+    <item android:title="Toggle notifications for new episodes" android:id="@+id/toogle_notifications_show"/>
     <item android:title="Download Bound" android:id="@+id/download_bound"/>
 </menu>

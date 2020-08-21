@@ -2,7 +2,7 @@
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
 3    package="net.bplaced.abzzezz.animeapp"
 4    android:versionCode="12"
-5    android:versionName="12" >
+5    android:versionName="12.0.1" >
 6
 7    <uses-sdk
 8        android:minSdkVersion="25"
@@ -49,7 +49,7 @@
 25    <application
 25-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:20:5-91:19
 26        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-26-->[androidx.core:core:1.3.0] E:\Code\gradle\caches\transforms-2\files-2.1\329481cfff2cdb40b031ea3d3ebd361c\core-1.3.0\AndroidManifest.xml:24:18-86
+26-->[androidx.core:core:1.3.0] E:\Code\gradle\caches\transforms-2\files-2.1\fcd12b6571c2f8aeb50729350f4f553d\core-1.3.0\AndroidManifest.xml:24:18-86
 27        android:debuggable="true"
 28        android:extractNativeLibs="false"
 29        android:icon="@mipmap/appimage"
@@ -188,15 +188,15 @@
 102-->E:\Code\Projects\anime4youApp\app\src\main\AndroidManifest.xml:89:19-69
 103        <!-- Receiver and Service -->
 104        <provider
-104-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:25:9-29:43
+104-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\133bb89c28043ecd08f3196e3ec3f2e5\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:25:9-29:43
 105            android:name="androidx.lifecycle.ProcessLifecycleOwnerInitializer"
-105-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:26:13-79
+105-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\133bb89c28043ecd08f3196e3ec3f2e5\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:26:13-79
 106            android:authorities="net.bplaced.abzzezz.animeapp.lifecycle-process"
-106-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:27:13-69
+106-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\133bb89c28043ecd08f3196e3ec3f2e5\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:27:13-69
 107            android:exported="false"
-107-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:28:13-37
+107-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\133bb89c28043ecd08f3196e3ec3f2e5\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:28:13-37
 108            android:multiprocess="true" />
-108-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\79f3fba9046a2d4adc059a39bbc3be7d\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:29:13-40
+108-->[androidx.lifecycle:lifecycle-process:2.2.0] E:\Code\gradle\caches\transforms-2\files-2.1\133bb89c28043ecd08f3196e3ec3f2e5\jetified-lifecycle-process-2.2.0\AndroidManifest.xml:29:13-40
 109    </application>
 110
 111</manifest>

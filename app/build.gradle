@@ -9,7 +9,7 @@ android {
         minSdkVersion 25
         targetSdkVersion 30
         versionCode 12
-        versionName "12"
+        versionName "12.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     packagingOptions {

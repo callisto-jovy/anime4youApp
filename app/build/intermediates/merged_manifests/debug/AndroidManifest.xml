@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.bplaced.abzzezz.animeapp"
     android:versionCode="12"
-    android:versionName="12" >
+    android:versionName="12.0.1" >
 
     <uses-sdk
         android:minSdkVersion="25"

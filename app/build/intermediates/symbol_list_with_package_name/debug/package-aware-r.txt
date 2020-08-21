@@ -2031,7 +2031,7 @@ id title
 id titleDividerNoCustom
 id title_template
 id title_text
-id toogle_notifications_anime
+id toogle_notifications_show
 id top
 id topPanel
 id touch_outside
@@ -2335,10 +2335,11 @@ string exposed_dropdown_menu_content_description
 string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string global_notifications
-string global_options
+string global_settings
 string global_video
 string hide_bottom_view_on_scroll_behavior
 string icon_content_description
+string image_compression_strength
 string menu_anime_list
 string menu_changelog
 string menu_settings

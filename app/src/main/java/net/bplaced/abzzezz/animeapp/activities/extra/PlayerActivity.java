@@ -56,7 +56,7 @@ public class PlayerActivity extends AppCompatActivity {
     public void onBackPressed() {
         simpleExoPlayer.stop();
         simpleExoPlayer.release();
-        Intent intent = new Intent(this, DrawerMainMenu.class);
+        final Intent intent = new Intent(this, DrawerMainMenu.class);
         startActivity(intent);
         finish();
         super.onBackPressed();

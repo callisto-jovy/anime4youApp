@@ -1,7 +1,5 @@
-net/bplaced/abzzezz/animeapp/AnimeAppMain.java
- net.bplaced.abzzezz.animeapp.AnimeAppMain
- net.bplaced.abzzezz.animeapp.AnimeAppMain$1
- net.bplaced.abzzezz.animeapp.AnimeAppMain$1$1
+net/bplaced/abzzezz/animeapp/util/tasks/DownloadTask.java
+ net.bplaced.abzzezz.animeapp.util.tasks.DownloadTask
 net/bplaced/abzzezz/animeapp/activities/extra/PlayerActivity.java
  net.bplaced.abzzezz.animeapp.activities.extra.PlayerActivity
 net/bplaced/abzzezz/animeapp/util/receiver/BootReceiver.java
@@ -12,14 +10,17 @@ net/bplaced/abzzezz/animeapp/util/animenotifications/NotificationService.java
  net.bplaced.abzzezz.animeapp.util.animenotifications.NotificationService
 net/bplaced/abzzezz/animeapp/util/ImageUtil.java
  net.bplaced.abzzezz.animeapp.util.ImageUtil
-net/bplaced/abzzezz/animeapp/util/tasks/DownloadTask.java
- net.bplaced.abzzezz.animeapp.util.tasks.DownloadTask
+net/bplaced/abzzezz/animeapp/util/receiver/Alarm.java
+ net.bplaced.abzzezz.animeapp.util.receiver.Alarm
+ net.bplaced.abzzezz.animeapp.util.receiver.Alarm$1
 net/bplaced/abzzezz/animeapp/BuildConfig.java
  net.bplaced.abzzezz.animeapp.BuildConfig
+net/bplaced/abzzezz/animeapp/activities/main/ui/settings/SettingsFragment.java
+ net.bplaced.abzzezz.animeapp.activities.main.ui.settings.SettingsFragment
+ net.bplaced.abzzezz.animeapp.activities.main.ui.settings.SettingsFragment$SettingsFragmentInner
+ net.bplaced.abzzezz.animeapp.activities.main.ui.settings.SettingsFragment$SettingsFragmentInner$1
 net/bplaced/abzzezz/animeapp/util/tasks/DataBaseTask.java
  net.bplaced.abzzezz.animeapp.util.tasks.DataBaseTask
-net/bplaced/abzzezz/animeapp/activities/extra/StreamPlayer.java
- net.bplaced.abzzezz.animeapp.activities.extra.StreamPlayer
 net/bplaced/abzzezz/animeapp/util/tasks/TaskExecutor.java
  net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor
  net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor$Callback
@@ -28,7 +29,6 @@ net/bplaced/abzzezz/animeapp/activities/main/ui/settings/SettingsFragmentDirecti
 net/bplaced/abzzezz/animeapp/activities/main/ui/chagelog/ChangelogFragment.java
  net.bplaced.abzzezz.animeapp.activities.main.ui.chagelog.ChangelogFragment
  net.bplaced.abzzezz.animeapp.activities.main.ui.chagelog.ChangelogFragment$1
- net.bplaced.abzzezz.animeapp.activities.main.ui.chagelog.ChangelogFragment$2
 net/bplaced/abzzezz/animeapp/util/tasks/VideoFindTask.java
  net.bplaced.abzzezz.animeapp.util.tasks.VideoFindTask
 net/bplaced/abzzezz/animeapp/activities/extra/SplashScreen.java
@@ -48,9 +48,15 @@ net/bplaced/abzzezz/animeapp/util/receiver/StopDownloadReceiver.java
  net.bplaced.abzzezz.animeapp.util.receiver.StopDownloadReceiver
 net/bplaced/abzzezz/animeapp/util/file/Downloader.java
  net.bplaced.abzzezz.animeapp.util.file.Downloader
-net/bplaced/abzzezz/animeapp/util/file/OfflineImageLoader.java
- net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader
- net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader$1
+net/bplaced/abzzezz/animeapp/util/scripter/DataBaseSearch.java
+ net.bplaced.abzzezz.animeapp.util.scripter.DataBaseSearch
+net/bplaced/abzzezz/animeapp/util/scripter/StringHandler.java
+ net.bplaced.abzzezz.animeapp.util.scripter.StringHandler
+net/bplaced/abzzezz/animeapp/activities/main/ui/tracker/DownloadTrackerFragmentDirections.java
+ net.bplaced.abzzezz.animeapp.activities.main.ui.tracker.DownloadTrackerFragmentDirections
+net/bplaced/abzzezz/animeapp/util/InputDialogBuilder.java
+ net.bplaced.abzzezz.animeapp.util.InputDialogBuilder
+ net.bplaced.abzzezz.animeapp.util.InputDialogBuilder$InputDialogListener
 net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity$1
@@ -61,13 +67,6 @@ net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity$3$1
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity$3$1$1
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity$EpisodeAdapter
-net/bplaced/abzzezz/animeapp/activities/main/ui/tracker/DownloadTrackerFragmentDirections.java
- net.bplaced.abzzezz.animeapp.activities.main.ui.tracker.DownloadTrackerFragmentDirections
-net/bplaced/abzzezz/animeapp/util/InputDialogBuilder.java
- net.bplaced.abzzezz.animeapp.util.InputDialogBuilder
- net.bplaced.abzzezz.animeapp.util.InputDialogBuilder$InputDialogListener
-net/bplaced/abzzezz/animeapp/util/file/ShowSaver.java
- net.bplaced.abzzezz.animeapp.util.file.ShowSaver
 net/bplaced/abzzezz/animeapp/util/file/DownloadTracker.java
  net.bplaced.abzzezz.animeapp.util.file.DownloadTracker
 net/bplaced/abzzezz/animeapp/util/scripter/ScriptUtil.java
@@ -78,20 +77,20 @@ net/bplaced/abzzezz/animeapp/activities/main/ui/settings/NotificationsFragment.j
  net.bplaced.abzzezz.animeapp.activities.main.ui.settings.NotificationsFragment
 net/bplaced/abzzezz/animeapp/activities/main/ui/chagelog/ChangelogFragmentDirections.java
  net.bplaced.abzzezz.animeapp.activities.main.ui.chagelog.ChangelogFragmentDirections
-net/bplaced/abzzezz/animeapp/util/scripter/StringHandler.java
- net.bplaced.abzzezz.animeapp.util.scripter.StringHandler
-net/bplaced/abzzezz/animeapp/util/receiver/Alarm.java
- net.bplaced.abzzezz.animeapp.util.receiver.Alarm
- net.bplaced.abzzezz.animeapp.util.receiver.Alarm$1
+net/bplaced/abzzezz/animeapp/util/file/OfflineImageLoader.java
+ net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader
+ net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader$1
+net/bplaced/abzzezz/animeapp/activities/extra/StreamPlayer.java
+ net.bplaced.abzzezz.animeapp.activities.extra.StreamPlayer
+net/bplaced/abzzezz/animeapp/AnimeAppMain.java
+ net.bplaced.abzzezz.animeapp.AnimeAppMain
+ net.bplaced.abzzezz.animeapp.AnimeAppMain$1
+ net.bplaced.abzzezz.animeapp.AnimeAppMain$1$1
 net/bplaced/abzzezz/animeapp/activities/main/ui/home/ListFragment.java
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.ListFragment
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.ListFragment$1
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.ListFragment$2
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.ListFragment$AnimeAdapter
  net.bplaced.abzzezz.animeapp.activities.main.ui.home.ListFragment$AnimeAdapter$1
-net/bplaced/abzzezz/animeapp/util/scripter/DataBaseSearch.java
- net.bplaced.abzzezz.animeapp.util.scripter.DataBaseSearch
-net/bplaced/abzzezz/animeapp/activities/main/ui/settings/SettingsFragment.java
- net.bplaced.abzzezz.animeapp.activities.main.ui.settings.SettingsFragment
- net.bplaced.abzzezz.animeapp.activities.main.ui.settings.SettingsFragment$SettingsFragmentInner
- net.bplaced.abzzezz.animeapp.activities.main.ui.settings.SettingsFragment$SettingsFragmentInner$1
+net/bplaced/abzzezz/animeapp/util/file/ShowSaver.java
+ net.bplaced.abzzezz.animeapp.util.file.ShowSaver

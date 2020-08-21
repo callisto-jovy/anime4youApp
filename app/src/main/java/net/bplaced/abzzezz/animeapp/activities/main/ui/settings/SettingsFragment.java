@@ -7,7 +7,6 @@
 package net.bplaced.abzzezz.animeapp.activities.main.ui.settings;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 
 public class SettingsFragment extends Fragment {
 

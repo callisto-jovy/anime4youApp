@@ -4,58 +4,7 @@
             "outputFile": "E:\\Code\\Projects\\anime4youApp\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-en-rGB\\values-en-rGB.xml",
             "map": [
                 {
-                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\499c5fe0d79c93c465e60b74b989b6d8\\appcompat-1.1.0\\res\\values-en-rGB\\values-en-rGB.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,209,309,417,501,601,716,794,870,961,1053,1148,1242,1343,1436,1531,1625,1716,1807,1888,1991,2094,2193,2298,2402,2506,2662,2762",
-                        "endColumns": "103,99,107,83,99,114,77,75,90,91,94,93,100,92,94,93,90,90,80,102,102,98,104,103,103,155,99,81",
-                        "endOffsets": "204,304,412,496,596,711,789,865,956,1048,1143,1237,1338,1431,1526,1620,1711,1802,1883,1986,2089,2188,2293,2397,2501,2657,2757,2839"
-                    },
-                    "to": {
-                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,75",
-                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
-                        "startOffsets": "105,209,309,417,501,601,716,794,870,961,1053,1148,1242,1343,1436,1531,1625,1716,1807,1888,1991,2094,2193,2298,2402,2506,2662,6008",
-                        "endColumns": "103,99,107,83,99,114,77,75,90,91,94,93,100,92,94,93,90,90,80,102,102,98,104,103,103,155,99,81",
-                        "endOffsets": "204,304,412,496,596,711,789,865,956,1048,1143,1237,1338,1431,1526,1620,1711,1802,1883,1986,2089,2188,2293,2397,2501,2657,2757,6085"
-                    }
-                },
-                {
-                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\3cb7b87b1f498d18772d709a9c4411bb\\preference-1.1.1\\res\\values-en-rGB\\values-en-rGB.xml",
-                    "from": {
-                        "startLines": "2,3,4,5,6,7,8",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "105,173,260,333,467,636,716",
-                        "endColumns": "67,86,72,133,168,79,75",
-                        "endOffsets": "168,255,328,462,631,711,787"
-                    },
-                    "to": {
-                        "startLines": "29,70,73,74,77,78,79",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "2762,5491,5801,5874,6191,6360,6440",
-                        "endColumns": "67,86,72,133,168,79,75",
-                        "endOffsets": "2825,5573,5869,6003,6355,6435,6511"
-                    }
-                },
-                {
-                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\02f52b7038aed3c8f2abf40bd2f6d9fa\\navigation-ui-2.3.0\\res\\values-en-rGB\\values-en-rGB.xml",
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,161",
-                        "endColumns": "105,116",
-                        "endOffsets": "156,273"
-                    },
-                    "to": {
-                        "startLines": "71,72",
-                        "startColumns": "4,4",
-                        "startOffsets": "5578,5684",
-                        "endColumns": "105,116",
-                        "endOffsets": "5679,5796"
-                    }
-                },
-                {
-                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\329481cfff2cdb40b031ea3d3ebd361c\\core-1.3.0\\res\\values-en-rGB\\values-en-rGB.xml",
+                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\fcd12b6571c2f8aeb50729350f4f553d\\core-1.3.0\\res\\values-en-rGB\\values-en-rGB.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -72,7 +21,58 @@
                     }
                 },
                 {
-                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\8043ca9c442730b9dbce7f0198e78a89\\jetified-exoplayer-ui-2.11.6\\res\\values-en-rGB\\values-en-rGB.xml",
+                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\6a65f5772f6b61e0d9a7897baa2b3e67\\preference-1.1.1\\res\\values-en-rGB\\values-en-rGB.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "105,173,260,333,467,636,716",
+                        "endColumns": "67,86,72,133,168,79,75",
+                        "endOffsets": "168,255,328,462,631,711,787"
+                    },
+                    "to": {
+                        "startLines": "29,70,73,74,77,78,79",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "2762,5491,5801,5874,6191,6360,6440",
+                        "endColumns": "67,86,72,133,168,79,75",
+                        "endOffsets": "2825,5573,5869,6003,6355,6435,6511"
+                    }
+                },
+                {
+                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\4265c322b513f43053d57d21747c6697\\navigation-ui-2.3.0\\res\\values-en-rGB\\values-en-rGB.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,161",
+                        "endColumns": "105,116",
+                        "endOffsets": "156,273"
+                    },
+                    "to": {
+                        "startLines": "71,72",
+                        "startColumns": "4,4",
+                        "startOffsets": "5578,5684",
+                        "endColumns": "105,116",
+                        "endOffsets": "5679,5796"
+                    }
+                },
+                {
+                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\9bdc28ab987d2e6f223f69a7b569dd1f\\appcompat-1.1.0\\res\\values-en-rGB\\values-en-rGB.xml",
+                    "from": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,209,309,417,501,601,716,794,870,961,1053,1148,1242,1343,1436,1531,1625,1716,1807,1888,1991,2094,2193,2298,2402,2506,2662,2762",
+                        "endColumns": "103,99,107,83,99,114,77,75,90,91,94,93,100,92,94,93,90,90,80,102,102,98,104,103,103,155,99,81",
+                        "endOffsets": "204,304,412,496,596,711,789,865,956,1048,1143,1237,1338,1431,1526,1620,1711,1802,1883,1986,2089,2188,2293,2397,2501,2657,2757,2839"
+                    },
+                    "to": {
+                        "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,75",
+                        "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
+                        "startOffsets": "105,209,309,417,501,601,716,794,870,961,1053,1148,1242,1343,1436,1531,1625,1716,1807,1888,1991,2094,2193,2298,2402,2506,2662,6008",
+                        "endColumns": "103,99,107,83,99,114,77,75,90,91,94,93,100,92,94,93,90,90,80,102,102,98,104,103,103,155,99,81",
+                        "endOffsets": "204,304,412,496,596,711,789,865,956,1048,1143,1237,1338,1431,1526,1620,1711,1802,1883,1986,2089,2188,2293,2397,2501,2657,2757,6085"
+                    }
+                },
+                {
+                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\b68842e89cb7cd90f5d764be314c9b7d\\jetified-exoplayer-ui-2.11.6\\res\\values-en-rGB\\values-en-rGB.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

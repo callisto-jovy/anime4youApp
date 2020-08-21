@@ -3,7 +3,7 @@
     package="net.bplaced.abzzezz.animeapp"
     android:targetSandboxVersion="2"
     android:versionCode="12"
-    android:versionName="12" >
+    android:versionName="12.0.1" >
 
     <uses-sdk
         android:minSdkVersion="25"

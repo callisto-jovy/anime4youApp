@@ -16,15 +16,18 @@
     <string name="title_activity_main">Main</string>
     <string name="title_activity_settings">Settings</string>
     <!-- Preference Titles -->
-    <string name="global_options">Options</string>
+    <string name="global_settings">Settings</string>
     <string name="global_video">Video</string>
     <string name="global_notifications">Notifications</string>
 
     <string name="download_delay">Download delay (seconds)</string>
+    <string name="image_compression_strength">Image compression strength</string>
+
     <string name="offline_mode">Offline mode</string>
     <string name="offline_mode_attachment_summary_on">Show covers and information will be stored in storage, thus
         resulting in higher storage usage. In addition image load-times will be slower.
     </string>
+
     <string name="offline_mode_attachment_summary_off">Images will only be cached. If cache is cleared and device is not
         connected to the internet, no images will be loaded.
     </string>

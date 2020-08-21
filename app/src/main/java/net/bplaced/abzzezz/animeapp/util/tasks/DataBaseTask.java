@@ -20,11 +20,11 @@ public class DataBaseTask implements Callable<JSONObject> {
     private final DataBaseSearch dataBaseSearch;
     private String id;
 
-    public DataBaseTask(JSONObject details, DataBaseSearch dataBaseSearch) {
+    public DataBaseTask(final JSONObject details, final DataBaseSearch dataBaseSearch) {
         this.details = details;
         this.dataBaseSearch = dataBaseSearch;
         try {
-            this.id = details.getString("id");
+            this.id = details.getString(StringHandler.SHOW_ID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -73,12 +73,12 @@ public class DataBaseTask implements Callable<JSONObject> {
 
     private JSONObject getDetails(final JSONObject jsonObject) throws Exception {
         final JSONObject inf = new JSONObject();
-        inf.put("id", id);
-        inf.put("image_url", StringHandler.COVER_DATABASE.concat(jsonObject.getString("image_id")));
-        inf.put("episodes", jsonObject.getString("Letzte"));
-        inf.put("title", jsonObject.getString("titel"));
-        inf.put("language", jsonObject.getString("Untertitel"));
-        inf.put("year", jsonObject.getString("Jahr"));
+        inf.put(StringHandler.SHOW_ID, id);
+        inf.put(StringHandler.SHOW_IMAGE_URL, StringHandler.COVER_DATABASE.concat(jsonObject.getString(StringHandler.SHOW_IMAGE_URL)));
+        inf.put(StringHandler.SHOW_EPISODES_COUNT, jsonObject.getString("Letzte"));
+        inf.put(StringHandler.SHOW_TITLE, jsonObject.getString("titel"));
+        inf.put(StringHandler.SHOW_LANG, jsonObject.getString("Untertitel"));
+        inf.put(StringHandler.SHOW_YEAR, jsonObject.getString("Jahr"));
         return inf;
     }
 }

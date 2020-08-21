@@ -15,11 +15,11 @@ public class InputDialogBuilder {
     private final InputDialogListener dialogListener;
     private EditText editText;
 
-    public InputDialogBuilder(InputDialogListener listener) {
+    public InputDialogBuilder(final InputDialogListener listener) {
         this.dialogListener = listener;
     }
 
-    public void showInput(String title, String text, Context context) {
+    public void showInput(final String title, final String text, final Context context) {
         this.editText = new EditText(context);
         new AlertDialog.Builder(context)
                 .setTitle(title)

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import ga.abzzezz.util.data.URLUtil;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
+import net.bplaced.abzzezz.animeapp.BuildConfig;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.main.DrawerMainMenu;
 import net.bplaced.abzzezz.animeapp.util.file.Downloader;
@@ -49,6 +50,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onComplete(Boolean result) {
                 if (result) {
+                    AnimeAppMain.getInstance().setVersionOutdated(true);
                     Downloader.download(StringHandler.UPDATE_APK, new File(Environment.DIRECTORY_DOWNLOADS, "Anime4you-Update"), "AutoUpdate.apk", getParent());
                     Toast.makeText(SplashScreen.this, "New update available. Please install the new version.", Toast.LENGTH_LONG).show();
                 }
@@ -56,7 +58,7 @@ public class SplashScreen extends AppCompatActivity {
         });
 
         //Set version text
-        ((TextView) findViewById(R.id.version_text)).append("v." + AnimeAppMain.getInstance().getVersion());
+        ((TextView) findViewById(R.id.version_text)).append("v." + BuildConfig.VERSION_NAME);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             //Start menu

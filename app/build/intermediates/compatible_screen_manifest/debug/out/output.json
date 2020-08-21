@@ -1,1 +1,6 @@
-[]
+{
+  "version": 1,
+  "applicationId": "net.bplaced.abzzezz.animeapp",
+  "variantType": "BASE_APK",
+  "elements": []
+}

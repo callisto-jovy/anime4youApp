@@ -1,1 +1,24 @@
-[{"outputType":{"type":"METADATA_FEATURE_MANIFEST"},"apkData":{"type":"MAIN","splits":[],"versionCode":12,"versionName":"12","enabled":true,"outputFile":"app-debug.apk","fullName":"debug","baseName":"debug","dirName":""},"path":"AndroidManifest.xml","properties":{}}]
+{
+  "version": 1,
+  "applicationId": "net.bplaced.abzzezz.animeapp",
+  "variantType": "BASE_APK",
+  "elements": [
+    {
+      "outputType": {
+        "type": "METADATA_FEATURE_MANIFEST"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": 12,
+        "versionName": "12.0.1",
+        "outputFile": "app-debug.apk",
+        "fullName": "debug",
+        "baseName": "debug",
+        "dirName": ""
+      },
+      "path": "AndroidManifest.xml",
+      "properties": {}
+    }
+  ]
+}

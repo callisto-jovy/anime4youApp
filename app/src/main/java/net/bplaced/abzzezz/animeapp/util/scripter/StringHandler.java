@@ -17,7 +17,7 @@ public class StringHandler {
      */
     public static final String CAPTCHA_ANIME_4_YOU_ONE = "https://captcha.anime4you.one";
     public static final String UPDATE_APK = "http://abzzezz.bplaced.net/app/update.apk";
-    public static final String APP_VERSION_TXT = "http://abzzezz.bplaced.net/app/version.txt";
+    public static final String APP_VERSION_TXT = "http://abzzezz.bplaced.net/app/app_version.txt";
     public static final String APP_CHANGELOG_TXT = "http://abzzezz.bplaced.net/app/changelog.txt";
     public static final String USER_AGENT = "Mozilla/5.0 (Linux; Android 7.0; Moto C Plus) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.73 Mobile Safari/537.36";
     public static final String REQUEST_URL = "http://abzzezz.bplaced.net/app/request.php";
@@ -25,6 +25,17 @@ public class StringHandler {
     public static final String DATABASE = "https://www.anime4you.one/speedlist.old.txt";
     public static final String BACKUP_DATABASE = "http://abzzezz.bplaced.net/list.txt";
     public static final String COVER_DATABASE = "https://cdn.anime4you.one/covers/";
+
+    /*
+    JSON keys
+     */
+    public static final String SHOW_ID = "id";
+    public static final String SHOW_IMAGE_URL = "image_url";
+    public static final String SHOW_EPISODES_COUNT = "episodes";
+    public static final String SHOW_TITLE = "title";
+    public static final String SHOW_LANG = "language";
+    public static final String SHOW_YEAR = "year-";
+
 
     public static boolean isOnline(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

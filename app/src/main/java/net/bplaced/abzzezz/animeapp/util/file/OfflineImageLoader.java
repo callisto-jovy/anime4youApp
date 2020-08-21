@@ -9,6 +9,7 @@ package net.bplaced.abzzezz.animeapp.util.file;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
+import androidx.preference.PreferenceManager;
 import com.squareup.picasso.Picasso;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
@@ -20,14 +21,14 @@ import java.io.FileOutputStream;
 
 public class OfflineImageLoader {
 
-    public static void loadImage(String url, String aid, ImageView imageView, Context context) {
+    public static void loadImage(final String url, final String id, final ImageView imageView, final Context context) {
         //Get image Bitmap file
-        final File imageBitmap = new File(AnimeAppMain.getInstance().getImageStorage(), aid);
+        final File imageBitmap = new File(AnimeAppMain.getInstance().getImageStorage(), id);
         if (!imageBitmap.exists()) {
             //Create new task
             new TaskExecutor().executeAsync(() -> {
                 //Load image bitmap into new file, compress etc.
-                Picasso.with(context).load(url).get().compress(Bitmap.CompressFormat.JPEG, 50, new FileOutputStream(imageBitmap));
+                Picasso.with(context).load(url).get().compress(Bitmap.CompressFormat.JPEG, PreferenceManager.getDefaultSharedPreferences(context).getInt("image_compression", 50), new FileOutputStream(imageBitmap));
                 return null;
             }, new TaskExecutor.Callback<Object>() {
                 @Override

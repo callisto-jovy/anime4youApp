@@ -1,1 +1,24 @@
-[{"outputType":{"type":"PROCESSED_RES"},"apkData":{"type":"MAIN","splits":[],"versionCode":12,"versionName":"12","enabled":true,"outputFile":"app-debug-androidTest.apk","fullName":"debugAndroidTest","baseName":"debug-androidTest","dirName":""},"path":"resources-debugAndroidTest.ap_","properties":{}}]
+{
+  "version": 1,
+  "applicationId": "net.bplaced.abzzezz.animeapp.test",
+  "variantType": "ANDROID_TEST",
+  "elements": [
+    {
+      "outputType": {
+        "type": "PROCESSED_RES"
+      },
+      "apkData": {
+        "type": "MAIN",
+        "splits": [],
+        "versionCode": 12,
+        "versionName": "12.0.1",
+        "outputFile": "app-debug-androidTest.apk",
+        "fullName": "debugAndroidTest",
+        "baseName": "debug-androidTest",
+        "dirName": ""
+      },
+      "path": "resources-debugAndroidTest.ap_",
+      "properties": {}
+    }
+  ]
+}

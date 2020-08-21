@@ -41,16 +41,19 @@ public class AnimeAppMain {
     private final float version;
     private final boolean debugVersion;
     private final String notificationChannelName;
-    private String androidId;
     private int themeId;
+    private String androidId;
+
     private File imageStorage;
 
     private ShowSaver showSaver;
     private DownloadTracker downloadTracker;
     private ShowNotifications animeNotifications;
 
+    private boolean isVersionOutdated;
+
     public AnimeAppMain() {
-        this.version = 48;
+        this.version = BuildConfig.VERSION_CODE;
         this.debugVersion = false;
         this.notificationChannelName = "AnimeChannel";
     }
@@ -68,7 +71,6 @@ public class AnimeAppMain {
         this.showSaver = new ShowSaver(application);
         this.downloadTracker = new DownloadTracker(application);
         this.animeNotifications = new ShowNotifications(application);
-
         this.imageStorage = new File(application.getDataDir(), "StoredImagesOffline");
         if (!imageStorage.exists()) Logger.log("Image file created: " + imageStorage.mkdir(), Logger.LogType.INFO);
 
@@ -83,7 +85,7 @@ public class AnimeAppMain {
     public void checkPermission(final Context context) {
         new PermissionTask().executeAsync(new TaskExecutor.Callback<Boolean>() {
             @Override
-            public void onComplete(Boolean permit) {
+            public void onComplete(final Boolean permit) {
                 if (permit) {
                     Logger.log("Unregistered device", Logger.LogType.INFO);
                     new IonAlert(context).setTitleText("You are not registered").setContentText("You are not registered. Please contact the developer and give him your clipboard id").setConfirmText("Exit").setConfirmClickListener(new IonAlert.ClickListener() {
@@ -162,5 +164,13 @@ public class AnimeAppMain {
 
     public float getVersion() {
         return version;
+    }
+
+    public boolean isVersionOutdated() {
+        return isVersionOutdated;
+    }
+
+    public void setVersionOutdated(boolean versionOutdated) {
+        isVersionOutdated = versionOutdated;
     }
 }

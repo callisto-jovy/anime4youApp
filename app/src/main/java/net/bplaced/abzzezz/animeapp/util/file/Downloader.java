@@ -23,14 +23,14 @@ public class Downloader {
      * @param outFileName
      * @param activity
      */
-    public static void download(String url, File outDir, String outFileName, Activity activity) {
+    public static void download(final String url, final File outDir, final String outFileName, final Activity activity) {
         if (!outDir.exists()) outDir.mkdir();
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        final DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
         request.setDescription("Downloading File: ".concat(outFileName));
         request.setTitle(outFileName);
 
         request.setDestinationInExternalPublicDir(outDir.getAbsolutePath(), outFileName);
-        DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+        final DownloadManager manager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
         manager.enqueue(request);
     }
 }

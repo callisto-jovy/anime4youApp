@@ -10,8 +10,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
+import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Optional;
 
 public class ShowSaver {
 
@@ -40,15 +43,32 @@ public class ShowSaver {
      * @param all
      */
     public void addShow(final JSONObject all) throws JSONException {
-        if (publicPreferences.getBoolean("check_existing", false) && containsID(all.getString("id"))) return;
+        if (publicPreferences.getBoolean("check_existing", false) && containsID(all.getString(StringHandler.SHOW_ID)))
+            return;
         editor.putString(String.valueOf(preferences.getAll().size()), all.toString());
         editor.commit();
     }
 
+    /**
+     * Refresh show index
+     * @param details show details to overwrite
+     * @param index shows index
+     */
+    public void refreshShow(final JSONObject details, final int index) {
+        editor.putString(String.valueOf(index), details.toString());
+        editor.commit();
+    }
+
+
+    /**
+     * Check if preferences contain a certain id
+     * @param id it to search
+     * @return id contained
+     */
     public boolean containsID(final String id) {
         return preferences.getAll().values().stream().anyMatch(o -> {
             try {
-                return new JSONObject(o.toString()).getString("id").equals(id);
+                return new JSONObject(o.toString()).getString(StringHandler.SHOW_ID).equals(id);
             } catch (JSONException e) {
                 e.printStackTrace();
                 return false;
@@ -79,15 +99,19 @@ public class ShowSaver {
      * @param index key
      * @return new JSON object
      */
-    public JSONObject getShow(final int index) {
+    public Optional<JSONObject> getShow(final int index) {
         try {
-            return new JSONObject(preferences.getString(String.valueOf(index), "-1"));
+            return Optional.of(new JSONObject(preferences.getString(String.valueOf(index), "-1")));
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
+            return Optional.empty();
         }
     }
 
+    /**
+     *
+     * @return all size
+     */
     public int getShowSize() {
         return preferences.getAll().size();
     }

@@ -23,7 +23,7 @@ public class DownloadTracker {
 
     private final File trackerFile;
 
-    public DownloadTracker(Context context) {
+    public DownloadTracker(final Context context) {
         this.trackerFile = new File(context.getFilesDir(), "DownloadTracker.xml");
         Logger.log("Download Tracker set up", Logger.LogType.INFO);
         try {

@@ -4,7 +4,7 @@
             "outputFile": "E:\\Code\\Projects\\anime4youApp\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v16\\values-v16.xml",
             "map": [
                 {
-                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\329481cfff2cdb40b031ea3d3ebd361c\\core-1.3.0\\res\\values-v16\\values-v16.xml",
+                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\fcd12b6571c2f8aeb50729350f4f553d\\core-1.3.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\499c5fe0d79c93c465e60b74b989b6d8\\appcompat-1.1.0\\res\\values-v16\\values-v16.xml",
+                    "source": "E:\\Code\\gradle\\caches\\transforms-2\\files-2.1\\9bdc28ab987d2e6f223f69a7b569dd1f\\appcompat-1.1.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
