@@ -56,7 +56,6 @@ public class ShowSaver {
      */
     public void refreshShow(final JSONObject details, final int index) {
         editor.putString(String.valueOf(index), details.toString());
-        editor.commit();
     }
 
 

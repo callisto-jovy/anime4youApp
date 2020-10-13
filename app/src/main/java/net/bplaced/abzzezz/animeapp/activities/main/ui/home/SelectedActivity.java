@@ -66,6 +66,7 @@ public class SelectedActivity extends AppCompatActivity {
          */
         try {
             final JSONObject inf = new JSONObject(getIntent().getStringExtra("details"));
+
             this.title = inf.getString(StringHandler.SHOW_TITLE);
             this.episodes = inf.getInt(StringHandler.SHOW_EPISODES_COUNT);
             this.id = inf.getInt(StringHandler.SHOW_ID);
@@ -76,8 +77,8 @@ public class SelectedActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.selected_anime_name)).setText(title);
             ((TextView) findViewById(R.id.selected_anime_episodes)).append(String.valueOf(episodes));
             ((TextView) findViewById(R.id.selected_anime_aid)).append(String.valueOf(id));
-            ((TextView) findViewById(R.id.selected_anime_language)).append(inf.getString("language"));
-            ((TextView) findViewById(R.id.selected_anime_year)).append(inf.getString("year"));
+            ((TextView) findViewById(R.id.selected_anime_language)).append(inf.getString(StringHandler.SHOW_LANG));
+            ((TextView) findViewById(R.id.selected_anime_year)).append(inf.getString(StringHandler.SHOW_YEAR));
             ((TextView) findViewById(R.id.anime_directory_size)).append(FileUtil.calculateFileSize(file));
 
             final ImageView cover = findViewById(R.id.anime_cover_image);
@@ -207,7 +208,7 @@ public class SelectedActivity extends AppCompatActivity {
     public void downloadEpisode(final int start, final int countMax, final int currentCount) {
         Logger.log("Next episode: " + start, Logger.LogType.INFO);
         int[] count = {currentCount, start};
-        /**
+        /*
          * Check if count is bigger than the max episodes to download
          */
         if (count[0] >= countMax) {
@@ -233,7 +234,6 @@ public class SelectedActivity extends AppCompatActivity {
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        System.out.println(result);
                         view.evaluateJavascript(result, returnCaptcha -> {
                             if (returnCaptcha.contains("vivo")) {
                                 Logger.log("Found link for vivo:" + returnCaptcha, Logger.LogType.INFO);
@@ -462,7 +462,7 @@ public class SelectedActivity extends AppCompatActivity {
         public void deleteItem(final int index) {
             final Optional<File> videoFile = getEpisodeFile(index);
             if (videoFile.isPresent()) {
-                Logger.log("Deleted: " + videoFile.get(), Logger.LogType.INFO);
+                Logger.log("Deleted: " + videoFile.get().delete(), Logger.LogType.INFO);
                 notifyDataSetChanged();
             }
         }

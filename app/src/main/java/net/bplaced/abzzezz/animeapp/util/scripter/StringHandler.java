@@ -34,7 +34,7 @@ public class StringHandler {
     public static final String SHOW_EPISODES_COUNT = "episodes";
     public static final String SHOW_TITLE = "title";
     public static final String SHOW_LANG = "language";
-    public static final String SHOW_YEAR = "year-";
+    public static final String SHOW_YEAR = "year";
 
 
     public static boolean isOnline(Context context) {

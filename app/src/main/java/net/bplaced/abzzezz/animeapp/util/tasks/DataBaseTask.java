@@ -74,7 +74,7 @@ public class DataBaseTask implements Callable<JSONObject> {
     private JSONObject getDetails(final JSONObject jsonObject) throws Exception {
         final JSONObject inf = new JSONObject();
         inf.put(StringHandler.SHOW_ID, id);
-        inf.put(StringHandler.SHOW_IMAGE_URL, StringHandler.COVER_DATABASE.concat(jsonObject.getString(StringHandler.SHOW_IMAGE_URL)));
+        inf.put(StringHandler.SHOW_IMAGE_URL, StringHandler.COVER_DATABASE.concat(jsonObject.getString("image_id")));
         inf.put(StringHandler.SHOW_EPISODES_COUNT, jsonObject.getString("Letzte"));
         inf.put(StringHandler.SHOW_TITLE, jsonObject.getString("titel"));
         inf.put(StringHandler.SHOW_LANG, jsonObject.getString("Untertitel"));

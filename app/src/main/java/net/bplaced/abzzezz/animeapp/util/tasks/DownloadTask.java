@@ -136,7 +136,7 @@ public class DownloadTask extends TaskExecutor implements Callable<String>, Task
         final PendingIntent stopDownloadingPendingIntent = PendingIntent.getBroadcast(application, 1, notificationActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         this.notification = new NotificationCompat.Builder(application, AnimeAppMain.NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.download)
-                .setContentText("Currently downloading episode: " + count[1])
+                .setContentText("Currently downloading episode: " + count[1] + " from show: " + name)
                 .setContentTitle("Episode Download")
                 .setPriority(NotificationCompat.PRIORITY_HIGH).addAction(R.drawable.cancel, "Stop downloading", stopDownloadingPendingIntent)
                 .setOngoing(true);

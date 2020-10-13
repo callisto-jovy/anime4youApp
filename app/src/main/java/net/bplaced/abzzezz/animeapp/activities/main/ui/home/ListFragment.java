@@ -98,14 +98,15 @@ public class ListFragment extends Fragment {
 
     /**
      * Get shows information from index
-     * @param index show index
+     *
+     * @param index  show index
      * @param intent intent
      */
     private void getInformation(final int index, final Intent intent) {
         final Optional<JSONObject> savedInformation = AnimeAppMain.getInstance().getShowSaver().getShow(index);
 
-        if (!StringHandler.isOnline(getActivity().getApplicationContext())) {
-            startActivity(intent.putExtra("details", savedInformation.toString()));
+        if (!StringHandler.isOnline(getActivity().getApplicationContext()) && savedInformation.isPresent()) {
+            startActivity(intent.putExtra("details", savedInformation.get().toString()));
             getActivity().finish();
             return;
         }
@@ -172,28 +173,32 @@ public class ListFragment extends Fragment {
         }
 
         public void removeItem(final int index) {
-            this.size--;
-            try {
-                final File dir = new File(getActivity().getFilesDir(), ((JSONObject) getItem(index)).getString("title"));
-                if (dir.listFiles() != null && dir.listFiles().length > 0) {
-                    new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
-                            .setTitleText("Delete all remaining episodes?")
-                            .setContentText("Won't be able to recover the files!")
-                            .setConfirmText("Yes, delete!")
-                            .setConfirmClickListener(ionAlert -> {
-                                for (final File file : dir.listFiles()) {
-                                    Logger.log("Deleting file: " + file.delete(), Logger.LogType.INFO);
-                                }
-                                Toast.makeText(context, "Remaining files deleted.", Toast.LENGTH_SHORT).show();
-                                ionAlert.dismissWithAnimation();
-                            }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
-                            .show();
+            final Optional<JSONObject> itemToRemove = (Optional<JSONObject>) getItem(index);
+            if (itemToRemove.isPresent()) {
+                this.size--;
+                try {
+
+                    final File dir = new File(getActivity().getFilesDir(), itemToRemove.get().getString(StringHandler.SHOW_TITLE));
+                    if (dir.listFiles() != null && dir.listFiles().length > 0) {
+                        new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
+                                .setTitleText("Delete all remaining episodes?")
+                                .setContentText("Won't be able to recover the files!")
+                                .setConfirmText("Yes, delete!")
+                                .setConfirmClickListener(ionAlert -> {
+                                    for (final File file : dir.listFiles()) {
+                                        Logger.log("Deleting file: " + file.delete(), Logger.LogType.INFO);
+                                    }
+                                    Toast.makeText(context, "Remaining files deleted.", Toast.LENGTH_SHORT).show();
+                                    ionAlert.dismissWithAnimation();
+                                }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
+                                .show();
+                    }
+                } catch (final JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (final JSONException e) {
-                e.printStackTrace();
+                AnimeAppMain.getInstance().getShowSaver().remove(index);
+                notifyDataSetChanged();
             }
-            AnimeAppMain.getInstance().getShowSaver().remove(index);
-            notifyDataSetChanged();
         }
 
         public void addItem(final String item) {
