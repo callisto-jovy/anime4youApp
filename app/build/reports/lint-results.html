@@ -176,7 +176,7 @@ document.getElementById(id).style.display = 'none';
       <span class="mdl-layout-title">Lint Report: 57 warnings</span>
       <div class="mdl-layout-spacer"></div>
       <nav class="mdl-navigation mdl-layout--large-screen-only">
-Check performed at Tue Oct 13 16:40:45 CEST 2020      </nav>
+Check performed at Tue Nov 03 20:27:57 CET 2020      </nav>
     </div>
   </header>
   <div class="mdl-layout__drawer">
@@ -451,34 +451,34 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:220</span>: <span class="message">Using <code>setJavaScriptEnabled</code> can introduce XSS vulnerabilities into your application, review carefully.</span><br /><pre class="errorlines">
-<span class="lineno"> 217 </span>        }
-<span class="lineno"> 218 </span>
-<span class="lineno"> 219 </span>        <span class="keyword">final</span> WebView webView = <span class="keyword">new</span> WebView(getApplicationContext());
-<span class="caretline"><span class="lineno"> 220 </span>        <span class="warning">webView.getSettings().setJavaScriptEnabled(<span class="keyword">true</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 221 </span>        webView.loadUrl(StringHandler.CAPTCHA_ANIME_4_YOU_ONE);
-<span class="lineno"> 222 </span>
-<span class="lineno"> 223 </span>        WebStorage.getInstance().deleteAllData();
+<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:221</span>: <span class="message">Using <code>setJavaScriptEnabled</code> can introduce XSS vulnerabilities into your application, review carefully.</span><br /><pre class="errorlines">
+<span class="lineno"> 218 </span>        }
+<span class="lineno"> 219 </span>
+<span class="lineno"> 220 </span>        <span class="keyword">final</span> WebView webView = <span class="keyword">new</span> WebView(getApplicationContext());
+<span class="caretline"><span class="lineno"> 221 </span>        <span class="warning">webView.getSettings().setJavaScriptEnabled(<span class="keyword">true</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 222 </span>        webView.loadUrl(StringHandler.CAPTCHA_ANIME_4_YOU_ONE);
+<span class="lineno"> 223 </span>
+<span class="lineno"> 224 </span>        WebStorage.getInstance().deleteAllData();
 </pre>
 
-<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:284</span>: <span class="message">Using <code>setJavaScriptEnabled</code> can introduce XSS vulnerabilities into your application, review carefully.</span><br /><pre class="errorlines">
-<span class="lineno"> 281 </span><span class="javadoc">     */</span>
-<span class="lineno"> 282 </span>    <span class="keyword">public</span> <span class="keyword">void</span> streamEpisode(<span class="keyword">final</span> <span class="keyword">int</span> episode) {
-<span class="lineno"> 283 </span>        <span class="keyword">final</span> WebView webView = <span class="keyword">new</span> WebView(getApplicationContext());
-<span class="caretline"><span class="lineno"> 284 </span>        <span class="warning">webView.getSettings().setJavaScriptEnabled(<span class="keyword">true</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 285 </span>        webView.loadUrl(StringHandler.CAPTCHA_ANIME_4_YOU_ONE);
-<span class="lineno"> 286 </span>
-<span class="lineno"> 287 </span>        WebStorage.getInstance().deleteAllData();
+<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:278</span>: <span class="message">Using <code>setJavaScriptEnabled</code> can introduce XSS vulnerabilities into your application, review carefully.</span><br /><pre class="errorlines">
+<span class="lineno"> 275 </span><span class="javadoc">     */</span>
+<span class="lineno"> 276 </span>    <span class="keyword">public</span> <span class="keyword">void</span> streamEpisode(<span class="keyword">final</span> <span class="keyword">int</span> episode) {
+<span class="lineno"> 277 </span>        <span class="keyword">final</span> WebView webView = <span class="keyword">new</span> WebView(getApplicationContext());
+<span class="caretline"><span class="lineno"> 278 </span>        <span class="warning">webView.getSettings().setJavaScriptEnabled(<span class="keyword">true</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 279 </span>        webView.loadUrl(StringHandler.CAPTCHA_ANIME_4_YOU_ONE);
+<span class="lineno"> 280 </span>
+<span class="lineno"> 281 </span>        WebStorage.getInstance().deleteAllData();
 </pre>
 
-<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:298</span>: <span class="message">Using <code>setJavaScriptEnabled</code> can introduce XSS vulnerabilities into your application, review carefully.</span><br /><pre class="errorlines">
-<span class="lineno"> 295 </span>  <span class="keyword">new</span> VideoFindTask(id, episode).executeAsync(<span class="keyword">new</span> TaskExecutor.Callback&lt;String>() {
-<span class="lineno"> 296 </span>      <span class="annotation">@Override</span>
-<span class="lineno"> 297 </span>      <span class="keyword">public</span> <span class="keyword">void</span> onComplete(String result) {
-<span class="caretline"><span class="lineno"> 298 </span>          <span class="warning">webView.getSettings().setJavaScriptEnabled(<span class="keyword">true</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 299 </span>          <span class="comment">/*
-</span><span class="lineno"> 300 </span><span class="comment">           * Clear all previous data and Cookies, so no code 400 appears: Cookie too large (yummy ;) )
-</span><span class="lineno"> 301 </span><span class="comment">           */</span></pre>
+<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:292</span>: <span class="message">Using <code>setJavaScriptEnabled</code> can introduce XSS vulnerabilities into your application, review carefully.</span><br /><pre class="errorlines">
+<span class="lineno"> 289 </span>  <span class="keyword">new</span> VideoFindTask(id, episode).executeAsync(<span class="keyword">new</span> TaskExecutor.Callback&lt;String>() {
+<span class="lineno"> 290 </span>      <span class="annotation">@Override</span>
+<span class="lineno"> 291 </span>      <span class="keyword">public</span> <span class="keyword">void</span> onComplete(String result) {
+<span class="caretline"><span class="lineno"> 292 </span>          <span class="warning">webView.getSettings().setJavaScriptEnabled(<span class="keyword">true</span>)</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 293 </span>          <span class="comment">/*
+</span><span class="lineno"> 294 </span><span class="comment">           * Clear all previous data and Cookies, so no code 400 appears: Cookie too large (yummy ;) )
+</span><span class="lineno"> 295 </span><span class="comment">           */</span></pre>
 
 </div>
 <div class="metadata"><div class="explanation" id="explanationSetJavaScriptEnabled" style="display: none;">
@@ -1316,24 +1316,24 @@ Dismiss</button>            </div>
               <div class="mdl-card__supporting-text">
 <div class="issue">
 <div class="warningslist">
-<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:434</span>: <span class="message">Do not concatenate text displayed with <code>setText</code>. Use resource string with placeholders.</span><br /><pre class="errorlines">
-<span class="lineno"> 431 </span>
-<span class="lineno"> 432 </span>        <span class="keyword">final</span> TextView textView = convertView.findViewById(R.id.episode_name);
-<span class="lineno"> 433 </span>        <span class="keyword">final</span> ImageView actionButton = convertView.findViewById(R.id.download_button);
-<span class="caretline"><span class="lineno"> 434 </span>        textView.setText(<span class="warning"><span class="string">"Episode: "</span> + position</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 435 </span>
-<span class="lineno"> 436 </span>        <span class="keyword">if</span> (isEpisodeDownloaded(position)) {
-<span class="lineno"> 437 </span>            textView.setTextColor(<span class="number">0xFF30475e</span>);
+<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:428</span>: <span class="message">Do not concatenate text displayed with <code>setText</code>. Use resource string with placeholders.</span><br /><pre class="errorlines">
+<span class="lineno"> 425 </span>
+<span class="lineno"> 426 </span>        <span class="keyword">final</span> TextView textView = convertView.findViewById(R.id.episode_name);
+<span class="lineno"> 427 </span>        <span class="keyword">final</span> ImageView actionButton = convertView.findViewById(R.id.download_button);
+<span class="caretline"><span class="lineno"> 428 </span>        textView.setText(<span class="warning"><span class="string">"Episode: "</span> + position</span>);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 429 </span>
+<span class="lineno"> 430 </span>        <span class="keyword">if</span> (isEpisodeDownloaded(position)) {
+<span class="lineno"> 431 </span>            textView.setTextColor(<span class="number">0xFF30475e</span>);
 </pre>
 
-<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:434</span>: <span class="message">String literal in <code>setText</code> can not be translated. Use Android resources instead.</span><br /><pre class="errorlines">
-<span class="lineno"> 431 </span>
-<span class="lineno"> 432 </span>        <span class="keyword">final</span> TextView textView = convertView.findViewById(R.id.episode_name);
-<span class="lineno"> 433 </span>        <span class="keyword">final</span> ImageView actionButton = convertView.findViewById(R.id.download_button);
-<span class="caretline"><span class="lineno"> 434 </span>        textView.setText(<span class="warning"><span class="string">"Episode: "</span></span> + position);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-<span class="lineno"> 435 </span>
-<span class="lineno"> 436 </span>        <span class="keyword">if</span> (isEpisodeDownloaded(position)) {
-<span class="lineno"> 437 </span>            textView.setTextColor(<span class="number">0xFF30475e</span>);
+<span class="location"><a href="../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java">../../src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java</a>:428</span>: <span class="message">String literal in <code>setText</code> can not be translated. Use Android resources instead.</span><br /><pre class="errorlines">
+<span class="lineno"> 425 </span>
+<span class="lineno"> 426 </span>        <span class="keyword">final</span> TextView textView = convertView.findViewById(R.id.episode_name);
+<span class="lineno"> 427 </span>        <span class="keyword">final</span> ImageView actionButton = convertView.findViewById(R.id.download_button);
+<span class="caretline"><span class="lineno"> 428 </span>        textView.setText(<span class="warning"><span class="string">"Episode: "</span></span> + position);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="lineno"> 429 </span>
+<span class="lineno"> 430 </span>        <span class="keyword">if</span> (isEpisodeDownloaded(position)) {
+<span class="lineno"> 431 </span>            textView.setTextColor(<span class="number">0xFF30475e</span>);
 </pre>
 
 </div>

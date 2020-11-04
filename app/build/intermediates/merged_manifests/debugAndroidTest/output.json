@@ -10,8 +10,8 @@
       "apkData": {
         "type": "MAIN",
         "splits": [],
-        "versionCode": 12,
-        "versionName": "12.0.1",
+        "versionCode": 16,
+        "versionName": "12.0.3",
         "outputFile": "app-debug-androidTest.apk",
         "fullName": "debugAndroidTest",
         "baseName": "debug-androidTest",

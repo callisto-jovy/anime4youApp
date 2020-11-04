@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.oktavianto:ionalert:1.0.4@aar">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2490f475fb756fb3ec663990574b2fef/jetified-ionalert-1.0.4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/2490f475fb756fb3ec663990574b2fef/jetified-ionalert-1.0.4/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7de4bc2e6ed1c5fb99811bf95edf53ba/jetified-ionalert-1.0.4/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7de4bc2e6ed1c5fb99811bf95edf53ba/jetified-ionalert-1.0.4/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

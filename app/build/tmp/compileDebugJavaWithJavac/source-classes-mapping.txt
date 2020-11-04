@@ -69,6 +69,8 @@ net/bplaced/abzzezz/animeapp/util/InputDialogBuilder.java
  net.bplaced.abzzezz.animeapp.util.InputDialogBuilder$InputDialogListener
 net/bplaced/abzzezz/animeapp/util/file/ShowSaver.java
  net.bplaced.abzzezz.animeapp.util.file.ShowSaver
+net/bplaced/abzzezz/animeapp/util/tasks/VivoDecodeTask.java
+ net.bplaced.abzzezz.animeapp.util.tasks.VivoDecodeTask
 net/bplaced/abzzezz/animeapp/util/file/DownloadTracker.java
  net.bplaced.abzzezz.animeapp.util.file.DownloadTracker
 net/bplaced/abzzezz/animeapp/util/scripter/ScriptUtil.java

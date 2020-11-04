@@ -83,7 +83,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="E:\Code\Projects\anime4youApp\app\src\main\java\net\bplaced\abzzezz\animeapp\activities\main\ui\home\SelectedActivity.java"
-            line="220"
+            line="221"
             column="9"/>
     </issue>
 
@@ -101,7 +101,7 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="E:\Code\Projects\anime4youApp\app\src\main\java\net\bplaced\abzzezz\animeapp\activities\main\ui\home\SelectedActivity.java"
-            line="284"
+            line="278"
             column="9"/>
     </issue>
 
@@ -119,7 +119,7 @@
         errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="E:\Code\Projects\anime4youApp\app\src\main\java\net\bplaced\abzzezz\animeapp\activities\main\ui\home\SelectedActivity.java"
-            line="298"
+            line="292"
             column="17"/>
     </issue>
 
@@ -717,7 +717,7 @@
         errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="E:\Code\Projects\anime4youApp\app\src\main\java\net\bplaced\abzzezz\animeapp\activities\main\ui\home\SelectedActivity.java"
-            line="434"
+            line="428"
             column="30"/>
     </issue>
 
@@ -735,7 +735,7 @@
         errorLine2="                             ~~~~~~~~~~~">
         <location
             file="E:\Code\Projects\anime4youApp\app\src\main\java\net\bplaced\abzzezz\animeapp\activities\main\ui\home\SelectedActivity.java"
-            line="434"
+            line="428"
             column="30"/>
     </issue>
 

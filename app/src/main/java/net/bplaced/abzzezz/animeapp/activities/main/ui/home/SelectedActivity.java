@@ -39,6 +39,7 @@ import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.DownloadTask;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.tasks.VideoFindTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.VivoDecodeTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -237,19 +238,17 @@ public class SelectedActivity extends AppCompatActivity {
                         view.evaluateJavascript(result, returnCaptcha -> {
                             if (returnCaptcha.contains("vivo")) {
                                 Logger.log("Found link for vivo:" + returnCaptcha, Logger.LogType.INFO);
-                                makeText("Found VIVO link");
-                                view.loadUrl(URLUtil.toUrl(StringUtil.removeBadCharacters(returnCaptcha, "\\\\", "\""), "https"));
-                                view.setWebViewClient(new WebViewClient() {
+                                makeText("Found vivo.sx link");
+
+                                new VivoDecodeTask(URLUtil.toUrl(StringUtil.removeBadCharacters(returnCaptcha, "\\\\", "\""), "https")).executeAsync(new TaskExecutor.Callback<String>() {
                                     @Override
-                                    public void onPageFinished(WebView view, String url) {
-                                        view.evaluateJavascript(ScriptUtil.VIVO_EXPLOIT, value -> {
-                                            if (value.contains("node")) {
-                                                new DownloadTask(SelectedActivity.this, value.replaceAll("\"", ""), title, new int[]{count[0], count[1], countMax}).executeAsync();
-                                                view.destroy();
-                                                webView.destroy();
-                                            } else makeText("Error getting direct vivo link: " + value);
-                                        });
-                                        super.onPageFinished(view, url);
+                                    public void onComplete(final String result) {
+                                        new DownloadTask(SelectedActivity.this, result.replaceAll("\"", ""), title, new int[]{count[0], count[1], countMax}).executeAsync();
+                                    }
+
+                                    @Override
+                                    public void preExecute() {
+                                        webView.destroy();
                                     }
                                 });
                             } else {
@@ -268,11 +267,6 @@ public class SelectedActivity extends AppCompatActivity {
             }
         });
     }
-    /**
-     * Get download link then stream
-     *
-     * @param episode
-     */
 
     /**
      * TODO: Merge

@@ -26,6 +26,8 @@ public class StringHandler {
     public static final String BACKUP_DATABASE = "http://abzzezz.bplaced.net/list.txt";
     public static final String COVER_DATABASE = "https://cdn.anime4you.one/covers/";
 
+
+    
     /*
     JSON keys
      */

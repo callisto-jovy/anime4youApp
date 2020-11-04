@@ -3,7 +3,7 @@
     package="net.bplaced.abzzezz.animeapp.test" >
 
     <uses-sdk
-        android:minSdkVersion="25"
+        android:minSdkVersion="28"
         android:targetSdkVersion="30" />
 
     <instrumentation
