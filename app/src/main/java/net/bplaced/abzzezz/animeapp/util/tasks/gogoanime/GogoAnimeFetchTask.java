@@ -7,14 +7,16 @@
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
 import net.bplaced.abzzezz.animeapp.util.gogoanime.GogoAnimeFetcher;
+import net.bplaced.abzzezz.animeapp.util.provider.ProviderType;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
+import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.concurrent.Callable;
 
-public class GogoAnimeFetchTask extends TaskExecutor implements Callable<JSONObject> {
+public class GogoAnimeFetchTask extends TaskExecutor implements Callable<Show> {
 
     private final String urlIn;
 
@@ -22,12 +24,12 @@ public class GogoAnimeFetchTask extends TaskExecutor implements Callable<JSONObj
         this.urlIn = urlIn;
     }
 
-    public <R> void executeAsync(Callback<JSONObject> callback) {
+    public <R> void executeAsync(Callback<Show> callback) {
         super.executeAsync(this, callback);
     }
 
     @Override
-    public JSONObject call() throws Exception {
+    public Show call() throws Exception {
         final GogoAnimeFetcher fetcher = new GogoAnimeFetcher(urlIn);
         final String id = fetcher.getID();
         final String imageURL = fetcher.fetchImage0();
@@ -38,13 +40,12 @@ public class GogoAnimeFetchTask extends TaskExecutor implements Callable<JSONObj
 
         for (final String fetchedDirectURL : fetcher.getFetchedDirectURLs()) episodes.put(fetchedDirectURL);
 
-        return new JSONObject()
+        return new Show(new JSONObject()
                 .put(StringHandler.SHOW_ID, id)
                 .put(StringHandler.SHOW_LANG, "english")
                 .put("ep_start", episodeStart)
                 .put("ep_end", episodeEnd)
                 .put(StringHandler.SHOW_IMAGE_URL, imageURL)
-                .put("episodes", episodes)
-                .put(StringHandler.SHOW_PROVIDER, StringHandler.SHOW_PROVIDER_GOGO);
+                .put("episodes", episodes), ProviderType.GOGOANIME);
     }
 }

@@ -18,10 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
-import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
+import net.bplaced.abzzezz.animeapp.util.provider.ProviderType;
+import net.bplaced.abzzezz.animeapp.util.show.Show;
+import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouSearchDBTask;
 import net.bplaced.abzzezz.animeapp.util.tasks.gogoanime.GogoAnimeFetchTask;
-import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,9 +72,9 @@ public class SearchFragment extends Fragment {
         root.findViewById(R.id.add_aid).setOnClickListener(v -> new InputDialogBuilder(new InputDialogBuilder.InputDialogListener() {
             @Override
             public void onDialogInput(String text) {
-                new GogoAnimeFetchTask(text).executeAsync(new TaskExecutor.Callback<JSONObject>() {
+                new GogoAnimeFetchTask(text).executeAsync(new TaskExecutor.Callback<Show>() {
                     @Override
-                    public void onComplete(final JSONObject result) throws Exception {
+                    public void onComplete(final Show result) throws Exception {
                         AnimeAppMain.getInstance().getShowSaver().addShow(result);
                         Toast.makeText(root.getContext(), "Added show!", Toast.LENGTH_SHORT).show();
                     }
@@ -142,18 +143,11 @@ public class SearchFragment extends Fragment {
             if (convertView == null) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.show_item_layout, parent, false);
 
-                final JSONObject show = (JSONObject) getItem(position);
+                final JSONObject jsonAtIndex = (JSONObject) getItem(position);
 
                 convertView.setOnClickListener(listener -> {
                     try {
-                        final JSONObject inf = new JSONObject();
-                        inf.put(StringHandler.SHOW_ID, show.getInt("aid"));
-                        inf.put(StringHandler.SHOW_IMAGE_URL, StringHandler.COVER_DATABASE.concat(show.getString("image_id")));
-                        inf.put(StringHandler.SHOW_EPISODE_COUNT, show.getString("Letzte"));
-                        inf.put(StringHandler.SHOW_TITLE, show.getString("titel"));
-                        inf.put(StringHandler.SHOW_LANG, show.getString("Untertitel"));
-                        inf.put(StringHandler.SHOW_YEAR, show.getString("Jahr"));
-                        AnimeAppMain.getInstance().getShowSaver().addShow(inf);
+                        AnimeAppMain.getInstance().getShowSaver().addShow(ProviderType.ANIME4YOU.getProvider().getShow(jsonAtIndex));
                         Toast.makeText(context, "Added show!", Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -166,10 +160,10 @@ public class SearchFragment extends Fragment {
                 final TextView showYear = convertView.findViewById(R.id.show_year);
 
                 try {
-                    showTitle.append(show.getString("titel"));
-                    showEpisodes.append(show.getString("Letzte"));
-                    showLanguage.append(show.getString("Untertitel"));
-                    showYear.append(show.getString("Jahr"));
+                    showTitle.append(jsonAtIndex.getString("titel"));
+                    showEpisodes.append(jsonAtIndex.getString("Letzte"));
+                    showLanguage.append(jsonAtIndex.getString("Untertitel"));
+                    showYear.append(jsonAtIndex.getString("Jahr"));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

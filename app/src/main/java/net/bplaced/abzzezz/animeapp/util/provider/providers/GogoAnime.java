@@ -24,6 +24,11 @@ public class GogoAnime extends Provider {
     }
 
     @Override
+    public Show getShow(JSONObject data) throws JSONException {
+        return null;
+    }
+
+    @Override
     public void handleDownload() {
 
     }

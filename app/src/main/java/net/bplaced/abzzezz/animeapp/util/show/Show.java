@@ -15,7 +15,7 @@ import org.json.JSONObject;
 public class Show {
 
     private String id;
-    private String year;
+    private String year = "";
     private String title;
     private String episodes;
     private String imageURL;
@@ -33,16 +33,6 @@ public class Show {
         this.provider = provider;
     }
 
-    public Show(String id, String title, String episodes, String imageURL, String language, Provider provider, JSONObject showJSON) {
-        this.id = id;
-        this.title = title;
-        this.episodes = episodes;
-        this.imageURL = imageURL;
-        this.language = language;
-        this.provider = provider;
-        this.showJSON = showJSON;
-    }
-
     public Show(JSONObject showJSON) throws JSONException {
         this.id = showJSON.getString(StringHandler.SHOW_ID);
         this.title = showJSON.getString(StringHandler.SHOW_TITLE);
@@ -50,6 +40,15 @@ public class Show {
         this.imageURL = showJSON.getString(StringHandler.SHOW_IMAGE_URL);
         this.language = showJSON.getString(StringHandler.SHOW_LANG);
         this.provider = ProviderType.getProvider(showJSON.getString(StringHandler.SHOW_PROVIDER));
+    }
+
+    public Show(JSONObject showJSON, ProviderType provider) throws JSONException {
+        this.id = showJSON.getString(StringHandler.SHOW_ID);
+        this.title = showJSON.getString(StringHandler.SHOW_TITLE);
+        this.episodes = showJSON.getString(StringHandler.SHOW_EPISODE_COUNT);
+        this.imageURL = showJSON.getString(StringHandler.SHOW_IMAGE_URL);
+        this.language = showJSON.getString(StringHandler.SHOW_LANG);
+        this.provider = provider.getProvider();
     }
 
     @Override

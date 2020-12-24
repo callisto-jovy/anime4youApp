@@ -23,13 +23,24 @@ public class Anime4you extends Provider {
     public JSONObject format(final Show show) throws JSONException {
         return new JSONObject()
                 .put(StringHandler.SHOW_ID, show.getID())
-                .put(StringHandler.SHOW_IMAGE_URL, StringHandler.COVER_DATABASE.concat(show.getShowJSON().getString("image_id")))
-                .put(StringHandler.SHOW_EPISODE_COUNT, show.getShowJSON().getString("Letzte"))
-                .put(StringHandler.SHOW_TITLE, show.getShowJSON().getString("titel"))
-                .put(StringHandler.SHOW_LANG, show.getShowJSON().getString("Untertitel"))
-                .put(StringHandler.SHOW_YEAR, show.getShowJSON().getString("Jahr"))
-                .put(StringHandler.SHOW_PROVIDER, StringHandler.SHOW_PROVIDER_ANIME4YOU);
+                .put(StringHandler.SHOW_IMAGE_URL, show.getImageURL())
+                .put(StringHandler.SHOW_EPISODE_COUNT, show.getEpisodes())
+                .put(StringHandler.SHOW_TITLE, show.getTitle())
+                .put(StringHandler.SHOW_LANG, show.getLanguage())
+                .put(StringHandler.SHOW_YEAR, show.getYear())
+                .put(StringHandler.SHOW_PROVIDER, ProviderType.ANIME4YOU.name());
     }
+
+    @Override
+    public Show getShow(final JSONObject data) throws JSONException {
+        return new Show(data.getString("aid"),
+                data.getString("titel"),
+                data.getString("Letzte"),
+                StringHandler.COVER_DATABASE.concat(data.getString("image_id")),
+                data.getString("Untertitel"),
+                ProviderType.ANIME4YOU.getProvider());
+    }
+
 
     @Override
     public void handleDownload() {
