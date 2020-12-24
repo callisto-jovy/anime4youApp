@@ -1,11 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.media:media:1.0.1@aar">
     <ANNOTATIONS>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/a4888b703e498ad4cc5af40eab2494f8/media-1.0.1/annotations.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/aec8e68cbe6c608af5c7c514df29d5ba/media-1.0.1/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/a4888b703e498ad4cc5af40eab2494f8/media-1.0.1/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/a4888b703e498ad4cc5af40eab2494f8/media-1.0.1/res" />
+      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/aec8e68cbe6c608af5c7c514df29d5ba/media-1.0.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/aec8e68cbe6c608af5c7c514df29d5ba/media-1.0.1/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
