@@ -20,42 +20,28 @@ import java.util.function.Consumer;
 
 public abstract class Provider {
 
-    private Providers type;
-    private String baseURL;
+    private final String name;
 
-    public Provider(Providers type, String baseURL) {
-        this.type = type;
-        this.baseURL = baseURL;
+    public Provider(String type) {
+        this.name = type;
     }
 
     public abstract void refreshShow(final Show show, final Consumer<Show> updatedShow);
 
-    public abstract void handleSearch(final String searchQuery, final Consumer<List<JSONObject>> searchResults);
+    public abstract void handleSearch(final java.lang.String searchQuery, final Consumer<List<Show>> searchResults);
 
     public abstract JSONObject format(final Show show) throws JSONException;
 
     public abstract Show getShow(final JSONObject data) throws JSONException;
 
-    public abstract Optional<URL> handleURLRequest(Show show, final Context context, int... ints);
+    public abstract void handleURLRequest(Show show, final Context context, Consumer<Optional<URL>> resultURL, int... ints);
 
     public abstract void handleDownload(SelectedActivity activity, final URL url, final Show show, final File outDirectory, final int... ints);
 
     public abstract Show decode(JSONObject showJSON) throws JSONException;
 
-    public Providers getType() {
-        return type;
-    }
-
-    public void setType(Providers type) {
-        this.type = type;
-    }
-
-    public String getBaseURL() {
-        return baseURL;
-    }
-
-    public void setBaseURL(String baseURL) {
-        this.baseURL = baseURL;
+    public String getName() {
+        return name;
     }
 
 }

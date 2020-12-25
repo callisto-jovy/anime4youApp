@@ -19,11 +19,11 @@ public enum Providers {
         this.provider = provider;
     }
 
-    public Provider getProvider() {
-        return provider;
+    public static Provider getProvider(final java.lang.String enumValue) {
+        return valueOf(enumValue).getProvider();
     }
 
-    public static Provider getProvider(final String enumValue) {
-        return valueOf(enumValue).getProvider();
+    public Provider getProvider() {
+        return provider;
     }
 }

@@ -23,7 +23,6 @@ import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.tasks.gogoanime.GogoAnimeFetchTask;
 import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,28 +41,28 @@ public class SearchFragment extends Fragment {
 
         showSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(java.lang.String query) {
                 ((SearchAdapter) listView.getAdapter()).getEntries().clear();
                 for (final Providers value : Providers.values()) {
-                    value.getProvider().handleSearch(query, jsonObjects -> {
-                        ((SearchAdapter) listView.getAdapter()).getEntries().addAll(jsonObjects);
+                    value.getProvider().handleSearch(query, shows -> {
+                        ((SearchAdapter) listView.getAdapter()).getEntries().addAll(shows);
+                        ((SearchAdapter) listView.getAdapter()).notifyDataSetChanged();
 
                     });
                 }
                 showSearch.clearFocus();
-                ((SearchAdapter) listView.getAdapter()).notifyDataSetChanged();
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onQueryTextChange(java.lang.String newText) {
                 return false;
             }
         });
 
         root.findViewById(R.id.add_aid).setOnClickListener(v -> new InputDialogBuilder(new InputDialogBuilder.InputDialogListener() {
             @Override
-            public void onDialogInput(String text) {
+            public void onDialogInput(java.lang.String text) {
                 new GogoAnimeFetchTask(text).executeAsync(new TaskExecutor.Callback<Show>() {
                     @Override
                     public void onComplete(final Show result) throws Exception {
@@ -76,26 +75,6 @@ public class SearchFragment extends Fragment {
 
                     }
                 });
-                /*
-
-                if (!StringHandler.isOnline(Objects.requireNonNull(getActivity()))) {
-                    Toast.makeText(root.getContext(), "You are currently not connected to the internet", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                //Create new database request. get episodes, imageURL, name
-                new TaskExecutor().executeAsync(new Anime4YouDataBaseTask(text, new AniDBSearch()), new TaskExecutor.Callback<JSONObject>() {
-                    @Override
-                    public void onComplete(final JSONObject result) throws Exception {
-                        AnimeAppMain.getInstance().getShowSaver().addShow(result);
-                        Toast.makeText(root.getContext(), "Added show!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void preExecute() {
-                    }
-                });
-
-                 */
             }
 
             @Override
@@ -107,10 +86,10 @@ public class SearchFragment extends Fragment {
     }
 
     static class SearchAdapter extends BaseAdapter {
-        private final List<JSONObject> entries;
+        private final List<Show> entries;
         private final Context context;
 
-        public SearchAdapter(final List<JSONObject> entries, final Context context) {
+        public SearchAdapter(final List<Show> entries, final Context context) {
             this.entries = entries;
             this.context = context;
         }
@@ -135,11 +114,11 @@ public class SearchFragment extends Fragment {
             if (convertView == null) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.show_item_layout, parent, false);
 
-                final JSONObject jsonAtIndex = (JSONObject) getItem(position);
+                final Show showAtIndex = (Show) getItem(position);
 
                 convertView.setOnClickListener(listener -> {
                     try {
-                        AnimeAppMain.getInstance().getShowSaver().addShow(Providers.ANIME4YOU.getProvider().getShow(jsonAtIndex));
+                        AnimeAppMain.getInstance().getShowSaver().addShow(showAtIndex);
                         Toast.makeText(context, "Added show!", Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -149,17 +128,12 @@ public class SearchFragment extends Fragment {
                 final TextView showTitle = convertView.findViewById(R.id.show_title);
                 final TextView showEpisodes = convertView.findViewById(R.id.show_episodes);
                 final TextView showLanguage = convertView.findViewById(R.id.show_language);
-                final TextView showYear = convertView.findViewById(R.id.show_year);
+                final TextView showYear = convertView.findViewById(R.id.show_provider);
 
-                try {
-                    showTitle.append(jsonAtIndex.getString("titel"));
-                    showEpisodes.append(jsonAtIndex.getString("Letzte"));
-                    showLanguage.append(jsonAtIndex.getString("Untertitel"));
-                    showYear.append(jsonAtIndex.getString("Jahr"));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                showTitle.append(showAtIndex.getTitle());
+                showEpisodes.append(showAtIndex.getEpisodes());
+                showLanguage.append(showAtIndex.getLanguage());
+                showYear.append(showAtIndex.getProvider().getName());
 
             }
 
@@ -167,7 +141,7 @@ public class SearchFragment extends Fragment {
             return convertView;
         }
 
-        public List<JSONObject> getEntries() {
+        public List<Show> getEntries() {
             return entries;
         }
     }

@@ -47,8 +47,9 @@ public class Anime4you extends Provider {
     public static final Anime4YouDBSearch ANIME_4_YOU_DB_SEARCH = new Anime4YouDBSearch();
 
     public Anime4you() {
-        super(Providers.ANIME4YOU, StringHandler.DATABASE);
+        super("ANIME4YOU");
     }
+
 
     @Override
     public void refreshShow(Show show, Consumer<Show> updatedShow) {
@@ -66,10 +67,10 @@ public class Anime4you extends Provider {
     }
 
     @Override
-    public void handleSearch(String searchQuery, Consumer<List<JSONObject>> searchResults) {
-        new Anime4YouSearchDBTask(searchQuery).executeAsync(new TaskExecutor.Callback<List<JSONObject>>() {
+    public void handleSearch(java.lang.String searchQuery, Consumer<List<Show>> searchResults) {
+        new Anime4YouSearchDBTask(searchQuery).executeAsync(new TaskExecutor.Callback<List<Show>>() {
             @Override
-            public void onComplete(final List<JSONObject> result) {
+            public void onComplete(final List<Show> result) {
                 searchResults.accept(result);
             }
 
@@ -116,7 +117,7 @@ public class Anime4you extends Provider {
     }
 
     @Override
-    public Optional<URL> handleURLRequest(final Show show, final Context context, int... ints) {
+    public void handleURLRequest(Show show, Context context, Consumer<Optional<URL>> resultURL, int... ints) {
         final WebView webView = new WebView(context);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(StringHandler.CAPTCHA_ANIME_4_YOU_ONE);
@@ -131,26 +132,26 @@ public class Anime4you extends Provider {
 
         AtomicReference<URL> url = new AtomicReference<>();
 
-        new Anime4YouDirectVideoTask(show.getID(), ints[1]).executeAsync(new TaskExecutor.Callback<String>() {
+        new Anime4YouDirectVideoTask(show.getID(), ints[1]).executeAsync(new TaskExecutor.Callback<java.lang.String>() {
             @Override
-            public void onComplete(String foundEntry) {
+            public void onComplete(java.lang.String foundEntry) {
                 webView.setWebViewClient(new WebViewClient() {
                     @Override
-                    public void onPageFinished(final WebView view, final String u) {
+                    public void onPageFinished(final WebView view, final java.lang.String u) {
                         view.evaluateJavascript(foundEntry, resultFromCaptcha -> {
                             try {
                                 final JSONArray resultJSON = new JSONObject(resultFromCaptcha).getJSONArray("hosts");
-                                final String vivoURLEncoded = resultJSON.getJSONObject(2).getString("href");
-                                final String vidozaHash = resultJSON.getJSONObject(1).getString("crypt");
+                                final java.lang.String vivoURLEncoded = resultJSON.getJSONObject(2).getString("href");
+                                final java.lang.String vidozaHash = resultJSON.getJSONObject(1).getString("crypt");
 
-                                final String[] urls = new String[2];
+                                final java.lang.String[] urls = new java.lang.String[2];
 
-                                final Consumer<String> onDone = vivoURLDecoded -> {
+                                final Consumer<java.lang.String> onDone = vivoURLDecoded -> {
                                     urls[0] = vivoURLDecoded;
                                     webView.destroy();
                                     view.destroy();
 
-                                    String finalURL = urls[0];
+                                    java.lang.String finalURL = urls[0];
                                     if (urls[0] == null && urls[1] == null) {
                                         makeText("No link found for requested video", context);
                                         return;
@@ -163,13 +164,13 @@ public class Anime4you extends Provider {
                                     }
 
                                     try {
-                                        url.set(new URL(finalURL.replace("\"", "")));
+                                        resultURL.accept(Optional.of(new URL(finalURL.replace("\"", ""))));
                                     } catch (MalformedURLException e) {
                                         e.printStackTrace();
                                     }
                                 };
 
-                                view.evaluateJavascript(String.format(StringHandler.VIDOZA_SCRIPT, vidozaHash), vidozaURL -> {
+                                view.evaluateJavascript(java.lang.String.format(StringHandler.VIDOZA_SCRIPT, vidozaHash), vidozaURL -> {
                                     Vidoza.fetch(vidozaURL.replace("\"", ""), new LowCostVideo.OnTaskCompleted() {
                                         @Override
                                         public void onTaskCompleted(final ArrayList<XModel> vidURL, final boolean multiple_quality) {
@@ -197,17 +198,17 @@ public class Anime4you extends Provider {
             public void preExecute() {
             }
         });
-        return Optional.ofNullable(url.get());
     }
 
-    public void makeText(final String text, final Context context) {
+
+    public void makeText(final java.lang.String text, final Context context) {
         Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 
-    private void decodeVivo(final String vivoURL, final Consumer<String> url) {
-        new VivoDecodeTask(vivoURL).executeAsync(new TaskExecutor.Callback<String>() {
+    private void decodeVivo(final java.lang.String vivoURL, final Consumer<java.lang.String> url) {
+        new VivoDecodeTask(vivoURL).executeAsync(new TaskExecutor.Callback<java.lang.String>() {
             @Override
-            public void onComplete(String result) {
+            public void onComplete(java.lang.String result) {
                 url.accept(result);
             }
 

@@ -42,9 +42,9 @@
             app:layout_constraintHorizontal_bias="0.955" app:layout_constraintVertical_bias="0.976"
     />
     <TextView
-            android:text="Anime Name"
+            android:text="Title:"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:id="@+id/selected_anime_name"
+            android:layout_height="wrap_content" android:id="@+id/selected_show_name"
             app:layout_constraintStart_toEndOf="@+id/anime_cover_image" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selected_anime_toolbar"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
@@ -88,14 +88,14 @@
             app:layout_constraintStart_toStartOf="parent"
             android:alpha="0.87" android:id="@+id/textView"/>
     <TextView
-            android:text="AID:"
+            android:text="ID:"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/selected_anime_aid"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/anime_cover_image"
             app:layout_constraintHorizontal_bias="0.0"
             android:alpha="0.87" app:layout_constraintBottom_toBottomOf="@+id/anime_cover_image"
-            app:layout_constraintTop_toBottomOf="@+id/selected_anime_name" app:layout_constraintVertical_bias="0.3"/>
+            app:layout_constraintTop_toBottomOf="@+id/selected_show_name" app:layout_constraintVertical_bias="0.3"/>
     <TextView
             android:text="Language:"
             android:layout_width="wrap_content"

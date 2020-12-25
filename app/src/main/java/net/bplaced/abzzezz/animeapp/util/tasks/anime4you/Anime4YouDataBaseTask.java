@@ -16,9 +16,9 @@ import java.util.concurrent.Callable;
 public class Anime4YouDataBaseTask implements Callable<Show> {
 
     private final Anime4YouDBSearch anime4YouDBSearch;
-    private final String id;
+    private final java.lang.String id;
 
-    public Anime4YouDataBaseTask(String id, Anime4YouDBSearch anime4YouDBSearch) {
+    public Anime4YouDataBaseTask(java.lang.String id, Anime4YouDBSearch anime4YouDBSearch) {
         this.anime4YouDBSearch = anime4YouDBSearch;
         this.id = id;
     }

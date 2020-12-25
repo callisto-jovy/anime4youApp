@@ -11,8 +11,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 import ga.abzzezz.util.logging.Logger;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouDownloadTask;
 import net.bplaced.abzzezz.animeapp.util.tasks.IntentHelper;
+import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouDownloadTask;
 
 public class StopDownloadReceiver extends BroadcastReceiver {
 

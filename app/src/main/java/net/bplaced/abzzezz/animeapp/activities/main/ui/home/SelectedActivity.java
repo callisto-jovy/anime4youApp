@@ -59,12 +59,12 @@ public class SelectedActivity extends AppCompatActivity {
          */
         this.show = (Show) IntentHelper.getObjectForKey("show");
 
-        this.showDirectory = new File(getFilesDir(), show.getProvider().getType().name() + show.getTitle());
+        this.showDirectory = new File(getFilesDir(), show.getProvider().getName() + show.getTitle());
 
         final String coverUrl = show.getImageURL();
 
         //Set text etc.
-        ((TextView) findViewById(R.id.selected_anime_name)).setText(show.getTitle());
+        ((TextView) findViewById(R.id.selected_show_name)).setText(show.getTitle());
         ((TextView) findViewById(R.id.selected_anime_episodes)).append(show.getEpisodes());
         ((TextView) findViewById(R.id.selected_anime_aid)).append(show.getID());
         ((TextView) findViewById(R.id.selected_anime_language)).append(show.getLanguage());
@@ -204,16 +204,20 @@ public class SelectedActivity extends AppCompatActivity {
             return;
         }
 
-        show.getProvider().handleURLRequest(show, getApplicationContext(), count[0], count[1], countMax).ifPresent(url -> {
-            if (stream) {
-                final Intent intent = new Intent(SelectedActivity.this, StreamPlayer.class);
-                intent.putExtra("stream", url);
-                startActivity(intent);
-                finish();
-            } else {
-                show.getProvider().handleDownload(this, url, show, showDirectory, count[0], count[1], countMax);
-            }
-        });
+
+        show.getProvider().handleURLRequest(show, getApplicationContext(), optionalURL -> {
+            optionalURL.ifPresent(url -> {
+                if (stream) {
+                    final Intent intent = new Intent(SelectedActivity.this, StreamPlayer.class);
+                    intent.putExtra("stream", url);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    show.getProvider().handleDownload(this, url, show, showDirectory, count[0], count[1], countMax);
+                }
+            });
+        }, count[0], count[1], countMax);
+
     }
 
     /**

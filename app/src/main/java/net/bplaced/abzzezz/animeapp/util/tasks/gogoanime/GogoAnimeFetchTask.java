@@ -18,9 +18,9 @@ import java.util.concurrent.Callable;
 
 public class GogoAnimeFetchTask extends TaskExecutor implements Callable<Show> {
 
-    private final String urlIn;
+    private final java.lang.String urlIn;
 
-    public GogoAnimeFetchTask(final String urlIn) {
+    public GogoAnimeFetchTask(final java.lang.String urlIn) {
         this.urlIn = urlIn;
     }
 
@@ -31,15 +31,15 @@ public class GogoAnimeFetchTask extends TaskExecutor implements Callable<Show> {
     @Override
     public Show call() throws Exception {
         final GogoAnimeFetcher fetcher = new GogoAnimeFetcher(urlIn);
-        final String id = fetcher.getID();
-        final String title = fetcher.getShowTitle();
-        final String imageURL = fetcher.fetchImage0();
-        final String episodeStart = fetcher.getEpisodeStart();
-        final String episodeEnd = fetcher.getEpisodeEnd();
+        final java.lang.String id = fetcher.getID();
+        final java.lang.String title = fetcher.getShowTitle();
+        final java.lang.String imageURL = fetcher.fetchImage0();
+        final java.lang.String episodeStart = fetcher.getEpisodeStart();
+        final java.lang.String episodeEnd = fetcher.getEpisodeEnd();
 
         final JSONArray episodes = new JSONArray();
 
-        for (final String fetchedDirectURL : fetcher.getFetchedDirectURLs()) episodes.put(fetchedDirectURL);
+        for (final java.lang.String fetchedDirectURL : fetcher.getFetchedDirectURLs()) episodes.put(fetchedDirectURL);
 
         return Providers.GOGOANIME.getProvider().getShow(new JSONObject()
                 .put(StringHandler.SHOW_ID, id)

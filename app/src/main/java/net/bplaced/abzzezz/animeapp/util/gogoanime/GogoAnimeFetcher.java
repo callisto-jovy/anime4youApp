@@ -1,6 +1,7 @@
 package net.bplaced.abzzezz.animeapp.util.gogoanime;
 
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
+import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
@@ -23,6 +24,8 @@ public class GogoAnimeFetcher {
     public static final String API_URL = "https://gogo-play.net/ajax.php?id=%s";
     //Start, end, anime-id, Returns a "list" containing all redirects to the other episodes
     public static final String EPISODE_API_URL = "https://ajax.gogocdn.net/ajax/load-list-episode?ep_start=%d&ep_end=%d&id=%d";
+
+    public static final String SEARCH_URL = "https://gogoanime.so/search.html?keyword=%s";
 
     public static final Pattern PATTERN = Pattern.compile("id=.+&");
 
@@ -114,6 +117,25 @@ public class GogoAnimeFetcher {
                         return "";
                     }
                 }).toArray(String[]::new);
+    }
+
+    public static String[] getURLsFromSearch(final String searchQuery) throws IOException {
+        final Document document = Jsoup.connect(String.format(SEARCH_URL, searchQuery)).userAgent(StringHandler.USER_AGENT).get();
+        return document.getElementsByClass("name").stream().map(element -> BASE_URL + element.select("a").attr("href")).toArray(String[]::new);
+    }
+
+    public static String getDirectVideoURL(final String urlIn) throws JSONException {
+        return getVidURL(String.format(API_URL, urlIn));
+    }
+
+    /**
+     * Gets the direct video url from the formatted api link
+     *
+     * @param in read in lines
+     * @return url to mp4
+     */
+    private static String getVidURL(final String in) throws JSONException {
+        return new JSONObject(in).getJSONArray("source").getJSONObject(0).getString("file");
     }
 
     /**
@@ -216,21 +238,6 @@ public class GogoAnimeFetcher {
                         return "";
                     }
                 }).toArray(String[]::new);
-    }
-
-
-    public static String getDirectVideoURL(final String urlIn) throws JSONException {
-        return getVidURL(String.format(API_URL, urlIn));
-    }
-
-    /**
-     * Gets the direct video url from the formatted api link
-     *
-     * @param in read in lines
-     * @return url to mp4
-     */
-    private static String getVidURL(final String in) throws JSONException {
-        return new JSONObject(in).getJSONArray("source").getJSONObject(0).getString("file");
     }
 
     /**
