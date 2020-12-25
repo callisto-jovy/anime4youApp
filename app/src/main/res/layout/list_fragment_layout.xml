@@ -10,24 +10,29 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
-                                                   android:id="@+id/anime_list_layout"
-        >
+                                                   android:id="@+id/anime_list_layout">
 
-    <GridView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:numColumns="3"
-            android:columnWidth="@android:dimen/thumbnail_width"
-            android:stretchMode="columnWidth"
-            tools:context="net.bplaced.abzzezz.animeapp.activities.main.AnimeListActivity"
-            android:id="@+id/anime_grid"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintVertical_bias="0.0"
-            app:layout_constraintTop_toTopOf="parent">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swiperefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </GridView>
+        <GridView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:numColumns="3"
+                android:columnWidth="@android:dimen/thumbnail_width"
+                android:stretchMode="columnWidth"
+                tools:context="net.bplaced.abzzezz.animeapp.activities.main.AnimeListActivity"
+                android:id="@+id/anime_grid"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintVertical_bias="0.0"
+                app:layout_constraintTop_toTopOf="parent">
+
+        </GridView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

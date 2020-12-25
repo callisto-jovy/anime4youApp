@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.squareup.picasso.Picasso;
 import ga.abzzezz.util.logging.Logger;
 import id.ionbit.ionalert.IonAlert;
@@ -73,6 +74,20 @@ public class ListFragment extends Fragment {
                     .setCancelText("Close").setCancelClickListener(IonAlert::dismissWithAnimation)
                     .show();
         }
+
+        final SwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            for (int i = 0; i < AnimeAppMain.getInstance().getShowSaver().getShowSize(); i++) {
+                int finalI = i;
+                AnimeAppMain.getInstance().getShowSaver().getShow(i).ifPresent(show -> {
+                    show.getProvider().refreshShow(show, refreshedShow -> {
+                        AnimeAppMain.getInstance().getShowSaver().refreshShow(refreshedShow, finalI);
+                        Toast.makeText(getContext(), "Refreshed show:" + refreshedShow.getTitle(), Toast.LENGTH_SHORT).show();
+                    });
+                });
+            }
+            swipeRefreshLayout.setRefreshing(false);
+        });
         return root;
     }
 
@@ -92,12 +107,9 @@ public class ListFragment extends Fragment {
         }
 
         showAtIndex.ifPresent(show -> {
-            show.getProvider().refreshShow(show, refreshedShow -> {
-                AnimeAppMain.getInstance().getShowSaver().refreshShow(refreshedShow, index);
-                IntentHelper.addObjectForKey(refreshedShow, "show");
-                startActivity(intent);//.putExtra("details", result.toString())*/);
-                Objects.requireNonNull(getActivity()).finish();
-            });
+            IntentHelper.addObjectForKey(show, "show");
+            startActivity(intent);//.putExtra("details", result.toString())*/);
+            Objects.requireNonNull(getActivity()).finish();
         });
     }
 

@@ -98,9 +98,25 @@ public class GogoAnime extends Provider {
     }
 
     @Override
+    public Show decode(JSONObject showJSON) throws JSONException {
+        final JSONArray episodes = showJSON.getJSONArray("episodes");
+        return new Show(
+                showJSON.getString(StringHandler.SHOW_ID),
+                showJSON.getString(StringHandler.SHOW_TITLE),
+                java.lang.String.valueOf(episodes.length()),
+                showJSON.getString(StringHandler.SHOW_IMAGE_URL),
+                showJSON.getString(StringHandler.SHOW_LANG),
+                Providers.GOGOANIME.getProvider(), new JSONObject()
+                .put("episodes", episodes)
+                .put("ep_start", showJSON.getInt("ep_start"))
+                .put("ep_end", showJSON.getInt("ep_end")));
+    }
+
+    @Override
     public void handleURLRequest(Show show, Context context, Consumer<Optional<URL>> resultURL, int... ints) {
         try {
-            final String apiURL = java.lang.String.format(GogoAnimeFetcher.API_URL, show.getShowAdditional().getJSONArray("episodes").getString((ints[1] + 1)));
+            final JSONArray episodes = show.getShowAdditional().getJSONArray("episodes");
+            final String apiURL = java.lang.String.format(GogoAnimeFetcher.API_URL, episodes.getString(episodes.length() - (ints[1] + 1)));
             AtomicReference<URL> url = new AtomicReference<>();
 
             new GogoAnimeFetchAPITask(apiURL).executeAsync(new TaskExecutor.Callback<String>() {
@@ -117,21 +133,6 @@ public class GogoAnime extends Provider {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public Show decode(JSONObject showJSON) throws JSONException {
-        final JSONArray episodes = showJSON.getJSONArray("episodes");
-        return new Show(
-                showJSON.getString(StringHandler.SHOW_ID),
-                showJSON.getString(StringHandler.SHOW_TITLE),
-                java.lang.String.valueOf(episodes.length()),
-                showJSON.getString(StringHandler.SHOW_IMAGE_URL),
-                showJSON.getString(StringHandler.SHOW_LANG),
-                Providers.GOGOANIME.getProvider(), new JSONObject()
-                .put("episodes", episodes)
-                .put("ep_start", showJSON.getInt("ep_start"))
-                .put("ep_end", showJSON.getInt("ep_end")));
     }
 
     @Override
