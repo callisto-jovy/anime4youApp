@@ -20,7 +20,7 @@ import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
 import net.bplaced.abzzezz.animeapp.util.provider.Providers;
-import net.bplaced.abzzezz.animeapp.util.provider.holders.Anime4YouHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.impl.Anime4YouHolder;
 import net.bplaced.abzzezz.animeapp.util.scripter.Anime4YouDBSearch;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.show.Show;

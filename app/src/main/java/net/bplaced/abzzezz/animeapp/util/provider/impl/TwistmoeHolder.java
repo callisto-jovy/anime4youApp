@@ -4,7 +4,7 @@
  * Last modified: 29.12.20, 17:41
  */
 
-package net.bplaced.abzzezz.animeapp.util.provider.holders;
+package net.bplaced.abzzezz.animeapp.util.provider.impl;
 
 import java.util.Random;
 

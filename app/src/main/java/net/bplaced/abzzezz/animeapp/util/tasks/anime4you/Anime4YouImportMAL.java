@@ -10,7 +10,7 @@ import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
 import ga.abzzezz.util.stringing.StringUtil;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
-import net.bplaced.abzzezz.animeapp.util.provider.holders.Anime4YouHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.impl.Anime4YouHolder;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.ricecode.similarity.JaroStrategy;
 import net.ricecode.similarity.SimilarityStrategy;

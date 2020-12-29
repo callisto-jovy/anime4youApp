@@ -16,6 +16,7 @@ import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.tasks.twistmoe.TwistmoeDecodeSourcesTask;
 import net.bplaced.abzzezz.animeapp.util.tasks.twistmoe.TwistmoeEpisodeDownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.twistmoe.TwistmoeFetchCallable;
 import net.bplaced.abzzezz.animeapp.util.tasks.twistmoe.TwistmoeSearchTask;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +35,17 @@ public class Twistmoe extends Provider {
 
     @Override
     public void refreshShow(Show show, Consumer<Show> updatedShow) {
+        new TaskExecutor().executeAsync(() -> new TwistmoeFetchCallable(show.getShowAdditional().getString("slug")).call(), new TaskExecutor.Callback<JSONObject>() {
+            @Override
+            public void onComplete(JSONObject result) throws Exception {
+                updatedShow.accept(getShow(result));
+            }
 
+            @Override
+            public void preExecute() {
+                Logger.log("Refreshing twist.moe", Logger.LogType.INFO);
+            }
+        });
     }
 
     @Override
@@ -62,7 +73,7 @@ public class Twistmoe extends Provider {
                 showJSON.getString(StringHandler.SHOW_IMAGE_URL),
                 showJSON.getString(StringHandler.SHOW_LANG),
                 Providers.TWISTMOE.getProvider(),
-                new JSONObject().put("src", showJSON.getJSONArray("src")));
+                new JSONObject().put("src", showJSON.getJSONArray("src")).put("slug", showJSON.getString("slug")));
     }
 
     @Override
@@ -74,6 +85,7 @@ public class Twistmoe extends Provider {
                 .put(StringHandler.SHOW_EPISODE_COUNT, show.getEpisodes())
                 .put(StringHandler.SHOW_IMAGE_URL, show.getImageURL())
                 .put("src", show.getShowAdditional().getJSONArray("src"))
+                .put("slug", show.getShowAdditional().getString("slug"))
                 .put(StringHandler.SHOW_PROVIDER, Providers.TWISTMOE.name());
     }
 
@@ -81,7 +93,7 @@ public class Twistmoe extends Provider {
     public Show getShow(JSONObject data) throws JSONException {
         final String title = data.getString("title");
         final String imageURL = StringHandler.IMAGE_URL + title;
-        final JSONObject additional = new JSONObject().put("src", data.getJSONArray("sources"));
+        final JSONObject additional = new JSONObject().put("src", data.getJSONArray("sources")).put("slug", data.getString("url"));
         return new Show(data.getString("id"), title, data.getString("episodes"), imageURL, "eng-sub", Providers.TWISTMOE.getProvider(), additional);
     }
 

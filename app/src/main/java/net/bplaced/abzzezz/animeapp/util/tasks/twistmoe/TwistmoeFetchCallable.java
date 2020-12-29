@@ -7,7 +7,7 @@
 package net.bplaced.abzzezz.animeapp.util.tasks.twistmoe;
 
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
-import net.bplaced.abzzezz.animeapp.util.provider.holders.TwistmoeHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.impl.TwistmoeHolder;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import org.json.JSONArray;
 import org.json.JSONObject;

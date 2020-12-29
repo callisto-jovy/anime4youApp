@@ -4,7 +4,7 @@
  * Last modified: 29.12.20, 17:45
  */
 
-package net.bplaced.abzzezz.animeapp.util.provider.holders;
+package net.bplaced.abzzezz.animeapp.util.provider.impl;
 
 public interface Anime4YouHolder {
 

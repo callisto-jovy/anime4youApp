@@ -8,7 +8,7 @@ package net.bplaced.abzzezz.animeapp.util.scripter;
 
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
-import net.bplaced.abzzezz.animeapp.util.provider.holders.Anime4YouHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.impl.Anime4YouHolder;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
