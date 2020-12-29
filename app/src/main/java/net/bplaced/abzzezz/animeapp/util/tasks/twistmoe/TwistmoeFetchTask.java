@@ -6,10 +6,8 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.twistmoe;
 
-import android.util.Log;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.provider.holders.TwistmoeHolder;
-import net.bplaced.abzzezz.animeapp.util.provider.providers.Twistmoe;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,8 +15,6 @@ import org.json.JSONObject;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
@@ -28,7 +24,7 @@ public class TwistmoeFetchTask extends TaskExecutor implements Callable<JSONObje
     private final String url;
 
     public TwistmoeFetchTask(final String itemUrl) {
-        this.showName = itemUrl.substring(itemUrl.indexOf("/a/") + 3, itemUrl.lastIndexOf("/"));
+        this.showName = itemUrl;
         this.url = SHOW_API + showName;
 
     }
@@ -59,7 +55,7 @@ public class TwistmoeFetchTask extends TaskExecutor implements Callable<JSONObje
                 .put("title", fetchedDetails.getString("title"))
                 .put("id", fetchedDetails.getString("id"))
                 .put("sources", sources)
-                .put("episode_count", sources.length())
+                .put("episodes", sources.length())
                 .put("description", fetchedDetails.getString("description"));
         return showDetails;
     }

@@ -18,9 +18,9 @@ public class StringHandler {
     public static final String APP_VERSION_TXT = "http://abzzezz.bplaced.net/app/app_version_new.txt";
     public static final String APP_CHANGELOG_TXT = "http://abzzezz.bplaced.net/app/changelog.txt";
     public static final String USER_URL = "http://abzzezz.bplaced.net/app/user.php";
+    public static final String IMAGE_URL = "http://abzzezz.bplaced.net/app/imgCreate.php?text=%s";
 
 
-    //https://gogoanime.so/search.html?keyword=Darling
     /*
     JSON keys
      */

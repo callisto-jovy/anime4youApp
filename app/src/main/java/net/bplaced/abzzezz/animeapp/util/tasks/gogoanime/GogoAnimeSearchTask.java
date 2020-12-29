@@ -20,9 +20,9 @@ import java.util.concurrent.Callable;
 
 public class GogoAnimeSearchTask extends TaskExecutor implements Callable<List<Show>> {
 
-    private final java.lang.String searchQuery;
+    private final String searchQuery;
 
-    public GogoAnimeSearchTask(final java.lang.String searchQuery) {
+    public GogoAnimeSearchTask(final String searchQuery) {
         this.searchQuery = searchQuery;
     }
 
@@ -34,19 +34,19 @@ public class GogoAnimeSearchTask extends TaskExecutor implements Callable<List<S
     public List<Show> call() throws Exception {
         final List<Show> showsOut = new ArrayList<>();
 
-        final java.lang.String[] urls = GogoAnimeFetcher.getURLsFromSearch(searchQuery);
+        final String[] urls = GogoAnimeFetcher.getURLsFromSearch(searchQuery);
 
-        for (final java.lang.String url : urls) {
+        for (final String url : urls) {
             final GogoAnimeFetcher fetcher = new GogoAnimeFetcher(url);
-            final java.lang.String id = fetcher.getID();
-            final java.lang.String title = fetcher.getShowTitle();
-            final java.lang.String imageURL = fetcher.fetchImage0();
-            final java.lang.String episodeStart = fetcher.getEpisodeStart();
-            final java.lang.String episodeEnd = fetcher.getEpisodeEnd();
+            final String id = fetcher.getID();
+            final String title = fetcher.getShowTitle();
+            final String imageURL = fetcher.fetchImage0();
+            final String episodeStart = fetcher.getEpisodeStart();
+            final String episodeEnd = fetcher.getEpisodeEnd();
 
             final JSONArray episodes = new JSONArray();
 
-            for (final java.lang.String fetchedDirectURL : fetcher.getFetchedDirectURLs())
+            for (final String fetchedDirectURL : fetcher.getFetchedDirectURLs())
                 episodes.put(fetchedDirectURL);
 
             showsOut.add(Providers.GOGOANIME.getProvider().getShow(new JSONObject()

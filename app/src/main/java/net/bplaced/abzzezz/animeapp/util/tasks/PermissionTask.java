@@ -20,6 +20,6 @@ public class PermissionTask extends TaskExecutor implements Callable<Boolean> {
 
     @Override
     public Boolean call() throws Exception {
-        return URLUtil.createHTTPURLConnection(StringHandler.USER_URL, "POST", new String[]{"Referer", AnimeAppMain.getInstance().getAndroidId()}).getResponseCode() != 200;
+        return URLUtil.createHTTPURLConnection(StringHandler.IMAGE_URL, "POST", new String[]{"Referer", AnimeAppMain.getInstance().getAndroidId()}).getResponseCode() != 200;
     }
 }

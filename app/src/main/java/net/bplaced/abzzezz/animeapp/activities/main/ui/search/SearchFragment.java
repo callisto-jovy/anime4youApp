@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.util.provider.Providers;
+import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.tasks.gogoanime.GogoAnimeFetchTask;
@@ -42,6 +43,7 @@ public class SearchFragment extends Fragment {
         showSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(java.lang.String query) {
+                if(!StringHandler.isOnline(getContext())) return true;
                 ((SearchAdapter) listView.getAdapter()).getEntries().clear();
                 for (final Providers value : Providers.values()) {
                     value.getProvider().handleSearch(query, shows -> {

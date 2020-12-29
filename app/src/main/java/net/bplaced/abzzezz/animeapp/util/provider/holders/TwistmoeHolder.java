@@ -20,6 +20,8 @@ public interface TwistmoeHolder {
 
     String STREAM_URL = "https://twistcdn.bunny.sh";
 
+    String SHOW_BASE_URL = "https://twist.moe/a/";
+
 
     default String getRequestToken() {
         final String[] tokens = {"1rj2vRtegS8Y60B3w3qNZm5T2Q0TN2NR"};

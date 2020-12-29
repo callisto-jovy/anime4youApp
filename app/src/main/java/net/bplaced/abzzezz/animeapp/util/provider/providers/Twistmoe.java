@@ -7,8 +7,11 @@
 package net.bplaced.abzzezz.animeapp.util.provider.providers;
 
 import android.content.Context;
+import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
+import net.bplaced.abzzezz.animeapp.util.provider.Providers;
+import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.tasks.twistmoe.TwistmoeSearchTask;
@@ -42,19 +45,42 @@ public class Twistmoe extends Provider {
 
             @Override
             public void preExecute() {
-
+                Logger.log("Searching twist.moe", Logger.LogType.INFO);
             }
         });
     }
 
+
+    @Override
+    public Show decode(JSONObject showJSON) throws JSONException {
+        return new Show(
+                showJSON.getString(StringHandler.SHOW_ID),
+                showJSON.getString(StringHandler.SHOW_TITLE),
+                showJSON.getString(StringHandler.SHOW_EPISODE_COUNT),
+                showJSON.getString(StringHandler.SHOW_IMAGE_URL),
+                showJSON.getString(StringHandler.SHOW_LANG),
+                Providers.TWISTMOE.getProvider(),
+                new JSONObject().put("src", showJSON.getJSONArray("src")));
+    }
+
     @Override
     public JSONObject format(Show show) throws JSONException {
-        return null;
+        return new JSONObject()
+                .put(StringHandler.SHOW_ID, show.getID())
+                .put(StringHandler.SHOW_TITLE, show.getTitle())
+                .put(StringHandler.SHOW_LANG, show.getLanguage())
+                .put(StringHandler.SHOW_EPISODE_COUNT, show.getEpisodes())
+                .put(StringHandler.SHOW_IMAGE_URL, show.getImageURL())
+                .put("src", show.getShowAdditional().getJSONArray("src"))
+                .put(StringHandler.SHOW_PROVIDER, Providers.GOGOANIME.name());
     }
 
     @Override
     public Show getShow(JSONObject data) throws JSONException {
-        return null;
+        final String title = data.getString("title");
+        final String imageURL = String.format(StringHandler.IMAGE_URL, title);
+        final JSONObject additional = new JSONObject().put("src", data.getJSONArray("sources"));
+        return new Show(data.getString("id"), title, data.getString("episodes"), imageURL, "eng-sub", Providers.TWISTMOE.getProvider(), additional);
     }
 
     @Override
@@ -67,8 +93,4 @@ public class Twistmoe extends Provider {
 
     }
 
-    @Override
-    public Show decode(JSONObject showJSON) throws JSONException {
-        return null;
-    }
 }

@@ -13,6 +13,7 @@ import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.ricecode.similarity.JaroStrategy;
 import net.ricecode.similarity.SimilarityStrategy;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +39,9 @@ public class Anime4YouSearchTask extends TaskExecutor implements Callable<List<S
         final Anime4You decoder = (Anime4You) Providers.ANIME4YOU.getProvider();
 
         for (int i = 0; i < showsIn.length(); i++) {
-            final Show show = decoder.getShow(showsIn.getJSONObject(i));
-
-            if (stringSimilarity.score(show.getTitle(), input) > 0.8 && !showsOut.contains(show)) {
-                showsOut.add(show);
+            final JSONObject show = showsIn.getJSONObject(i);
+            if (stringSimilarity.score(show.getString("title"), input) > 0.8) {
+                showsOut.add(decoder.getShow(show));
             }
         }
         return showsOut;

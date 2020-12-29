@@ -14,17 +14,17 @@ import org.json.JSONObject;
 
 public class Show {
 
-    private final java.lang.String year = "";
-    private java.lang.String id;
-    private java.lang.String title;
-    private java.lang.String episodes;
-    private java.lang.String imageURL;
-    private java.lang.String language;
+    private final String year = "";
+    private String id;
+    private String title;
+    private String episodes;
+    private String imageURL;
+    private String language;
 
     private Provider provider;
     private JSONObject showAdditional;
 
-    public Show(java.lang.String id, java.lang.String title, java.lang.String episodes, java.lang.String imageURL, java.lang.String language, Provider provider, final JSONObject... showAdditional) {
+    public Show(String id, String title, String episodes, String imageURL, String language, Provider provider, final JSONObject... showAdditional) {
         this.id = id;
         this.title = title;
         this.episodes = episodes;
@@ -58,7 +58,7 @@ public class Show {
     }
 
     @Override
-    public java.lang.String toString() {
+    public String toString() {
         try {
             return provider.format(this).toString();
         } catch (JSONException e) {
@@ -75,47 +75,47 @@ public class Show {
         this.showAdditional = showAdditional;
     }
 
-    public java.lang.String getYear() {
+    public String getYear() {
         return year;
     }
 
-    public java.lang.String getID() {
+    public String getID() {
         return id;
     }
 
-    public void setId(java.lang.String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public java.lang.String getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    public void setTitle(java.lang.String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    public java.lang.String getEpisodes() {
+    public String getEpisodes() {
         return episodes;
     }
 
-    public void setEpisodes(java.lang.String episodes) {
+    public void setEpisodes(String episodes) {
         this.episodes = episodes;
     }
 
-    public java.lang.String getImageURL() {
+    public String getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(java.lang.String imageURL) {
+    public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
 
-    public java.lang.String getLanguage() {
+    public String getLanguage() {
         return language;
     }
 
-    public void setLanguage(java.lang.String language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 

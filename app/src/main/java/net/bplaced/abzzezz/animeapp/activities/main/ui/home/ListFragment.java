@@ -159,7 +159,7 @@ public class ListFragment extends Fragment {
             itemToRemove.ifPresent(show -> {
                 this.size--;
                 final File dir = new File(getActivity().getFilesDir(), show.getTitle());
-                if (dir.listFiles().length > 0) {
+                if (dir.listFiles() != null && dir.listFiles().length > 0) {
                     new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
                             .setTitleText("Delete all remaining episodes?")
                             .setContentText("Won't be able to recover the files!")

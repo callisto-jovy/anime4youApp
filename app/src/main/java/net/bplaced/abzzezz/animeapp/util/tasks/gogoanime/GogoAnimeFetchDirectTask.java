@@ -6,6 +6,7 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
+import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,27 +44,9 @@ public class GogoAnimeFetchDirectTask extends TaskExecutor implements Callable<S
      */
     @Override
     public String call() throws Exception {
-        return getVidURL(collectLines(new URL(formattedIn), ""));
+        return getVidURL(URLUtil.collectLines(new URL(formattedIn), ""));
     }
 
-    /**
-     * Joins all the lines read from a url together
-     *
-     * @param src    url to read from
-     * @param joiner String to join all read lines together
-     * @return all joined lines
-     * @throws IOException if reader / url fails, etc.
-     */
-    private String collectLines(final URL src, final String joiner) throws IOException {
-        final StringBuilder builder = new StringBuilder();
-        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(src.openStream()));
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            builder.append(line).append(joiner);
-        }
-        bufferedReader.close();
-        return builder.toString();
-    }
 
 
 }
