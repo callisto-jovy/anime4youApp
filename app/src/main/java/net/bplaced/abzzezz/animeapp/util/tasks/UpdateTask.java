@@ -7,7 +7,7 @@
 package net.bplaced.abzzezz.animeapp.util.tasks;
 
 import android.annotation.TargetApi;
-import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -30,10 +30,10 @@ import java.util.concurrent.Callable;
 
 public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExecutor.Callback<File> {
 
-    private final Application application;
+    private final Context context;
 
-    public UpdateTask(final Application application) {
-        this.application = application;
+    public UpdateTask(final Context application) {
+        this.context = application;
     }
 
     public void executeAsync() {
@@ -47,7 +47,7 @@ public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExec
         if (updateNeeded) {
             AnimeAppMain.getInstance().setVersionOutdated(true);
 
-            final File outFile = File.createTempFile("Anime4youUpdate", ".apk", application.getExternalFilesDir(
+            final File outFile = File.createTempFile("Anime4youUpdate", ".apk", context.getExternalFilesDir(
                     Environment.DIRECTORY_DOWNLOADS));
 
 
@@ -81,7 +81,7 @@ public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExec
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
             try {
-                uri = FileProvider.getUriForFile(application, application.getPackageName() + ".provider", apk);
+                uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", apk);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -90,7 +90,7 @@ public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExec
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         } else {
-            final File file = new File(application.getExternalCacheDir(), "update.apk");
+            final File file = new File(context.getExternalCacheDir(), "update.apk");
             final FileOutputStream fileOutputStream = new FileOutputStream(file);
             fileOutputStream.getChannel().transferFrom(Channels.newChannel(new FileInputStream(apk)), 0, Long.MAX_VALUE);
             fileOutputStream.close();
@@ -106,7 +106,7 @@ public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExec
 
         Log.d("Updater", "Starting install intent...");
 
-        application.startActivity(intent);
+        context.startActivity(intent);
     }
 
 }

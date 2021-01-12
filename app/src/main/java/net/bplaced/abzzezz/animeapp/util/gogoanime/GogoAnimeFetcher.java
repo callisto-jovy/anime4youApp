@@ -178,29 +178,6 @@ public class GogoAnimeFetcher {
     }
 
     /**
-     * Fetch videos
-     *
-     * @param start start
-     * @param end   end
-     * @throws IOException if something goes wrong
-     */
-    public void fetch(final int start, final int end) throws IOException, JSONException {
-        //Create output directory
-        final File outputDirectory = new File(DOWNLOAD_DIRECTORY, showTitle);
-        if (!outputDirectory.exists()) outputDirectory.mkdir();
-
-        for (int i = start; i < end; i++) {
-            //Get direct video url
-            final String formatted = String.format(API_URL, fetchedDirectURLs[i]);
-            final URL vidURL = new URL(getVidURL(collectLines(new URL(formatted), "")));
-            //Copy file from url (Download)
-            copyFileFromURL(vidURL, new File(outputDirectory, showTitle.concat(" " + i).concat(".mp4")));
-            System.out.println("Done downloading " + i + "/" + end);
-        }
-        System.out.println("Done downloading!");
-    }
-
-    /**
      * Fetches all ids from the given url
      *
      * @return String array containing all ids for the direct url
@@ -251,25 +228,6 @@ public class GogoAnimeFetcher {
         final FileOutputStream fileOutputStream = new FileOutputStream(dest);
         fileOutputStream.getChannel().transferFrom(Channels.newChannel(src.openStream()), 0, Long.MAX_VALUE);
         fileOutputStream.close();
-    }
-
-    /**
-     * Joins all the lines read from a url together
-     *
-     * @param src    url to read from
-     * @param joiner String to join all read lines together
-     * @return all joined lines
-     * @throws IOException if reader / url fails, etc.
-     */
-    private String collectLines(final URL src, final String joiner) throws IOException {
-        final StringBuilder builder = new StringBuilder();
-        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(src.openStream()));
-        String line;
-        while ((line = bufferedReader.readLine()) != null) {
-            builder.append(line).append(joiner);
-        }
-        bufferedReader.close();
-        return builder.toString();
     }
 
     /**

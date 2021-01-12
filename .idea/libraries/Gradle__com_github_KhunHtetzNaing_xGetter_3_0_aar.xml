@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.KhunHtetzNaing:xGetter:3.0@aar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/6d0d66c91254d19dc9ba6b52739cdf36/jetified-xGetter-3.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/6d0d66c91254d19dc9ba6b52739cdf36/jetified-xGetter-3.0/res" />
+      <root url="jar://$PROJECT_DIR$/../../Runtime/gradle/caches/transforms-3/3bdd83bec1b3436dce4fa99f4e1ae5ce/transformed/jetified-xGetter-3.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../Runtime/gradle/caches/transforms-3/3bdd83bec1b3436dce4fa99f4e1ae5ce/transformed/jetified-xGetter-3.0/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/modules-2/files-2.1/com.github.KhunHtetzNaing/xGetter/3.0/549d30c2737858f79aa693feace30adbaed5be1/xGetter-3.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.KhunHtetzNaing/xGetter/3.0/549d30c2737858f79aa693feace30adbaed5be1/xGetter-3.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

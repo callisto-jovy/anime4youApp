@@ -23,7 +23,6 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
-import net.bplaced.abzzezz.animeapp.util.customnotification.NotificationService;
 import net.bplaced.abzzezz.animeapp.util.file.ShowNotifications;
 import net.bplaced.abzzezz.animeapp.util.file.ShowSaver;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
@@ -74,8 +73,6 @@ public class AnimeAppMain {
             this.themeId = R.style.DarkTheme;
         else
             this.themeId = R.style.LightTheme;
-
-        application.startService(new Intent(application, NotificationService.class).setFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES));
     }
 
     public void checkPermission(final Context context) {

@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.oktavianto:ionalert:1.0.4@aar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/17e78a25835f8c15d4e4c1843b5ff427/jetified-ionalert-1.0.4/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/17e78a25835f8c15d4e4c1843b5ff427/jetified-ionalert-1.0.4/res" />
+      <root url="jar://$PROJECT_DIR$/../../Runtime/gradle/caches/transforms-3/2f61a16062e8c51ca1681f3d1e1d875b/transformed/jetified-ionalert-1.0.4/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../Runtime/gradle/caches/transforms-3/2f61a16062e8c51ca1681f3d1e1d875b/transformed/jetified-ionalert-1.0.4/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/modules-2/files-2.1/com.github.oktavianto/ionalert/1.0.4/879dca900e9e0a82fbee3a7f3477bdf310876c73/ionalert-1.0.4-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.oktavianto/ionalert/1.0.4/879dca900e9e0a82fbee3a7f3477bdf310876c73/ionalert-1.0.4-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

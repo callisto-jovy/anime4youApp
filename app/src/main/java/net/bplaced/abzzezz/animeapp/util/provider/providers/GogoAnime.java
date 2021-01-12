@@ -117,7 +117,6 @@ public class GogoAnime extends Provider {
         try {
             final JSONArray episodes = show.getShowAdditional().getJSONArray("episodes");
             final String apiURL = String.format(GogoAnimeFetcher.API_URL, episodes.getString(episodes.length() - (ints[1] + 1)));
-            AtomicReference<URL> url = new AtomicReference<>();
 
             new GogoAnimeFetchDirectTask(apiURL).executeAsync(new TaskExecutor.Callback<String>() {
                 @Override

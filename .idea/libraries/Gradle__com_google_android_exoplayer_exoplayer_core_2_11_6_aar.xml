@@ -1,17 +1,17 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.exoplayer:exoplayer-core:2.11.6@aar">
     <ANNOTATIONS>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/23e5c3094b8b97b4f538044ab69139f9/jetified-exoplayer-core-2.11.6/annotations.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../../Runtime/gradle/caches/transforms-3/ab821bb44c975fa876477f9d190af25b/transformed/jetified-exoplayer-core-2.11.6/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/23e5c3094b8b97b4f538044ab69139f9/jetified-exoplayer-core-2.11.6/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../gradle/caches/transforms-2/files-2.1/23e5c3094b8b97b4f538044ab69139f9/jetified-exoplayer-core-2.11.6/res" />
+      <root url="jar://$PROJECT_DIR$/../../Runtime/gradle/caches/transforms-3/ab821bb44c975fa876477f9d190af25b/transformed/jetified-exoplayer-core-2.11.6/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../Runtime/gradle/caches/transforms-3/ab821bb44c975fa876477f9d190af25b/transformed/jetified-exoplayer-core-2.11.6/res" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/modules-2/files-2.1/com.google.android.exoplayer/exoplayer-core/2.11.6/5e6bb224d3aa3346fe508d1718299e83823c6aad/exoplayer-core-2.11.6-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.exoplayer/exoplayer-core/2.11.6/5e6bb224d3aa3346fe508d1718299e83823c6aad/exoplayer-core-2.11.6-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../../gradle/caches/modules-2/files-2.1/com.google.android.exoplayer/exoplayer-core/2.11.6/7c4ee2cdd38e8ce5716f4b623d0006ef902fd19d/exoplayer-core-2.11.6-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.android.exoplayer/exoplayer-core/2.11.6/7c4ee2cdd38e8ce5716f4b623d0006ef902fd19d/exoplayer-core-2.11.6-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
