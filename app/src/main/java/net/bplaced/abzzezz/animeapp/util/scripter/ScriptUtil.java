@@ -10,27 +10,6 @@ import java.util.Random;
 
 public class ScriptUtil {
 
-    public static final String VIVO_EXPLOIT = "cal();\n" +
-            "function cal() {\n" +
-            "  var source = document.getElementsByTagName('body')[0].innerHTML;\n" +
-            "  if (source != null) {\n" +
-            "    source = source.replace(/(?:.|\\n)+Core\\.InitializeStream\\s*\\(\\s*\\{[^)}]*source\\s*:\\s*'(.*?)'(?:.|\\n)+/, \"$1\");\n" +
-            "    var toNormalize = decodeURIComponent(source);\n" +
-            "    var url = \"\"\n" +
-            "    for (var i = 0; i < toNormalize.length; i++) {\n" +
-            "      var c = toNormalize.charAt(i);\n" +
-            "      if (c != ' ') {\n" +
-            "        var t = (function (c) { return c.charCodeAt == null ? c : c.charCodeAt(0); })(c) + '/'.charCodeAt(0);\n" +
-            "        if (126 < t) {\n" +
-            "          t -= 94;\n" +
-            "        }\n" +
-            "        url += String.fromCharCode(t);\n" +
-            "      }\n" +
-            "    }\n" +
-            "  }" +
-            "  return url;" +
-            "}";
-
     public static String generateRandomKey() {
         final String[] keys = {"2fe519479de544f68a46f5284a9e94dac6bc36f0fcee744312f92a77616bb790e705f8b0c03c582d",
                 "c19efb70201627778f8a3aa678d61b2c482503e75d470fc3357a837011e9a2c2b2a9c9815f854501",

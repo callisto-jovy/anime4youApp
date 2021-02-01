@@ -22,6 +22,7 @@ import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class ChangelogFragment extends Fragment {
 
@@ -32,7 +33,7 @@ public class ChangelogFragment extends Fragment {
         new TaskExecutor().executeAsync(() -> URLUtil.getURLContentAsArray(new URL(StringHandler.APP_CHANGELOG_TXT)), new TaskExecutor.Callback<ArrayList<String>>() {
             @Override
             public void onComplete(ArrayList<String> result) {
-                getActivity().runOnUiThread(() -> {
+                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
                     final ListView listView = getActivity().findViewById(R.id.simple_list_view);
                     final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
                     arrayAdapter.addAll(result);
