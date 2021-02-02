@@ -94,7 +94,12 @@ public class Twistmoe extends Provider {
         final String title = data.getString("title");
         final String imageURL = StringHandler.IMAGE_URL + title;
         final JSONObject additional = new JSONObject().put("src", data.getJSONArray("sources")).put("slug", data.getString("url"));
-        return new Show(data.getString("id"), title, data.getString("episodes"), imageURL, "eng-sub", Providers.TWISTMOE.getProvider(), additional);
+        return new Show(data.getString("id"),
+                title,
+                data.getString("episodes"),
+                imageURL, "eng-sub",
+                this,
+                additional);
     }
 
     @Override

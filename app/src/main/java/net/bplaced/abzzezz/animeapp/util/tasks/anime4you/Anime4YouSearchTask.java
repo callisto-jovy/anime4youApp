@@ -28,7 +28,7 @@ public class Anime4YouSearchTask extends TaskExecutor implements Callable<List<S
         this.input = input;
     }
 
-    public <R> void executeAsync(Callback<List<Show>> callback) {
+    public void executeAsync(Callback<List<Show>> callback) {
         super.executeAsync(this, callback);
     }
 
@@ -42,8 +42,8 @@ public class Anime4YouSearchTask extends TaskExecutor implements Callable<List<S
             final JSONObject showJSON = showsIn.getJSONObject(i);
             if (stringSimilarity.score(showJSON.getString("titel"), input) > 0.8) {
                 final Show show = decoder.getShow(showJSON);
-                if(!showsOut.contains(show))
-                showsOut.add(show);
+                if (!showsOut.contains(show))
+                    showsOut.add(show);
             }
         }
         return showsOut;

@@ -20,7 +20,7 @@ public class GogoAnimeRefreshTask extends TaskExecutor implements Callable<Show>
         this.showIn = showIn;
     }
 
-    public <R> void executeAsync(Callback<Show> callback) {
+    public void executeAsync(Callback<Show> callback) {
         super.executeAsync(this, callback);
     }
 

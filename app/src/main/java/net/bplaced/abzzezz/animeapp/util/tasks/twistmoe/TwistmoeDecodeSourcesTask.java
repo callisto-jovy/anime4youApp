@@ -32,7 +32,7 @@ public class TwistmoeDecodeSourcesTask extends TaskExecutor implements Callable<
         this.string = string;
     }
 
-    public <R> void executeAsync(final Callback<String> callback) {
+    public void executeAsync(final Callback<String> callback) {
         super.executeAsync(this, callback);
     }
 

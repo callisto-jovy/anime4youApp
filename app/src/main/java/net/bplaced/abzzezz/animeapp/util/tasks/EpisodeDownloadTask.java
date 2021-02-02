@@ -30,8 +30,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.concurrent.Callable;
 
 public class EpisodeDownloadTask extends TaskExecutor implements Callable<String>, TaskExecutor.Callback<String> {

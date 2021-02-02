@@ -15,7 +15,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,6 +85,7 @@ public class GogoAnimeFetcher {
 
     /**
      * Calls gogoanime's search api
+     *
      * @param searchQuery query to search for
      * @return String array with all url results
      * @throws IOException url error
@@ -94,7 +96,6 @@ public class GogoAnimeFetcher {
     }
 
     /**
-     *
      * @param urlIn url to extract from
      * @return extracted direct url
      * @throws JSONException when bad json is parsed
@@ -111,6 +112,28 @@ public class GogoAnimeFetcher {
      */
     private static String getVidURL(final String in) throws JSONException {
         return new JSONObject(in).getJSONArray("source").getJSONObject(0).getString("file");
+    }
+
+    /**
+     * Create jsoup connection
+     *
+     * @param url       url in
+     * @param userAgent user agent to use
+     * @return pre constructed connection
+     */
+    private static Connection createGogoConnection(final String url, final String userAgent) {
+        return Jsoup.connect(url).userAgent(userAgent).header("authority", "gogoanime.so").referrer("https://gogoanime.so/search.html");
+    }
+
+    /**
+     * Create jsoup connection
+     *
+     * @param url       url in
+     * @param userAgent user agent to use
+     * @return pre constructed connection
+     */
+    private static Connection createGogoCdn(final String url, final String userAgent) {
+        return Jsoup.connect(url).userAgent(userAgent).header("authority", "ajax.gogocdn.net");
     }
 
     /**
@@ -132,7 +155,6 @@ public class GogoAnimeFetcher {
     }
 
     /**
-     *
      * @return episode start from local document
      */
     public String getEpisodeStart() {
@@ -140,7 +162,6 @@ public class GogoAnimeFetcher {
     }
 
     /**
-     *
      * @return episode end from local document
      */
     public String getEpisodeEnd() {
@@ -185,26 +206,6 @@ public class GogoAnimeFetcher {
                         return "";
                     }
                 }).toArray(String[]::new);
-    }
-
-    /**
-     * Create jsoup connection
-     * @param url url in
-     * @param userAgent user agent to use
-     * @return pre constructed connection
-     */
-    private static Connection createGogoConnection(final String url, final String userAgent) {
-        return Jsoup.connect(url).userAgent(userAgent).header("authority", "gogoanime.so").referrer("https://gogoanime.so/search.html");
-    }
-
-    /**
-     * Create jsoup connection
-     * @param url url in
-     * @param userAgent user agent to use
-     * @return pre constructed connection
-     */
-    private static Connection createGogoCdn(final String url, final String userAgent) {
-        return Jsoup.connect(url).userAgent(userAgent).header("authority", "ajax.gogocdn.net");
     }
 
     /**

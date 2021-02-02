@@ -8,24 +8,15 @@ package net.bplaced.abzzezz.animeapp.activities.extra;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import ga.abzzezz.util.data.URLUtil;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.BuildConfig;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.main.DrawerMainMenu;
-import net.bplaced.abzzezz.animeapp.util.file.Downloader;
-import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
-import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.tasks.UpdateTask;
-
-import java.io.File;
-import java.net.URL;
 
 
 public class SplashScreen extends AppCompatActivity {

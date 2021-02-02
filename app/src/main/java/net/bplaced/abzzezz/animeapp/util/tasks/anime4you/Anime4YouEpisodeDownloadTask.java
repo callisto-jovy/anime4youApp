@@ -11,7 +11,6 @@ import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.tasks.EpisodeDownloadTask;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URL;
 
 public class Anime4YouEpisodeDownloadTask extends EpisodeDownloadTask {

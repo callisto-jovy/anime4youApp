@@ -27,7 +27,7 @@ public class GogoAnimeSearchTask extends TaskExecutor implements Callable<List<S
         this.searchQuery = searchQuery;
     }
 
-    public <R> void executeAsync(Callback<List<Show>> callback) {
+    public void executeAsync(Callback<List<Show>> callback) {
         super.executeAsync(this, callback);
     }
 

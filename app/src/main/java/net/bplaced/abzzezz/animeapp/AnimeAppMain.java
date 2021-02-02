@@ -90,7 +90,8 @@ public class AnimeAppMain {
             }
 
             @Override
-            public void preExecute() {}
+            public void preExecute() {
+            }
         });
     }
 

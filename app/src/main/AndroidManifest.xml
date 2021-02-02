@@ -15,9 +15,8 @@
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
-    <!-- Permissions -->
 
     <!-- Application tag -->
     <application
@@ -32,12 +31,14 @@
             tools:targetApi="q">
 
         <!-- Activities -->
-        <activity android:name=".activities.extra.PlayerActivity"
-                  android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection">
+        <activity
+                android:name=".activities.extra.PlayerActivity"
+                android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection">
         </activity>
 
-        <activity android:name=".activities.extra.StreamPlayer"
-                  android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection">
+        <activity
+                android:name=".activities.extra.StreamPlayer"
+                android:configChanges="keyboardHidden|orientation|screenSize|layoutDirection">
         </activity>
 
         <activity
@@ -79,13 +80,6 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-
-        <service
-                android:label="Anime Notification Service"
-                android:description="@string/anime_notification_service_description"
-                android:enabled="true" android:exported="true"
-                android:name=".util.customnotification.NotificationService"
-        />
         <receiver android:name=".util.receiver.StopDownloadReceiver"/>
         <!-- Receiver and Service -->
     </application>

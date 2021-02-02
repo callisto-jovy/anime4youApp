@@ -20,19 +20,19 @@ import java.util.stream.Collectors;
 
 public class TwistmoeFetchCallable implements Callable<JSONObject>, TwistmoeHolder {
 
-    private final String showSlug;
+    private final String slug;
 
     public TwistmoeFetchCallable(final String slug) {
-        this.showSlug = slug;
+        this.slug = slug;
     }
 
     @Override
     public JSONObject call() throws Exception {
-        HttpsURLConnection connection = URLUtil.createHTTPSURLConnection(SHOW_API + showSlug, new String[]{"x-access-token", getRequestToken()}, new String[]{"User-Agent", StringHandler.USER_AGENT});
+        HttpsURLConnection connection = URLUtil.createHTTPSURLConnection(SHOW_API + slug, requestHeaders);
         connection.connect();
         final JSONObject fetchedDetails = new JSONObject(new BufferedReader(new InputStreamReader(connection.getInputStream())).lines().collect(Collectors.joining()));
 
-        connection = URLUtil.createHTTPSURLConnection(SHOW_API + showSlug + "/sources/", new String[]{"x-access-token", getRequestToken()}, new String[]{"User-Agent", StringHandler.USER_AGENT});
+        connection = URLUtil.createHTTPSURLConnection(SHOW_API + slug + "/sources/", requestHeaders);
         connection.connect();
 
         final JSONArray fetchedSources = new JSONArray(new BufferedReader(new InputStreamReader(connection.getInputStream())).lines().collect(Collectors.joining()));
@@ -44,7 +44,7 @@ public class TwistmoeFetchCallable implements Callable<JSONObject>, TwistmoeHold
         }
 
         final JSONObject showDetails = new JSONObject();
-        showDetails.put("url", showSlug)
+        showDetails.put("url", slug)
                 .put("title", fetchedDetails.getString("title"))
                 .put("id", fetchedDetails.getString("id"))
                 .put("sources", sources)

@@ -32,7 +32,7 @@ public class GogoAnimeFetchDirectTask extends TaskExecutor implements Callable<S
         return new JSONObject(in).getJSONArray("source").getJSONObject(0).getString("file");
     }
 
-    public <R> void executeAsync(Callback<String> callback) {
+    public void executeAsync(Callback<String> callback) {
         super.executeAsync(this, callback);
     }
 

@@ -14,7 +14,7 @@ import org.json.JSONObject;
 
 public class Show {
 
-    private final String year = "";
+    private String year;
     private String id;
     private String title;
     private String episodes;
@@ -67,11 +67,15 @@ public class Show {
         }
     }
 
+    public void setYear(String year) {
+        this.year = year;
+    }
+
     public JSONObject getShowAdditional() {
         return showAdditional;
     }
 
-     public String getYear() {
+    public String getYear() {
         return year;
     }
 

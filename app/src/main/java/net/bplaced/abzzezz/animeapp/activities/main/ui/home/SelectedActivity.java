@@ -123,7 +123,7 @@ public class SelectedActivity extends AppCompatActivity {
 
     public int getLatestEpisode() {
         if (showDirectory.list() != null) {
-            final OptionalInt highest = Arrays.stream(showDirectory.list()).map(s -> StringUtil.extractNumberI(s.substring(0, s.lastIndexOf(".")))).mapToInt(integer -> integer).max();
+            final OptionalInt highest = Arrays.stream(showDirectory.listFiles()).filter(File::isFile).map(s -> StringUtil.extractNumberI(s.getName().substring(0, s.getName().lastIndexOf(".")))).mapToInt(integer -> integer).max();
             if (highest.isPresent()) return highest.getAsInt() + 1;
         }
         return 0;
@@ -135,7 +135,12 @@ public class SelectedActivity extends AppCompatActivity {
 
     private boolean isEpisodeDownloaded(final int index) {
         if (showDirectory.list() != null) {
-            return Arrays.stream(showDirectory.list()).anyMatch(s -> s.substring(0, s.lastIndexOf(".")).equals(String.valueOf(index)));
+            for (final File file : showDirectory.listFiles()) {
+                if (file.isFile()) {
+                    if (file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index)))
+                        return true;
+                }
+            }
         }
         return false;
     }
@@ -204,19 +209,15 @@ public class SelectedActivity extends AppCompatActivity {
             return;
         }
 
-
-        show.getProvider().handleURLRequest(show, getApplicationContext(), optionalURL -> {
-            optionalURL.ifPresent(url -> {
-                if (stream) {
-                    final Intent intent = new Intent(SelectedActivity.this, StreamPlayer.class);
-                    intent.putExtra("stream", url);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    show.getProvider().handleDownload(this, url, show, showDirectory, count[0], count[1], countMax);
-                }
-            });
-        }, count[0], count[1], countMax);
+        show.getProvider().handleURLRequest(show, getApplicationContext(), optionalURL -> optionalURL.ifPresent(url -> {
+            if (stream) {
+                final Intent intent = new Intent(SelectedActivity.this, StreamPlayer.class);
+                intent.putExtra("stream", url);
+                startActivity(intent);
+                finish();
+            } else
+                show.getProvider().handleDownload(this, url, show, showDirectory, count[0], count[1], countMax);
+        }), count[0], count[1], countMax);
 
     }
 
@@ -251,7 +252,7 @@ public class SelectedActivity extends AppCompatActivity {
      */
     public Optional<File> getEpisodeFile(final int index) {
         if (showDirectory.listFiles() != null) {
-            return Arrays.stream(showDirectory.listFiles()).filter(file -> file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index))).findFirst();
+            return Arrays.stream(showDirectory.listFiles()).filter(file -> file.isFile() && file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index))).findFirst();
         }
         return Optional.empty();
     }

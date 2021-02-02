@@ -43,7 +43,7 @@ public class SearchFragment extends Fragment {
                 searchAdapter.getEntries().clear();
 
                 for (final Providers value : Providers.values()) {
-                    if(value == Providers.NULL) continue;
+                    if (value == Providers.NULL) continue;
 
                     value.getProvider().handleSearch(query, shows -> {
                         searchAdapter.getEntries().addAll(shows);

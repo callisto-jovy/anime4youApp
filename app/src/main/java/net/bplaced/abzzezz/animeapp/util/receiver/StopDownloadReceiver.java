@@ -19,11 +19,9 @@ public class StopDownloadReceiver extends BroadcastReceiver {
     /**
      * Gets called if stop download is triggered
      *
-     * @param context
-     * @param intent
+     * @param context context
+     * @param intent  intent to read from
      */
-
-
     @Override
     public void onReceive(Context context, Intent intent) {
         final EpisodeDownloadTask trigger = (EpisodeDownloadTask) IntentHelper.getObjectForKey(intent.getData().toString());

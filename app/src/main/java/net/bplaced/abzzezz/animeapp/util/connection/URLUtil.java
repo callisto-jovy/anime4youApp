@@ -33,6 +33,24 @@ public class URLUtil {
         return connection;
     }
 
+    public static HttpsURLConnection createHTTPSURLConnection(final URL urlIn, final String requestMethod, final String[]... requestProperties) throws IOException {
+        final HttpsURLConnection connection = (HttpsURLConnection) urlIn.openConnection();
+        connection.setRequestMethod(requestMethod);
+        for (final String[] requestProperty : requestProperties) {
+            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
+        }
+        return connection;
+    }
+
+    public static HttpURLConnection createHTTPURLConnection(final URL urlIn, final String requestMethod, final String[]... requestProperties) throws IOException {
+        final HttpURLConnection connection = (HttpURLConnection) urlIn.openConnection();
+        connection.setRequestMethod(requestMethod);
+        for (final String[] requestProperty : requestProperties) {
+            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
+        }
+        return connection;
+    }
+
     public static HttpsURLConnection createHTTPSURLConnection(final String urlIn, final String[]... requestProperties) throws IOException {
         final HttpsURLConnection connection = (HttpsURLConnection) new URL(urlIn).openConnection();
         for (final String[] requestProperty : requestProperties) {
@@ -43,6 +61,46 @@ public class URLUtil {
 
     public static HttpURLConnection createHTTPURLConnection(final String urlIn, final String[]... requestProperties) throws IOException {
         final HttpURLConnection connection = (HttpURLConnection) new URL(urlIn).openConnection();
+        for (final String[] requestProperty : requestProperties) {
+            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
+        }
+        return connection;
+    }
+
+    public static HttpsURLConnection createHTTPSURLConnection(final String urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
+        final HttpsURLConnection connection = (HttpsURLConnection) new URL(urlIn).openConnection();
+        connection.setReadTimeout(readTimeout);
+        connection.setConnectTimeout(connectionTimeout);
+        for (final String[] requestProperty : requestProperties) {
+            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
+        }
+        return connection;
+    }
+
+    public static HttpURLConnection createHTTPURLConnection(final String urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
+        final HttpURLConnection connection = (HttpURLConnection) new URL(urlIn).openConnection();
+        connection.setReadTimeout(readTimeout);
+        connection.setConnectTimeout(connectionTimeout);
+        for (final String[] requestProperty : requestProperties) {
+            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
+        }
+        return connection;
+    }
+
+    public static HttpsURLConnection createHTTPSURLConnection(final URL urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
+        final HttpsURLConnection connection = (HttpsURLConnection) urlIn.openConnection();
+        connection.setReadTimeout(readTimeout);
+        connection.setConnectTimeout(connectionTimeout);
+        for (final String[] requestProperty : requestProperties) {
+            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
+        }
+        return connection;
+    }
+
+    public static HttpURLConnection createHTTPURLConnection(final URL urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
+        final HttpURLConnection connection = (HttpURLConnection) urlIn.openConnection();
+        connection.setReadTimeout(readTimeout);
+        connection.setConnectTimeout(connectionTimeout);
         for (final String[] requestProperty : requestProperties) {
             connection.setRequestProperty(requestProperty[0], requestProperty[1]);
         }

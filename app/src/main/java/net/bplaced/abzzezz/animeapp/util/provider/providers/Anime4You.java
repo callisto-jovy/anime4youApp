@@ -13,9 +13,6 @@ import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
-import com.htetznaing.lowcostvideo.LowCostVideo;
-import com.htetznaing.lowcostvideo.Model.XModel;
-import com.htetznaing.lowcostvideo.Sites.Vidoza;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
@@ -25,11 +22,7 @@ import net.bplaced.abzzezz.animeapp.util.scripter.Anime4YouDBSearch;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.VivoDecodeTask;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouDataBaseCallable;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouEpisodeDownloadTask;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouFetchDirectTask;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouSearchTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.*;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +33,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class Anime4You extends Provider implements Anime4YouHolder {
@@ -119,7 +111,7 @@ public class Anime4You extends Provider implements Anime4YouHolder {
 
     @Override
     public void handleURLRequest(Show show, Context context, Consumer<Optional<URL>> resultURL, int... ints) {
-        final WebView webView = new WebView(context);
+    /*    final WebView webView = new WebView(context);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(CAPTCHA_ANIME_4_YOU_ONE);
 
@@ -179,7 +171,6 @@ public class Anime4You extends Provider implements Anime4YouHolder {
 
                                         @Override
                                         public void onError() {
-                                            System.out.println("Error vidoza");
                                             decodeVivo(vivoURLEncoded, onDone);
                                         }
                                     });
@@ -197,6 +188,8 @@ public class Anime4You extends Provider implements Anime4YouHolder {
             public void preExecute() {
             }
         });
+
+     */
     }
 
     public void makeText(final String text, final Context context) {

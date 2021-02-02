@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2020. Roman P.
+ * Copyright (c) 2021. Roman P.
  * All code is owned by Roman P. APIs are mentioned.
- * Last modified: 24.12.20, 21:30
+ * Last modified: 02.02.21, 15:41
  */
 
 package net.bplaced.abzzezz.animeapp.util.provider.providers;
@@ -14,8 +14,10 @@ import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import net.bplaced.abzzezz.animeapp.util.tasks.gogoanime.*;
-import org.json.JSONArray;
+import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouEpisodeDownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.animepahe.AnimePaheEpisodeDownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.animepahe.AnimePaheFetchDirectTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.animepahe.AnimePaheSearchTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,33 +27,20 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-/*
-TODO: Fix unnecessary JSON transferring
- */
-public class GogoAnime extends Provider {
+public class AnimePahe extends Provider {
 
-    public GogoAnime() {
-        super("GOGOANIME");
+    public AnimePahe() {
+        super("ANIMEPAHE");
     }
 
     @Override
     public void refreshShow(Show show, Consumer<Show> updatedShow) {
-        new GogoAnimeRefreshTask(show).executeAsync(new TaskExecutor.Callback<Show>() {
-            @Override
-            public void onComplete(Show result) {
-                updatedShow.accept(result);
-            }
-
-            @Override
-            public void preExecute() {
-                Logger.log("Updating show from gogo-anime", Logger.LogType.INFO);
-            }
-        });
+//TODO:
     }
 
     @Override
     public void handleSearch(String searchQuery, Consumer<List<Show>> searchResults) {
-        new GogoAnimeSearchTask(searchQuery).executeAsync(new TaskExecutor.Callback<List<Show>>() {
+        new AnimePaheSearchTask(searchQuery).executeAsync(new TaskExecutor.Callback<List<Show>>() {
             @Override
             public void onComplete(List<Show> result) {
                 searchResults.accept(result);
@@ -59,7 +48,7 @@ public class GogoAnime extends Provider {
 
             @Override
             public void preExecute() {
-                Logger.log("Searching gogo-anime", Logger.LogType.INFO);
+                Logger.log("Searching anime-pahe", Logger.LogType.INFO);
             }
         });
     }
@@ -70,50 +59,51 @@ public class GogoAnime extends Provider {
                 .put(StringHandler.SHOW_ID, show.getID())
                 .put(StringHandler.SHOW_TITLE, show.getTitle())
                 .put(StringHandler.SHOW_LANG, show.getLanguage())
-                .put("ep_start", show.getShowAdditional().getInt("ep_start"))
-                .put("ep_end", show.getShowAdditional().getInt("ep_end"))
+                .put(StringHandler.SHOW_EPISODE_COUNT, show.getEpisodes())
                 .put(StringHandler.SHOW_IMAGE_URL, show.getImageURL())
-                .put("episodes", show.getShowAdditional().getJSONArray("episodes"))
-                .put(StringHandler.SHOW_PROVIDER, Providers.GOGOANIME.name());
+                .put("session", show.getShowAdditional().getString("session"))
+                .put(StringHandler.SHOW_YEAR, show.getYear())
+                .put("src", show.getShowAdditional().getJSONArray("src"))
+                .put(StringHandler.SHOW_PROVIDER, Providers.ANIMEPAHE.name());
     }
 
     @Override
     public Show getShow(JSONObject data) throws JSONException {
-        final JSONArray episodes = data.getJSONArray("episodes");
-        return new Show(
-                data.getString(StringHandler.SHOW_ID),
-                data.getString(StringHandler.SHOW_TITLE),
-                String.valueOf(episodes.length()),
-                data.getString(StringHandler.SHOW_IMAGE_URL),
-                data.getString(StringHandler.SHOW_LANG),
-                this, new JSONObject()
-                .put("episodes", episodes)
-                .put("ep_start", data.getInt("ep_start"))
-                .put("ep_end", data.getInt("ep_end")));
+        final Show show = new Show(data.getString("id"),
+                data.getString("title"),
+                data.getString("episodes"),
+                data.getString("poster"),
+                "eng",
+                this,
+                new JSONObject()
+                        .put("session", data.getString("session"))
+                        .put("src", data.getJSONArray("src")));
+
+        show.setYear(data.getString("year"));
+        return show;
     }
 
     @Override
     public Show decode(JSONObject showJSON) throws JSONException {
-        final JSONArray episodes = showJSON.getJSONArray("episodes");
-        return new Show(
+        final Show show = new Show(
                 showJSON.getString(StringHandler.SHOW_ID),
                 showJSON.getString(StringHandler.SHOW_TITLE),
-                String.valueOf(episodes.length()),
+                showJSON.getString(StringHandler.SHOW_EPISODE_COUNT),
                 showJSON.getString(StringHandler.SHOW_IMAGE_URL),
                 showJSON.getString(StringHandler.SHOW_LANG),
-                Providers.GOGOANIME.getProvider(), new JSONObject()
-                .put("episodes", episodes)
-                .put("ep_start", showJSON.getInt("ep_start"))
-                .put("ep_end", showJSON.getInt("ep_end")));
+                this,
+                new JSONObject()
+                        .put("session", showJSON.getString("session"))
+                        .put("src", showJSON.getJSONArray("src")));
+
+        show.setYear(showJSON.getString(StringHandler.SHOW_YEAR));
+        return show;
     }
 
     @Override
     public void handleURLRequest(Show show, Context context, Consumer<Optional<URL>> resultURL, int... ints) {
         try {
-            final JSONArray episodes = show.getShowAdditional().getJSONArray("episodes");
-            final String apiURL = String.format(GogoAnimeFetcher.API_URL, episodes.getString(episodes.length() - (ints[1] + 1)));
-
-            new GogoAnimeFetchDirectTask(apiURL).executeAsync(new TaskExecutor.Callback<String>() {
+            new AnimePaheFetchDirectTask(show.getShowAdditional().getJSONArray("src").getString(ints[1])).executeAsync(new TaskExecutor.Callback<String>() {
                 @Override
                 public void onComplete(String result) throws Exception {
                     resultURL.accept(Optional.of(new URL(result)));
@@ -121,16 +111,18 @@ public class GogoAnime extends Provider {
 
                 @Override
                 public void preExecute() {
+                    Logger.log("Fetching direct video link", Logger.LogType.INFO);
                 }
             });
-        } catch (JSONException e) {
+        } catch (final JSONException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void handleDownload(SelectedActivity activity, URL url, Show show, File outDirectory, int... ints) {
-        new GogoAnimeEpisodeDownloadTask(activity, url, show.getTitle(), outDirectory, ints).executeAsync();
+        new AnimePaheEpisodeDownloadTask(activity, url, show.getTitle(), outDirectory, ints).executeAsync();
     }
+
 
 }

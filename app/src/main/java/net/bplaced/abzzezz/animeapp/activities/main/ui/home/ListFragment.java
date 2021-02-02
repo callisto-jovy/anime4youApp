@@ -100,11 +100,9 @@ public class ListFragment extends Fragment {
      * @param intent intent
      */
     private void getInformation(final int index, final Intent intent) {
-        final Optional<Show> showAtIndex = AnimeAppMain.getInstance().getShowSaver().getShow(index);
-
-        showAtIndex.ifPresent(show -> {
+        AnimeAppMain.getInstance().getShowSaver().getShow(index).ifPresent(show -> {
             IntentHelper.addObjectForKey(show, "show");
-            startActivity(intent);//.putExtra("details", result.toString())*/);
+            this.startActivity(intent);
             Objects.requireNonNull(getActivity()).finish();
         });
     }
@@ -138,15 +136,13 @@ public class ListFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             final ImageView coverImage = new ImageView(context);
 
-            final Optional<Show> showAtIndex = AnimeAppMain.getInstance().getShowSaver().getShow(position);
-            showAtIndex.ifPresent(show -> {
+            AnimeAppMain.getInstance().getShowSaver().getShow(position).ifPresent(show -> {
                 final String imageURL = show.getImageURL();
 
-                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("offline_mode", false)) {
+                if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("offline_mode", false))
                     OfflineImageLoader.loadImage(imageURL, show, coverImage, getContext());
-                } else {
+                else
                     Picasso.with(context).load(imageURL).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(coverImage);
-                }
             });
             coverImage.setAdjustViewBounds(true);
             return coverImage;

@@ -7,39 +7,39 @@
 package net.bplaced.abzzezz.animeapp.util.tasks;
 
 import android.annotation.TargetApi;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
-import android.util.Log;
 import androidx.core.content.FileProvider;
+import com.blankj.utilcode.util.AppUtils;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
+import net.bplaced.abzzezz.animeapp.BuildConfig;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.concurrent.Callable;
 
 public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExecutor.Callback<File> {
 
     private final Context context;
 
-    public UpdateTask(final Context application) {
-        this.context = application;
+    public UpdateTask(final Context context) {
+        this.context = context;
     }
 
     public void executeAsync() {
         super.executeAsync(this, this);
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public File call() throws Exception {
         final boolean updateNeeded = AnimeAppMain.getInstance().getVersion() < Float.parseFloat(URLUtil.collectLines(new URL(StringHandler.APP_VERSION_TXT), ""));
@@ -47,43 +47,36 @@ public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExec
         if (updateNeeded) {
             AnimeAppMain.getInstance().setVersionOutdated(true);
 
-            final File outFile = File.createTempFile("Anime4youUpdate", ".apk", context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+            final File outFile = File.createTempFile("update", ".apk", context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+            final Uri outFileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", outFile);
 
-            URLUtil.copyFileFromURL(new URL(StringHandler.UPDATE_APK), outFile);
-            Logger.log("Done downloading", Logger.LogType.INFO);
-            return outFile;
-        } else
-            return null;
+            final DownloadManager.Request request = new DownloadManager.Request(Uri.parse(StringHandler.UPDATE_APK));
+            request.setDescription("Downloading File: ".concat("Update"));
+            request.setTitle("Update");
+            request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, outFile.getName());
+
+            final DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+            final long downloadID = downloadManager.enqueue(request);
+
+            context.registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) == downloadID) {
+                        AppUtils.installApp(outFileUri);
+
+                        Logger.log("Done downloading", Logger.LogType.INFO);
+                    }
+                }
+            }, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        }
+        return null;
     }
 
     @Override
     public void onComplete(File result) throws Exception {
-        if (result != null)
-            install(result);
     }
 
     @Override
-    public void preExecute() {}
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    private void install(final File apk) {
-        Log.d("Updater", "Trying to install...");
-        Uri uri = null;
-        Intent intent;
-
-        try {
-            uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", apk);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        intent = new Intent(Intent.ACTION_VIEW);
-        intent.setDataAndType(uri, "application/vnd.android.package-archive");
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-        Log.d("Updater", "Starting install intent...");
-
-        context.startActivity(intent);
+    public void preExecute() {
     }
-
 }
