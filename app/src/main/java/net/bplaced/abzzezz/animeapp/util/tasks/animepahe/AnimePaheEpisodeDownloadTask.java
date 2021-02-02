@@ -69,9 +69,7 @@ public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements
         cmdList.add("-c:a");
         cmdList.add("copy");
         cmdList.add("-acodec");
-        cmdList.add("copy");
-        cmdList.add("map");
-        cmdList.add("0");
+        cmdList.add("mp3");
         //Output
         cmdList.add(outFile.toString());
 
