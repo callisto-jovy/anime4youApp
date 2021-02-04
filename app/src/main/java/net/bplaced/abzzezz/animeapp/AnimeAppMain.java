@@ -34,10 +34,10 @@ public class AnimeAppMain {
     private static final AnimeAppMain INSTANCE = new AnimeAppMain();
 
     private final float version;
-    private final boolean debugVersion;
+    private final boolean developerMode;
     private final String notificationChannelName;
     private int themeId;
-    private boolean isVersionOutdated;
+    private boolean versionOutdated;
 
     //Private identifier
     private String androidID;
@@ -48,7 +48,7 @@ public class AnimeAppMain {
 
     public AnimeAppMain() {
         this.version = Float.parseFloat(BuildConfig.VERSION_NAME.replace(".", ""));
-        this.debugVersion = false;
+        this.developerMode = false;
         this.notificationChannelName = "AnimeChannel";
     }
 
@@ -160,8 +160,8 @@ public class AnimeAppMain {
         return showSaver;
     }
 
-    public boolean isDebugVersion() {
-        return debugVersion;
+    public boolean isDeveloperMode() {
+        return developerMode;
     }
 
     public float getVersion() {
@@ -169,10 +169,10 @@ public class AnimeAppMain {
     }
 
     public boolean isVersionOutdated() {
-        return isVersionOutdated;
+        return versionOutdated;
     }
 
     public void setVersionOutdated(boolean versionOutdated) {
-        isVersionOutdated = versionOutdated;
+        this.versionOutdated = versionOutdated;
     }
 }
