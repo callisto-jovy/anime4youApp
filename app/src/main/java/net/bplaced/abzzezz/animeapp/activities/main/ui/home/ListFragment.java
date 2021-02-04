@@ -81,12 +81,10 @@ public class ListFragment extends Fragment {
 
             for (int i = 0; i < AnimeAppMain.getInstance().getShowSaver().getShowSize(); i++) {
                 int finalI = i;
-                AnimeAppMain.getInstance().getShowSaver().getShow(i).ifPresent(show -> {
-                    show.getProvider().refreshShow(show, refreshedShow -> {
-                        AnimeAppMain.getInstance().getShowSaver().refreshShow(refreshedShow, finalI);
-                        Toast.makeText(getContext(), "Refreshed show:" + refreshedShow.getTitle(), Toast.LENGTH_SHORT).show();
-                    });
-                });
+                AnimeAppMain.getInstance().getShowSaver().getShow(i).ifPresent(show -> show.getProvider().refreshShow(show, refreshedShow -> {
+                    AnimeAppMain.getInstance().getShowSaver().refreshShow(refreshedShow, finalI);
+                    Toast.makeText(getContext(), "Refreshed show:" + refreshedShow.getTitle(), Toast.LENGTH_SHORT).show();
+                }));
             }
             swipeRefreshLayout.setRefreshing(false);
         });

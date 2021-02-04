@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.BuildConfig;
@@ -36,10 +37,18 @@ public class SplashScreen extends AppCompatActivity {
         ((TextView) findViewById(R.id.version_text)).append("v." + BuildConfig.VERSION_NAME);   //Set version text
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
+
+            for (int i = 0; i < AnimeAppMain.getInstance().getShowSaver().getShowSize(); i++) {
+                int finalI = i;
+                AnimeAppMain.getInstance().getShowSaver().getShow(i).ifPresent(show -> show.getProvider().refreshShow(show, refreshedShow -> {
+                    AnimeAppMain.getInstance().getShowSaver().refreshShow(refreshedShow, finalI);
+                    Toast.makeText(getApplicationContext(), "Refreshed show:" + refreshedShow.getTitle(), Toast.LENGTH_SHORT).show();
+                }));
+            }
             //Start menu
             startActivity(new Intent(this, DrawerMainMenu.class));
             finish();
-        }, AnimeAppMain.getInstance().isDebugVersion() ? 10 : 2500);
+        }, AnimeAppMain.getInstance().isDeveloperMode() ? 10 : 2500);
     }
 
 }
