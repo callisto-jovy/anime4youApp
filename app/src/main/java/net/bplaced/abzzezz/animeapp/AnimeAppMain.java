@@ -17,12 +17,10 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
-import android.provider.Settings;
 import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
-import net.bplaced.abzzezz.animeapp.util.file.ShowNotifications;
 import net.bplaced.abzzezz.animeapp.util.file.ShowSaver;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.PermissionTask;
@@ -34,18 +32,19 @@ public class AnimeAppMain {
 
     public static final String NOTIFICATION_CHANNEL_ID = "Anime Channel";
     private static final AnimeAppMain INSTANCE = new AnimeAppMain();
+
     private final float version;
     private final boolean debugVersion;
     private final String notificationChannelName;
     private int themeId;
-    private String androidId;
+    private boolean isVersionOutdated;
+
+    //Private identifier
+    private String androidID;
 
     private File imageStorage;
-
+    //Show utilities
     private ShowSaver showSaver;
-    private ShowNotifications animeNotifications;
-
-    private boolean isVersionOutdated;
 
     public AnimeAppMain() {
         this.version = Float.parseFloat(BuildConfig.VERSION_NAME.replace(".", ""));
@@ -62,9 +61,10 @@ public class AnimeAppMain {
      */
     @SuppressLint("HardwareIds")
     public void configureHandlers(final Application application) {
-        this.androidId = Settings.Secure.getString(application.getContentResolver(), Settings.Secure.ANDROID_ID);
+        this.androidID = generateID();
+
         this.showSaver = new ShowSaver(application);
-        this.animeNotifications = new ShowNotifications(application);
+
         this.imageStorage = new File(application.getDataDir(), "StoredImagesOffline");
         if (!imageStorage.exists()) Logger.log("Image file created: " + imageStorage.mkdir(), Logger.LogType.INFO);
 
@@ -74,6 +74,10 @@ public class AnimeAppMain {
             this.themeId = R.style.LightTheme;
     }
 
+    /**
+     * Check if user has access to the app
+     * @param context context to make toast on
+     */
     public void checkPermission(final Context context) {
         new PermissionTask().executeAsync(new TaskExecutor.Callback<Boolean>() {
             @Override
@@ -82,13 +86,13 @@ public class AnimeAppMain {
                     Logger.log("Unregistered device", Logger.LogType.INFO);
 
                     final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                    final ClipData clip = ClipData.newPlainText("ID", androidId);
+                    final ClipData clip = ClipData.newPlainText("ID", androidID);
                     clipboard.setPrimaryClip(clip);
+
                     System.exit(0);
                     Toast.makeText(context, "You are not registered. Please contact the developer and give him your clipboard id", Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void preExecute() {
             }
@@ -97,9 +101,10 @@ public class AnimeAppMain {
 
     /**
      * Checks permissions and internet connection
+     * @param activity Activity to make toast on & request permissions
      */
     @RequiresApi(api = Build.VERSION_CODES.P)
-    public void checkPermissions(final Activity activity) {
+    public void checkAndroidPermissions(final Activity activity) {
         final String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.INTERNET,
                 Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.ACCESS_WIFI_STATE,
@@ -111,19 +116,36 @@ public class AnimeAppMain {
             Toast.makeText(activity, "You are not connected to the internet. If Images are not cached they will not show.", Toast.LENGTH_LONG).show();
     }
 
-    public void createNotificationChannel(final Application application) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Logger.log("Creating new notification channel", Logger.LogType.INFO);
-            final NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, notificationChannelName, NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("Notification channel to display download notification");
-            channel.setLightColor(Color.MAGENTA);
-            final NotificationManager notificationManager = application.getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+    /**
+     * Creates notification channel
+     * @param context context to register service to
+     */
+    public void createNotificationChannel(final Context context) {
+        Logger.log("Creating new notification channel", Logger.LogType.INFO);
+        final NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, notificationChannelName, NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription("Notification channel to display download notification");
+        channel.setLightColor(Color.MAGENTA);
+        final NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 
-    public String getAndroidId() {
-        return androidId;
+    /**
+     * Generates a pseudo random id to the device's id
+     * @return the generated pseudo id
+     */
+    private String generateID() {
+        return "35" + //we make this look like a valid IMEI
+                Build.BOARD.length() % 10 + Build.BRAND.length() % 10 +
+                Build.CPU_ABI.length() % 10 + Build.DEVICE.length() % 10 +
+                Build.DISPLAY.length() % 10 + Build.HOST.length() % 10 +
+                Build.ID.length() % 10 + Build.MANUFACTURER.length() % 10 +
+                Build.MODEL.length() % 10 + Build.PRODUCT.length() % 10 +
+                Build.TAGS.length() % 10 + Build.TYPE.length() % 10 +
+                Build.USER.length() % 10; //13 digits;
+    }
+
+    public String getAndroidID() {
+        return androidID;
     }
 
     public File getImageStorage() {
@@ -132,10 +154,6 @@ public class AnimeAppMain {
 
     public int getThemeId() {
         return themeId;
-    }
-
-    public ShowNotifications getAnimeNotifications() {
-        return animeNotifications;
     }
 
     public ShowSaver getShowSaver() {

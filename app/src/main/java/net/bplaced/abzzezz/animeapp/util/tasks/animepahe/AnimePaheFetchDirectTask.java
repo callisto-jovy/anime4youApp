@@ -28,7 +28,6 @@ public class AnimePaheFetchDirectTask extends TaskExecutor implements Callable<S
         super.executeAsync(this, callback);
     }
 
-    //TODO: 1080p auto selecting & not hardcoded
     @Override
     public String call() throws Exception {
         final JSONObject episodeJSONObject = new JSONObject(this.episodeJSON);

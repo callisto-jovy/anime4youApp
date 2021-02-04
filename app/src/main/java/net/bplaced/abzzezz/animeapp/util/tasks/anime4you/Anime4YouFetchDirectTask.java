@@ -37,6 +37,6 @@ public class Anime4YouFetchDirectTask extends TaskExecutor implements Callable<S
         return new BufferedReader(new InputStreamReader(
                 URLUtil.createHTTPURLConnection(REQUEST_URL, "POST",
                         new String[]{"User-Agent", episode + StringUtil.splitter + aid + StringUtil.splitter.concat(ScriptUtil.generateRandomKey())},
-                        new String[]{"Referer", AnimeAppMain.getInstance().getAndroidId()}).getInputStream())).lines().collect(Collectors.joining());
+                        new String[]{"Referer", AnimeAppMain.getInstance().getAndroidID()}).getInputStream())).lines().collect(Collectors.joining());
     }
 }

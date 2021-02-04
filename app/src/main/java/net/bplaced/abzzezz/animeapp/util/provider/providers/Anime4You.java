@@ -8,10 +8,6 @@ package net.bplaced.abzzezz.animeapp.util.provider.providers;
 
 import android.content.Context;
 import android.util.Log;
-import android.webkit.CookieManager;
-import android.webkit.WebStorage;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Toast;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
@@ -22,15 +18,14 @@ import net.bplaced.abzzezz.animeapp.util.scripter.Anime4YouDBSearch;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.*;
-import org.json.JSONArray;
+import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouDataBaseCallable;
+import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouEpisodeDownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouSearchTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.VivoDecodeTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -110,7 +105,7 @@ public class Anime4You extends Provider implements Anime4YouHolder {
     }
 
     @Override
-    public void handleURLRequest(Show show, Context context, Consumer<Optional<URL>> resultURL, int... ints) {
+    public void handleURLRequest(Show show, Context context, Consumer<Optional<String>> resultURL, int... ints) {
     /*    final WebView webView = new WebView(context);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(CAPTCHA_ANIME_4_YOU_ONE);
@@ -210,7 +205,7 @@ public class Anime4You extends Provider implements Anime4YouHolder {
     }
 
     @Override
-    public void handleDownload(SelectedActivity activity, URL url, Show show, File outDirectory, int... ints) {
+    public void handleDownload(SelectedActivity activity, String url, Show show, File outDirectory, int... ints) {
         new Anime4YouEpisodeDownloadTask(activity, url, show.getTitle(), outDirectory, new int[]{ints[0], ints[1], ints[2]}).executeAsync();
     }
 }

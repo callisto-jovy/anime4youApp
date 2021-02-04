@@ -22,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -103,12 +102,12 @@ public class Twistmoe extends Provider {
     }
 
     @Override
-    public void handleURLRequest(Show show, Context context, Consumer<Optional<URL>> resultURL, int... ints) {
+    public void handleURLRequest(Show show, Context context, Consumer<Optional<String>> resultURL, int... ints) {
         try {
             new TwistmoeDecodeSourcesTask(show.getShowAdditional().getJSONArray("src").getString(ints[1])).executeAsync(new TaskExecutor.Callback<String>() {
                 @Override
                 public void onComplete(String result) throws Exception {
-                    resultURL.accept(Optional.of(new URL(result)));
+                    resultURL.accept(Optional.of(result));
                 }
 
                 @Override
@@ -122,7 +121,7 @@ public class Twistmoe extends Provider {
     }
 
     @Override
-    public void handleDownload(SelectedActivity activity, URL url, Show show, File outDirectory, int... ints) {
+    public void handleDownload(SelectedActivity activity, String url, Show show, File outDirectory, int... ints) {
         new TwistmoeEpisodeDownloadTask(activity, url, show.getTitle(), outDirectory, ints).executeAsync();
     }
 

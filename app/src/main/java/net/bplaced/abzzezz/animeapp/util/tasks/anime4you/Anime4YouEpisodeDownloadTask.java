@@ -11,13 +11,12 @@ import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.tasks.EpisodeDownloadTask;
 
 import java.io.File;
-import java.net.URL;
 
 public class Anime4YouEpisodeDownloadTask extends EpisodeDownloadTask {
 
     private int notifyID;
 
-    public Anime4YouEpisodeDownloadTask(SelectedActivity application, URL url, String name, File outDir, int[] count) {
+    public Anime4YouEpisodeDownloadTask(SelectedActivity application, String url, String name, File outDir, int[] count) {
         super(application, url, name, outDir, count);
     }
 

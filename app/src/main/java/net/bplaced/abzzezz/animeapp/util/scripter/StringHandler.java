@@ -20,7 +20,6 @@ public class StringHandler {
     public static final String USER_URL = "http://abzzezz.bplaced.net/app/user.php";
     public static final String IMAGE_URL = "http://abzzezz.bplaced.net/app/imgCreate.php?text=";
 
-
     /*
     JSON keys
      */

@@ -14,12 +14,12 @@ import java.util.concurrent.Callable;
 
 public class PermissionTask extends TaskExecutor implements Callable<Boolean> {
 
-    public <R> void executeAsync(Callback<Boolean> callback) {
+    public void executeAsync(Callback<Boolean> callback) {
         super.executeAsync(this, callback);
     }
 
     @Override
     public Boolean call() throws Exception {
-        return URLUtil.createHTTPURLConnection(StringHandler.USER_URL, "POST", new String[]{"Referer", AnimeAppMain.getInstance().getAndroidId()}).getResponseCode() != 200;
+        return URLUtil.createHTTPURLConnection(StringHandler.USER_URL, "POST", new String[]{"Referer", AnimeAppMain.getInstance().getAndroidID()}).getResponseCode() != 200;
     }
 }

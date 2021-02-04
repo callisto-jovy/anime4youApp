@@ -23,7 +23,6 @@ public class AnimePaheFetchCallable implements Callable<JSONObject>, AnimePaheHo
         this.showJSON = showJSON;
     }
 
-
     @Override
     public JSONObject call() throws Exception {
         final HttpsURLConnection httpsURLConnection = URLUtil.createHTTPSURLConnection(String.format(EPISODE_API, showJSON.getString("id")), new String[]{"User-Agent", RandomUserAgent.getRandomUserAgent()});

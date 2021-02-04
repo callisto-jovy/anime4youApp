@@ -17,6 +17,7 @@ import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +26,7 @@ import java.util.regex.Pattern;
  */
 public class GogoAnimeFetcher {
 
-    public static final String BASE_URL = "https://gogoanime.so";
+    public static final String BASE_URL = "https://gogoanime.sh";
 
     public static final String API_URL = "https://gogo-play.net/ajax.php?id=%s";
     //Start, end, anime-id, Returns a "list" containing all redirects to the other episodes
@@ -62,7 +63,7 @@ public class GogoAnimeFetcher {
          * Grab episodes & fetch ids
          */
 
-        final String episodesURL = String.format(EPISODE_API_URL, epiStart, epiEnd, id);
+        final String episodesURL = String.format(Locale.ENGLISH, EPISODE_API_URL, epiStart, epiEnd, id);
         final Document episodesDocument = createGogoCdn(episodesURL, userAgent).get();
 
         return episodesDocument.body().getElementById("episode_related").children().stream()
@@ -72,9 +73,13 @@ public class GogoAnimeFetcher {
                         final Document episodeDocument = createGogoCdn(episodesURL, userAgent).get();
                         final String src = episodeDocument.selectFirst("iframe").attr("src");
 
+                        System.out.println(src);
+
                         final Matcher matcher = PATTERN.matcher(src);
-                        if (matcher.find())
+                        if (matcher.find()) {
+                            System.out.println(matcher.group());
                             return matcher.group().substring(3, matcher.group().length() - 1);
+                        }
                         else return "";
                     } catch (IOException e) {
                         e.printStackTrace();

@@ -37,7 +37,7 @@ public class JsUnpacker {
      */
     public String unpack() {
         try {
-            Pattern p = Pattern.compile("\\}\\s*\\('(.*)',\\s*(.*?),\\s*(\\d+),\\s*'(.*?)'\\.split\\('\\|'\\)", Pattern.DOTALL);
+            Pattern p = Pattern.compile("}\\s*\\('(.*)',\\s*(.*?),\\s*(\\d+),\\s*'(.*?)'\\.split\\('\\|'\\)", Pattern.DOTALL);
             Matcher m = p.matcher(packedJS);
             if (m.find() && m.groupCount() == 4) {
                 String payload = m.group(1).replace("\\'", "'");

@@ -120,7 +120,7 @@ public class SettingsFragment extends Fragment {
                     return null;
                 }, new TaskExecutor.Callback<R>() {
                     @Override
-                    public void onComplete(R result) throws Exception {
+                    public void onComplete(R result) {
                         Toast.makeText(getContext(), "Done transferring files.", Toast.LENGTH_SHORT).show();
                     }
 

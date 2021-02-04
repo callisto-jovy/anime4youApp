@@ -9,17 +9,20 @@ package net.bplaced.abzzezz.animeapp.util.tasks.animepahe;
 import android.util.Log;
 import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.FFmpeg;
+import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
 import net.bplaced.abzzezz.animeapp.util.provider.impl.AnimePaheHolder;
 import net.bplaced.abzzezz.animeapp.util.scripter.JsUnpacker;
 import net.bplaced.abzzezz.animeapp.util.tasks.EpisodeDownloadTask;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.File;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 
 import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
@@ -27,8 +30,7 @@ import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
 public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements AnimePaheHolder {
 
-
-    public AnimePaheEpisodeDownloadTask(SelectedActivity application, URL url, String name, File outDir, int[] count) {
+    public AnimePaheEpisodeDownloadTask(SelectedActivity application, String url, String name, File outDir, int[] count) {
         super(application, url, name, outDir, count);
     }
 
@@ -37,14 +39,15 @@ public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements
         //M3u8 download
         if (!outDir.exists()) outDir.mkdir();
         this.outFile = new File(outDir, count[1] + ".mp4");
-        final String refererURL = url.toString();
+        //Fetch document
+        final Document document = Jsoup.connect(url).userAgent(RandomUserAgent.getRandomUserAgent()).referrer(ANIME_PAHE_REFERER).get();
+        final Elements javascriptElements = document.getElementsByTag("script");
 
-        final String scriptSrc = Jsoup.connect(refererURL).userAgent(RandomUserAgent.getRandomUserAgent()).referrer("https://animepahe.com/").get().getElementsByTag("script").get(5).toString();
-        final String unpackedJS = new JsUnpacker(scriptSrc).unpack();
+        //Get second to last javascript
+        final String unpackedJS = new JsUnpacker(javascriptElements.get(javascriptElements.size() - 2).toString()).unpack();
 
         final Matcher videoSrcMatcher = videoSrcPattern.matcher(unpackedJS);
 
-        System.out.println(unpackedJS);
         String m3u8Src = "";
         while (videoSrcMatcher.find()) {
             final String s = videoSrcMatcher.group();
@@ -56,10 +59,10 @@ public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements
             return "Error extracting";
         }
 
-        List<String> cmdList = new LinkedList<>();
+        final List<String> cmdList = new LinkedList<>();
         //Headers
         cmdList.add("-headers");
-        cmdList.add("referer:" + refererURL);
+        cmdList.add("referer:" + url);
         //Input
         cmdList.add("-i");
         cmdList.add(m3u8Src);
@@ -73,16 +76,14 @@ public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements
         //Output
         cmdList.add(outFile.toString());
 
-        final int returnCode = FFmpeg.execute(cmdList.toArray(new String[cmdList.size()]));
+        final int returnCode = executeFFmpeg(cmdList);
 
         if (returnCode == RETURN_CODE_SUCCESS) {
-            Log.i(Config.TAG, "Command execution completed successfully.");
             return name.concat(": ") + count[1];
         } else if (returnCode == RETURN_CODE_CANCEL) {
-            Log.i(Config.TAG, "Command execution cancelled by user.");
             return "Download cancelled";
         } else {
-            Log.i(Config.TAG, String.format("Command execution failed with returnCode=%d and the output below.", returnCode));
+            Logger.log(String.format(Locale.ENGLISH,"Command execution failed with returnCode=%d and the output below.", returnCode),  Logger.LogType.ERROR);
             Config.printLastCommandOutput(Log.INFO);
             return "Error";
         }

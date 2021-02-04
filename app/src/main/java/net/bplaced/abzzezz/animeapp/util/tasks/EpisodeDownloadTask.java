@@ -15,6 +15,7 @@ import android.os.Looper;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
+import com.arthenica.mobileffmpeg.FFmpeg;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
@@ -28,25 +29,26 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public class EpisodeDownloadTask extends TaskExecutor implements Callable<String>, TaskExecutor.Callback<String> {
 
     protected final SelectedActivity application;
     protected final int[] count;
-    protected final URL url;
+    protected final String url;
     protected final String name;
     protected final File outDir;
     protected boolean cancel;
-    protected FileOutputStream fileOutputStream;
     protected File outFile;
     private NotificationManagerCompat notificationManagerCompat;
     private NotificationCompat.Builder notification;
     private int notifyID;
 
-    public EpisodeDownloadTask(SelectedActivity application, URL url, String name, File outDir, int[] count) {
+    protected FileOutputStream fileOutputStream;
+
+    public EpisodeDownloadTask(SelectedActivity application, String url, String name, File outDir, int[] count) {
         this.application = application;
         this.name = name;
         this.url = url;
@@ -65,14 +67,11 @@ public class EpisodeDownloadTask extends TaskExecutor implements Callable<String
         this.outFile = new File(outDir, count[1] + ".mp4");
         try {
             //Open new URL connection
-            final URLConnection urlConnection = url.openConnection();
-            urlConnection.setRequestProperty("User-Agent", StringHandler.USER_AGENT);
-            urlConnection.connect();
+            final URLConnection urlConnection = URLUtil.createURLConnection(url, 0, 0, new String[]{"User-Agent", StringHandler.USER_AGENT});
 
-            URLUtil.copyFileFromURL(urlConnection, outFile);
+            URLUtil.copyFileFromURL(urlConnection, outFile, fileOutputStream -> this.fileOutputStream = fileOutputStream);
 
             Logger.log("Done copying streams, closing stream", Logger.LogType.INFO);
-            fileOutputStream.close();
             return name.concat(": ") + count[1];
         } catch (MalformedURLException e) {
             cancel();
@@ -86,13 +85,11 @@ public class EpisodeDownloadTask extends TaskExecutor implements Callable<String
         notificationManagerCompat.cancel(notifyID);
 
         if (!isCancelled()) {
-            //Create new "download-done" notification
             this.notification = new NotificationCompat.Builder(application, AnimeAppMain.NOTIFICATION_CHANNEL_ID)
                     .setSmallIcon(R.drawable.information).setColor(Color.GREEN).setContentText("Episode-download done")
                     .setContentTitle("Done downloading episode: " + result)
-                    .setPriority(NotificationCompat.PRIORITY_MAX);
-            //Notify, reuse old id
-            notificationManagerCompat.notify(notifyID, notification.build());
+                    .setPriority(NotificationCompat.PRIORITY_MAX); //Create new "download-done" notification
+            notificationManagerCompat.notify(notifyID, notification.build());  //Notify, reuse old id
             //Increase count
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 if (count[0] < count[2]) {
@@ -133,6 +130,15 @@ public class EpisodeDownloadTask extends TaskExecutor implements Callable<String
     }
 
     /**
+     *
+     * @param arguments ffmpeg arguments
+     * @return response code
+     */
+    protected int executeFFmpeg(final List<String> arguments) {
+        return FFmpeg.execute(arguments.toArray(new String[]{}));
+    }
+
+    /**
      * @return task cancelled
      */
     public boolean isCancelled() {
@@ -143,19 +149,18 @@ public class EpisodeDownloadTask extends TaskExecutor implements Callable<String
      * Cancel task
      */
     public void cancel() {
-        if (fileOutputStream == null) return;
-        try {
-            fileOutputStream.flush();
-            fileOutputStream.close();
-            application.refreshAdapter();
-        } catch (IOException e) {
-            Logger.log("Error closing task stream", Logger.LogType.ERROR);
-            e.printStackTrace();
+        if (fileOutputStream != null) {
+            try {
+                fileOutputStream.flush();
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        application.refreshAdapter();
         //Set cancelled true
         this.cancel = true;
-        Logger.log("Task cancelled, Streams flushed", Logger.LogType.INFO);
-        outFile.delete();
+        Logger.log("Task cancelled, Streams flushed; File deleted: " + outFile.delete(), Logger.LogType.INFO);
     }
 
 }

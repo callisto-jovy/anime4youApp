@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2020. Roman P.
+ * Copyright (c) 2021. Roman P.
  * All code is owned by Roman P. APIs are mentioned.
- * Last modified: 07.11.20, 20:32
+ * Last modified: 04.02.21, 08:31
  */
 
-package net.bplaced.abzzezz.animeapp.activities.extra;
+package net.bplaced.abzzezz.animeapp.activities.main.ui.splash;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,18 +27,13 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen_layout);
         AnimeAppMain.getInstance().createNotificationChannel(getApplication());
-        AnimeAppMain.getInstance().checkPermissions(this);
+        AnimeAppMain.getInstance().checkAndroidPermissions(this);
         //Configure handlers
         AnimeAppMain.getInstance().configureHandlers(getApplication());
 
-        /*
-        Check version
-         */
+        new UpdateTask(getApplication()).executeAsync(); //Check version
 
-        new UpdateTask(getApplication()).executeAsync();
-
-        //Set version text
-        ((TextView) findViewById(R.id.version_text)).append("v." + BuildConfig.VERSION_NAME);
+        ((TextView) findViewById(R.id.version_text)).append("v." + BuildConfig.VERSION_NAME);   //Set version text
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             //Start menu

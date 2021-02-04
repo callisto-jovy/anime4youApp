@@ -20,7 +20,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -108,7 +107,7 @@ public class GogoAnime extends Provider {
     }
 
     @Override
-    public void handleURLRequest(Show show, Context context, Consumer<Optional<URL>> resultURL, int... ints) {
+    public void handleURLRequest(Show show, Context context, Consumer<Optional<String>> resultURL, int... ints) {
         try {
             final JSONArray episodes = show.getShowAdditional().getJSONArray("episodes");
             final String apiURL = String.format(GogoAnimeFetcher.API_URL, episodes.getString(episodes.length() - (ints[1] + 1)));
@@ -116,7 +115,7 @@ public class GogoAnime extends Provider {
             new GogoAnimeFetchDirectTask(apiURL).executeAsync(new TaskExecutor.Callback<String>() {
                 @Override
                 public void onComplete(String result) throws Exception {
-                    resultURL.accept(Optional.of(new URL(result)));
+                    resultURL.accept(Optional.of(result));
                 }
 
                 @Override
@@ -129,7 +128,7 @@ public class GogoAnime extends Provider {
     }
 
     @Override
-    public void handleDownload(SelectedActivity activity, URL url, Show show, File outDirectory, int... ints) {
+    public void handleDownload(SelectedActivity activity, String url, Show show, File outDirectory, int... ints) {
         new GogoAnimeEpisodeDownloadTask(activity, url, show.getTitle(), outDirectory, ints).executeAsync();
     }
 

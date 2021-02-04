@@ -13,8 +13,6 @@ import net.bplaced.abzzezz.animeapp.util.provider.impl.AnimePaheHolder;
 import net.bplaced.abzzezz.animeapp.util.provider.providers.AnimePahe;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import net.ricecode.similarity.JaroStrategy;
-import net.ricecode.similarity.SimilarityStrategy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -25,7 +23,6 @@ import java.util.concurrent.Callable;
 public class AnimePaheSearchTask extends TaskExecutor implements Callable<List<Show>>, AnimePaheHolder {
 
     private final String searchQuery;
-    private final SimilarityStrategy stringSimilarity = new JaroStrategy();
 
     public AnimePaheSearchTask(final String searchQuery) {
         this.searchQuery = searchQuery;

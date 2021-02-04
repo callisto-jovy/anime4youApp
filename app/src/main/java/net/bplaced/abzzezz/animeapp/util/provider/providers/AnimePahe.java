@@ -14,15 +14,14 @@ import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouEpisodeDownloadTask;
 import net.bplaced.abzzezz.animeapp.util.tasks.animepahe.AnimePaheEpisodeDownloadTask;
 import net.bplaced.abzzezz.animeapp.util.tasks.animepahe.AnimePaheFetchDirectTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.animepahe.AnimePaheRefreshTask;
 import net.bplaced.abzzezz.animeapp.util.tasks.animepahe.AnimePaheSearchTask;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -35,7 +34,17 @@ public class AnimePahe extends Provider {
 
     @Override
     public void refreshShow(Show show, Consumer<Show> updatedShow) {
-//TODO:
+        new AnimePaheRefreshTask(show).executeAsync(new TaskExecutor.Callback<Show>() {
+            @Override
+            public void onComplete(Show result) {
+                updatedShow.accept(result);
+            }
+
+            @Override
+            public void preExecute() {
+                Logger.log("Refreshing show", Logger.LogType.INFO);
+            }
+        });
     }
 
     @Override
@@ -101,12 +110,12 @@ public class AnimePahe extends Provider {
     }
 
     @Override
-    public void handleURLRequest(Show show, Context context, Consumer<Optional<URL>> resultURL, int... ints) {
+    public void handleURLRequest(Show show, Context context, Consumer<Optional<String>> resultURL, int... ints) {
         try {
             new AnimePaheFetchDirectTask(show.getShowAdditional().getJSONArray("src").getString(ints[1])).executeAsync(new TaskExecutor.Callback<String>() {
                 @Override
                 public void onComplete(String result) throws Exception {
-                    resultURL.accept(Optional.of(new URL(result)));
+                    resultURL.accept(Optional.of(result));
                 }
 
                 @Override
@@ -120,7 +129,7 @@ public class AnimePahe extends Provider {
     }
 
     @Override
-    public void handleDownload(SelectedActivity activity, URL url, Show show, File outDirectory, int... ints) {
+    public void handleDownload(SelectedActivity activity, String url, Show show, File outDirectory, int... ints) {
         new AnimePaheEpisodeDownloadTask(activity, url, show.getTitle(), outDirectory, ints).executeAsync();
     }
 

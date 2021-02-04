@@ -12,9 +12,33 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
+import java.util.function.Consumer;
 
 public class URLUtil {
 
+    public static URLConnection createURLConnection(final String urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
+        return createURLConnection(new URL(urlIn), connectionTimeout, readTimeout, requestProperties);
+    }
+
+    public static URLConnection createURLConnection(final URL urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
+        final URLConnection connection = urlIn.openConnection();
+        connection.setReadTimeout(readTimeout);
+        connection.setConnectTimeout(connectionTimeout);
+        for (final String[] requestProperty : requestProperties) {
+            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
+        }
+        return connection;
+    }
+
+
+    /**
+     * Creates a HTTPS URL Connection
+     * @param urlIn url connection url
+     * @param requestMethod requestMethod
+     * @param requestProperties request property array to be used
+     * @return return pre configured connection
+     * @throws IOException url invalid
+     */
     public static HttpsURLConnection createHTTPSURLConnection(final String urlIn, final String requestMethod, final String[]... requestProperties) throws IOException {
         final HttpsURLConnection connection = (HttpsURLConnection) new URL(urlIn).openConnection();
         connection.setRequestMethod(requestMethod);
@@ -24,6 +48,14 @@ public class URLUtil {
         return connection;
     }
 
+    /**
+     * Creates a HTTP URL Connection
+     * @param urlIn url connection url
+     * @param requestMethod requestMethod
+     * @param requestProperties request property array to be used
+     * @return return pre configured connection
+     * @throws IOException url invalid
+     */
     public static HttpURLConnection createHTTPURLConnection(final String urlIn, final String requestMethod, final String[]... requestProperties) throws IOException {
         final HttpURLConnection connection = (HttpURLConnection) new URL(urlIn).openConnection();
         connection.setRequestMethod(requestMethod);
@@ -33,24 +65,13 @@ public class URLUtil {
         return connection;
     }
 
-    public static HttpsURLConnection createHTTPSURLConnection(final URL urlIn, final String requestMethod, final String[]... requestProperties) throws IOException {
-        final HttpsURLConnection connection = (HttpsURLConnection) urlIn.openConnection();
-        connection.setRequestMethod(requestMethod);
-        for (final String[] requestProperty : requestProperties) {
-            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
-        }
-        return connection;
-    }
-
-    public static HttpURLConnection createHTTPURLConnection(final URL urlIn, final String requestMethod, final String[]... requestProperties) throws IOException {
-        final HttpURLConnection connection = (HttpURLConnection) urlIn.openConnection();
-        connection.setRequestMethod(requestMethod);
-        for (final String[] requestProperty : requestProperties) {
-            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
-        }
-        return connection;
-    }
-
+    /**
+     * Creates a HTTPS URL connection
+     * @param urlIn url connection url
+     * @param requestProperties request property array to be used
+     * @return returns a pre configured https url connection
+     * @throws IOException url invalid
+     */
     public static HttpsURLConnection createHTTPSURLConnection(final String urlIn, final String[]... requestProperties) throws IOException {
         final HttpsURLConnection connection = (HttpsURLConnection) new URL(urlIn).openConnection();
         for (final String[] requestProperty : requestProperties) {
@@ -59,6 +80,13 @@ public class URLUtil {
         return connection;
     }
 
+    /**
+     * Creates a HTTP URL connection
+     * @param urlIn url connection url
+     * @param requestProperties request property array to be used
+     * @return returns a pre configured http url connection
+     * @throws IOException url invalid
+     */
     public static HttpURLConnection createHTTPURLConnection(final String urlIn, final String[]... requestProperties) throws IOException {
         final HttpURLConnection connection = (HttpURLConnection) new URL(urlIn).openConnection();
         for (final String[] requestProperty : requestProperties) {
@@ -67,6 +95,15 @@ public class URLUtil {
         return connection;
     }
 
+    /**
+     * Creates a HTTPS URL connection
+     * @param urlIn url connection url
+     * @param connectionTimeout connection timeout
+     * @param readTimeout read timeout
+     * @param requestProperties request property array to be used
+     * @return returns a pre configured http url connection
+     * @throws IOException url invalid
+     */
     public static HttpsURLConnection createHTTPSURLConnection(final String urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
         final HttpsURLConnection connection = (HttpsURLConnection) new URL(urlIn).openConnection();
         connection.setReadTimeout(readTimeout);
@@ -77,17 +114,20 @@ public class URLUtil {
         return connection;
     }
 
+    /**
+     * Creates a HTTPS URL connection
+     * @param urlIn url connection url
+     * @param connectionTimeout connection timeout
+     * @param readTimeout read timeout
+     * @param requestProperties request property array to be used
+     * @return returns a pre configured http url connection
+     * @throws IOException url invalid
+     */
     public static HttpURLConnection createHTTPURLConnection(final String urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
-        final HttpURLConnection connection = (HttpURLConnection) new URL(urlIn).openConnection();
-        connection.setReadTimeout(readTimeout);
-        connection.setConnectTimeout(connectionTimeout);
-        for (final String[] requestProperty : requestProperties) {
-            connection.setRequestProperty(requestProperty[0], requestProperty[1]);
-        }
-        return connection;
+        return createHTTPURLConnection(new URL(urlIn), connectionTimeout, readTimeout, requestProperties);
     }
 
-    public static HttpsURLConnection createHTTPSURLConnection(final URL urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
+    public static HttpURLConnection createHTTPSURLConnection(final URL urlIn, final int connectionTimeout, final int readTimeout, final String[]... requestProperties) throws IOException {
         final HttpsURLConnection connection = (HttpsURLConnection) urlIn.openConnection();
         connection.setReadTimeout(readTimeout);
         connection.setConnectTimeout(connectionTimeout);
@@ -167,6 +207,20 @@ public class URLUtil {
      */
     public static void copyFileFromURL(final URLConnection src, final File dest) throws IOException {
         final FileOutputStream fileOutputStream = new FileOutputStream(dest);
+        fileOutputStream.getChannel().transferFrom(Channels.newChannel(src.getInputStream()), 0, Long.MAX_VALUE);
+        fileOutputStream.close();
+    }
+    /**
+     * Copies file from url
+     *
+     * @param src  to copy from
+     * @param dest destination to copy to
+     * @param fileOutputStreamConsumer consumer that is accepted
+     * @throws IOException @
+     */
+    public static void copyFileFromURL(final URLConnection src, final File dest, final Consumer<FileOutputStream> fileOutputStreamConsumer) throws IOException {
+        final FileOutputStream fileOutputStream = new FileOutputStream(dest);
+        fileOutputStreamConsumer.accept(fileOutputStream);
         fileOutputStream.getChannel().transferFrom(Channels.newChannel(src.getInputStream()), 0, Long.MAX_VALUE);
         fileOutputStream.close();
     }

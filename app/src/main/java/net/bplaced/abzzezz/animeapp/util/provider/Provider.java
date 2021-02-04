@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -34,9 +33,9 @@ public abstract class Provider {
 
     public abstract Show getShow(final JSONObject data) throws JSONException;
 
-    public abstract void handleURLRequest(Show show, final Context context, Consumer<Optional<URL>> resultURL, int... ints);
+    public abstract void handleURLRequest(Show show, final Context context, Consumer<Optional<String>> resultURL, int... ints);
 
-    public abstract void handleDownload(SelectedActivity activity, final URL url, final Show show, final File outDirectory, final int... ints);
+    public abstract void handleDownload(SelectedActivity activity, final String url, final Show show, final File outDirectory, final int... ints);
 
     public abstract Show decode(JSONObject showJSON) throws JSONException;
 
