@@ -8,7 +8,7 @@ package net.bplaced.abzzezz.animeapp.util.tasks.animepahe;
 
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
-import net.bplaced.abzzezz.animeapp.util.provider.impl.AnimePaheHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.holders.AnimePaheHolder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

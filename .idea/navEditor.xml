@@ -34,27 +34,6 @@
                       </LayoutPositions>
                     </value>
                   </entry>
-                  <entry key="download_tracker">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-251" />
-                            <option name="y" value="-119" />
-                          </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_download_tracker_to_nav_changelog">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
                   <entry key="nav_anime_list">
                     <value>
                       <LayoutPositions>
@@ -109,6 +88,27 @@
                         <option name="myPositions">
                           <map>
                             <entry key="action_nav_changelog_to_nav_anime_list">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
+                  <entry key="show_search">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-712" />
+                            <option name="y" value="288" />
+                          </Point>
+                        </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_download_tracker_to_nav_changelog">
                               <value>
                                 <LayoutPositions />
                               </value>

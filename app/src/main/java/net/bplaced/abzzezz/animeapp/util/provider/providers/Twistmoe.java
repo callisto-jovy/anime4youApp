@@ -37,7 +37,7 @@ public class Twistmoe extends Provider {
         new TaskExecutor().executeAsync(() -> new TwistmoeFetchCallable(show.getShowAdditional().getString("slug")).call(), new TaskExecutor.Callback<JSONObject>() {
             @Override
             public void onComplete(JSONObject result) throws Exception {
-                updatedShow.accept(getShow(result));
+                updatedShow.accept(getShowFromProvider(result));
             }
 
             @Override
@@ -64,7 +64,7 @@ public class Twistmoe extends Provider {
 
 
     @Override
-    public Show decode(JSONObject showJSON) throws JSONException {
+    public Show getShowFromSave(JSONObject showJSON) throws JSONException {
         return new Show(
                 showJSON.getString(StringHandler.SHOW_ID),
                 showJSON.getString(StringHandler.SHOW_TITLE),
@@ -76,7 +76,7 @@ public class Twistmoe extends Provider {
     }
 
     @Override
-    public JSONObject format(Show show) throws JSONException {
+    public JSONObject formatShowForSave(Show show) throws JSONException {
         return new JSONObject()
                 .put(StringHandler.SHOW_ID, show.getID())
                 .put(StringHandler.SHOW_TITLE, show.getTitle())
@@ -89,7 +89,7 @@ public class Twistmoe extends Provider {
     }
 
     @Override
-    public Show getShow(JSONObject data) throws JSONException {
+    public Show getShowFromProvider(JSONObject data) throws JSONException {
         final String title = data.getString("title");
         final String imageURL = StringHandler.IMAGE_URL + title;
         final JSONObject additional = new JSONObject().put("src", data.getJSONArray("sources")).put("slug", data.getString("url"));
@@ -106,7 +106,7 @@ public class Twistmoe extends Provider {
         try {
             new TwistmoeDecodeSourcesTask(show.getShowAdditional().getJSONArray("src").getString(ints[1])).executeAsync(new TaskExecutor.Callback<String>() {
                 @Override
-                public void onComplete(String result) throws Exception {
+                public void onComplete(String result) {
                     resultURL.accept(Optional.of(result));
                 }
 
@@ -125,4 +125,8 @@ public class Twistmoe extends Provider {
         new TwistmoeEpisodeDownloadTask(activity, url, show.getTitle(), outDirectory, ints).executeAsync();
     }
 
+    @Override
+    public void handleImportMAL(String malURL, Consumer<List<Show>> matchingShows) {
+
+    }
 }

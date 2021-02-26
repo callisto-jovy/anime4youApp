@@ -21,23 +21,25 @@ public abstract class Provider {
 
     private final String name;
 
-    public Provider(String type) {
-        this.name = type;
+    public Provider(String name) {
+        this.name = name;
     }
 
     public abstract void refreshShow(final Show show, final Consumer<Show> updatedShow);
 
     public abstract void handleSearch(final String searchQuery, final Consumer<List<Show>> searchResults);
 
-    public abstract JSONObject format(final Show show) throws JSONException;
+    public abstract JSONObject formatShowForSave(final Show show) throws JSONException;
 
-    public abstract Show getShow(final JSONObject data) throws JSONException;
+    public abstract Show getShowFromProvider(final JSONObject data) throws JSONException;
+
+    public abstract Show getShowFromSave(JSONObject showJSON) throws JSONException;
 
     public abstract void handleURLRequest(Show show, final Context context, Consumer<Optional<String>> resultURL, int... ints);
 
     public abstract void handleDownload(SelectedActivity activity, final String url, final Show show, final File outDirectory, final int... ints);
 
-    public abstract Show decode(JSONObject showJSON) throws JSONException;
+    public abstract void handleImportMAL(final String malURL, final Consumer<List<Show>> matchingShows);
 
     public String getName() {
         return name;

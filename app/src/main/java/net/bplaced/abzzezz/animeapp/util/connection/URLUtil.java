@@ -12,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.util.function.Consumer;
 
 public class URLUtil {
@@ -222,6 +223,21 @@ public class URLUtil {
         final FileOutputStream fileOutputStream = new FileOutputStream(dest);
         fileOutputStreamConsumer.accept(fileOutputStream);
         fileOutputStream.getChannel().transferFrom(Channels.newChannel(src.getInputStream()), 0, Long.MAX_VALUE);
+        fileOutputStream.close();
+    }
+
+    /**
+     * Copies file from url
+     *
+     * @param readableByteChannel to copy from
+     * @param dest destination to copy to
+     * @param fileOutputStreamConsumer consumer that is accepted
+     * @throws IOException @
+     */
+    public static void copyFileFromRBC(final ReadableByteChannel readableByteChannel, final File dest, final Consumer<FileOutputStream> fileOutputStreamConsumer) throws IOException {
+        final FileOutputStream fileOutputStream = new FileOutputStream(dest);
+        fileOutputStreamConsumer.accept(fileOutputStream);
+        fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
         fileOutputStream.close();
     }
 

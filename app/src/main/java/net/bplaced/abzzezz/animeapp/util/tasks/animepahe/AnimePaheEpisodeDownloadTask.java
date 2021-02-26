@@ -6,15 +6,13 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.animepahe;
 
-import android.util.Log;
-import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.FFmpeg;
-import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
-import net.bplaced.abzzezz.animeapp.util.provider.impl.AnimePaheHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.holders.AnimePaheHolder;
 import net.bplaced.abzzezz.animeapp.util.scripter.JsUnpacker;
-import net.bplaced.abzzezz.animeapp.util.tasks.EpisodeDownloadTask;
+import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
+import net.bplaced.abzzezz.animeapp.util.tasks.download.EpisodeDownloadTask;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -22,13 +20,11 @@ import org.jsoup.select.Elements;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 
-import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
-import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
-
 public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements AnimePaheHolder {
+
+    private long ffmpegTask;
 
     public AnimePaheEpisodeDownloadTask(SelectedActivity application, String url, String name, File outDir, int[] count) {
         super(application, url, name, outDir, count);
@@ -56,42 +52,34 @@ public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements
 
         if (m3u8Src.isEmpty()) {
             this.cancel();
-            return "Error extracting";
+            this.progressHandler.onErrorThrown(getError("Extracting source"));
+            return null;
         }
 
-        final List<String> cmdList = new LinkedList<>();
+        final List<String> ffmpegArguments = new LinkedList<>();
         //Headers
-        cmdList.add("-headers");
-        cmdList.add("referer:" + url);
+        ffmpegArguments.add("-headers");
+        ffmpegArguments.add("referer:" + url);
         //Input
-        cmdList.add("-i");
-        cmdList.add(m3u8Src);
+        ffmpegArguments.add("-i");
+        ffmpegArguments.add(m3u8Src);
 
-        cmdList.add("-vcodec");
-        cmdList.add("copy");
-        cmdList.add("-c:a");
-        cmdList.add("copy");
-        cmdList.add("-acodec");
-        cmdList.add("mp3");
+        ffmpegArguments.add("-vcodec");
+        ffmpegArguments.add("copy");
+        ffmpegArguments.add("-c:a");
+        ffmpegArguments.add("copy");
+        ffmpegArguments.add("-acodec");
+        ffmpegArguments.add("mp3");
         //Output
-        cmdList.add(outFile.toString());
+        ffmpegArguments.add(outFile.getPath());
 
-        final int returnCode = executeFFmpeg(cmdList);
-
-        if (returnCode == RETURN_CODE_SUCCESS) {
-            return name.concat(": ") + count[1];
-        } else if (returnCode == RETURN_CODE_CANCEL) {
-            return "Download cancelled";
-        } else {
-            Logger.log(String.format(Locale.ENGLISH,"Command execution failed with returnCode=%d and the output below.", returnCode),  Logger.LogType.ERROR);
-            Config.printLastCommandOutput(Log.INFO);
-            return "Error";
-        }
+        this.ffmpegTask = this.startFFDefaultTask(ffmpegArguments, m3u8Src, new String[]{"Referer", url}, new String[]{"User-Agent", StringHandler.USER_AGENT});
+        return null;
     }
 
     @Override
     public void cancel() {
-        FFmpeg.cancel();
+        FFmpeg.cancel(ffmpegTask);
         super.cancel();
     }
 }

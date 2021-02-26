@@ -38,7 +38,7 @@ public class Show {
 
     public Show(JSONObject showJSON) throws JSONException {
         this.provider = Providers.getProvider(showJSON.getString(StringHandler.SHOW_PROVIDER));
-        final Show thisShow = provider.decode(showJSON);
+        final Show thisShow = provider.getShowFromSave(showJSON);
 
         this.id = thisShow.getID();
         this.title = thisShow.getTitle();
@@ -60,7 +60,7 @@ public class Show {
     @Override
     public String toString() {
         try {
-            return provider.format(this).toString();
+            return provider.formatShowForSave(this).toString();
         } catch (final JSONException e) {
             e.printStackTrace();
             return "";

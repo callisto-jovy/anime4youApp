@@ -4,7 +4,7 @@
  * Last modified: 29.12.20, 17:41
  */
 
-package net.bplaced.abzzezz.animeapp.util.provider.impl;
+package net.bplaced.abzzezz.animeapp.util.provider.holders;
 
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 

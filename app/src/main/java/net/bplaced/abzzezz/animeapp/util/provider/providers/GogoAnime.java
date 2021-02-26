@@ -24,9 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-/*
-TODO: Fix unnecessary JSON transferring
- */
 public class GogoAnime extends Provider {
 
     public GogoAnime() {
@@ -64,7 +61,7 @@ public class GogoAnime extends Provider {
     }
 
     @Override
-    public JSONObject format(Show show) throws JSONException {
+    public JSONObject formatShowForSave(Show show) throws JSONException {
         return new JSONObject()
                 .put(StringHandler.SHOW_ID, show.getID())
                 .put(StringHandler.SHOW_TITLE, show.getTitle())
@@ -77,7 +74,7 @@ public class GogoAnime extends Provider {
     }
 
     @Override
-    public Show getShow(JSONObject data) throws JSONException {
+    public Show getShowFromProvider(JSONObject data) throws JSONException {
         final JSONArray episodes = data.getJSONArray("episodes");
         return new Show(
                 data.getString(StringHandler.SHOW_ID),
@@ -92,7 +89,7 @@ public class GogoAnime extends Provider {
     }
 
     @Override
-    public Show decode(JSONObject showJSON) throws JSONException {
+    public Show getShowFromSave(JSONObject showJSON) throws JSONException {
         final JSONArray episodes = showJSON.getJSONArray("episodes");
         return new Show(
                 showJSON.getString(StringHandler.SHOW_ID),
@@ -100,7 +97,7 @@ public class GogoAnime extends Provider {
                 String.valueOf(episodes.length()),
                 showJSON.getString(StringHandler.SHOW_IMAGE_URL),
                 showJSON.getString(StringHandler.SHOW_LANG),
-                Providers.GOGOANIME.getProvider(), new JSONObject()
+                this, new JSONObject()
                 .put("episodes", episodes)
                 .put("ep_start", showJSON.getInt("ep_start"))
                 .put("ep_end", showJSON.getInt("ep_end")));
@@ -114,7 +111,7 @@ public class GogoAnime extends Provider {
 
             new GogoAnimeFetchDirectTask(apiURL).executeAsync(new TaskExecutor.Callback<String>() {
                 @Override
-                public void onComplete(String result) throws Exception {
+                public void onComplete(final String result) {
                     resultURL.accept(Optional.of(result));
                 }
 
@@ -132,4 +129,8 @@ public class GogoAnime extends Provider {
         new GogoAnimeEpisodeDownloadTask(activity, url, show.getTitle(), outDirectory, ints).executeAsync();
     }
 
+    @Override
+    public void handleImportMAL(String malURL, Consumer<List<Show>> matchingShows) {
+
+    }
 }

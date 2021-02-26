@@ -6,22 +6,17 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
-import android.util.Log;
-import com.arthenica.mobileffmpeg.Config;
-import ga.abzzezz.util.logging.Logger;
+import com.arthenica.mobileffmpeg.FFmpeg;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
-import net.bplaced.abzzezz.animeapp.util.tasks.EpisodeDownloadTask;
-import org.apache.commons.io.FilenameUtils;
+import net.bplaced.abzzezz.animeapp.util.tasks.download.EpisodeDownloadTask;
 
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-
-import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
-import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
 public class GogoAnimeEpisodeDownloadTask extends EpisodeDownloadTask {
+
+    private long ffmpegTask;
 
     public GogoAnimeEpisodeDownloadTask(SelectedActivity application, String url, String name, File outDir, int[] count) {
         super(application, url, name, outDir, count);
@@ -31,37 +26,41 @@ public class GogoAnimeEpisodeDownloadTask extends EpisodeDownloadTask {
     public String call() throws Exception {
         if (!outDir.exists()) outDir.mkdir();
         this.outFile = new File(outDir, count[1] + ".mp4");
-        final String extension = FilenameUtils.getExtension(url);
-        if (extension.equals("mp4")) {
-            return super.call();
-        } else if (extension.equals("m3u8")) {
-            final List<String> ffmpegArguments = new LinkedList<>();
-            //Input
-            ffmpegArguments.add("-i");
-            ffmpegArguments.add(url);
+        try {
+            final String extension = url.substring(url.lastIndexOf(".") + 1);
+            if (extension.equals("mp4")) {
+                return super.call();
+            } else if (extension.equals("m3u8")) {
+                final List<String> ffmpegArguments = new LinkedList<>();
+                //Input
+                ffmpegArguments.add("-i");
+                ffmpegArguments.add(url);
 
-            ffmpegArguments.add("-vcodec");
-            ffmpegArguments.add("copy");
-            ffmpegArguments.add("-c:a");
-            ffmpegArguments.add("copy");
-            ffmpegArguments.add("-acodec");
-            ffmpegArguments.add("mp3");
-            //Output
-            ffmpegArguments.add(outFile.toString());
+                ffmpegArguments.add("-vcodec");
+                ffmpegArguments.add("copy");
+                ffmpegArguments.add("-c:a");
+                ffmpegArguments.add("copy");
+                ffmpegArguments.add("-acodec");
+                ffmpegArguments.add("mp3");
+                //Output
+                ffmpegArguments.add(outFile.toString());
 
-            final int returnCode = executeFFmpeg(ffmpegArguments);
-
-            if (returnCode == RETURN_CODE_SUCCESS) {
-                return name.concat(": ") + count[1];
-            } else if (returnCode == RETURN_CODE_CANCEL) {
-                return "Download cancelled";
+                this.ffmpegTask = this.startFFDefaultTask(ffmpegArguments, url);
+                return null;
             } else {
-                Logger.log(String.format(Locale.ENGLISH,"Command execution failed with returnCode=%d and the output below.", returnCode),  Logger.LogType.ERROR);
-                Config.printLastCommandOutput(Log.INFO);
-                return "Error";
+                progressHandler.onErrorThrown(getError("Unexpected video format"));
+                return null;
             }
-        } else {
-            return "Unexpected video format";
+
+        } catch (final StringIndexOutOfBoundsException e) {
+            progressHandler.onErrorThrown(getError(e));
+            return null;
         }
     }
+    @Override
+    public void cancel() {
+        FFmpeg.cancel(ffmpegTask);
+        super.cancel();
+    }
+
 }

@@ -51,7 +51,7 @@ public class GogoAnimeSearchTask extends TaskExecutor implements Callable<List<S
                 for (final String fetchedDirectURL : fetcher.getFetchedDirectURLs())
                     episodes.put(fetchedDirectURL);
 
-                showsOut.add(Providers.GOGOANIME.getProvider().getShow(new JSONObject()
+                showsOut.add(Providers.GOGOANIME.getProvider().getShowFromProvider(new JSONObject()
                         .put(StringHandler.SHOW_ID, id)
                         .put(StringHandler.SHOW_TITLE, title)
                         .put(StringHandler.SHOW_LANG, "eng")

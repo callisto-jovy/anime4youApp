@@ -9,8 +9,7 @@ package net.bplaced.abzzezz.animeapp.util.tasks.anime4you;
 import ga.abzzezz.util.stringing.StringUtil;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
-import net.bplaced.abzzezz.animeapp.util.provider.impl.Anime4YouHolder;
-import net.bplaced.abzzezz.animeapp.util.scripter.ScriptUtil;
+import net.bplaced.abzzezz.animeapp.util.provider.holders.Anime4YouHolder;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import java.io.BufferedReader;
@@ -36,7 +35,7 @@ public class Anime4YouFetchDirectTask extends TaskExecutor implements Callable<S
     public String call() throws Exception {
         return new BufferedReader(new InputStreamReader(
                 URLUtil.createHTTPURLConnection(REQUEST_URL, "POST",
-                        new String[]{"User-Agent", episode + StringUtil.splitter + aid + StringUtil.splitter.concat(ScriptUtil.generateRandomKey())},
+                        new String[]{"User-Agent", episode + StringUtil.splitter + aid + StringUtil.splitter.concat(generateRandomKey())},
                         new String[]{"Referer", AnimeAppMain.getInstance().getAndroidID()}).getInputStream())).lines().collect(Collectors.joining());
     }
 }

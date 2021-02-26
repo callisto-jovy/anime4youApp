@@ -140,7 +140,7 @@ public class ListFragment extends Fragment {
                 if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean("offline_mode", false))
                     OfflineImageLoader.loadImage(imageURL, show, coverImage, getContext());
                 else
-                    Picasso.with(context).load(imageURL).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(coverImage);
+                    Picasso.with(context).load(imageURL).resize(ImageUtil.IMAGE_COVER_DIMENSIONS[0], ImageUtil.IMAGE_COVER_DIMENSIONS[1]).into(coverImage);
             });
             coverImage.setAdjustViewBounds(true);
             return coverImage;

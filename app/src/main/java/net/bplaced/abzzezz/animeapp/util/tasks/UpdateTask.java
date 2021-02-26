@@ -63,7 +63,6 @@ public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExec
                 public void onReceive(Context context, Intent intent) {
                     if (intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1) == downloadID) {
                         AppUtils.installApp(outFileUri);
-
                         Logger.log("Done downloading", Logger.LogType.INFO);
                     }
                 }

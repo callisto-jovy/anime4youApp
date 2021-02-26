@@ -41,7 +41,7 @@ public class Anime4YouSearchTask extends TaskExecutor implements Callable<List<S
         for (int i = 0; i < showsIn.length(); i++) {
             final JSONObject showJSON = showsIn.getJSONObject(i);
             if (stringSimilarity.score(showJSON.getString("titel"), input) > 0.8) {
-                final Show show = decoder.getShow(showJSON);
+                final Show show = decoder.getShowFromProvider(showJSON);
                 if (!showsOut.contains(show))
                     showsOut.add(show);
             }

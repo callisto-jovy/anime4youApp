@@ -63,7 +63,7 @@ public class AnimePahe extends Provider {
     }
 
     @Override
-    public JSONObject format(Show show) throws JSONException {
+    public JSONObject formatShowForSave(Show show) throws JSONException {
         return new JSONObject()
                 .put(StringHandler.SHOW_ID, show.getID())
                 .put(StringHandler.SHOW_TITLE, show.getTitle())
@@ -77,10 +77,10 @@ public class AnimePahe extends Provider {
     }
 
     @Override
-    public Show getShow(JSONObject data) throws JSONException {
+    public Show getShowFromProvider(JSONObject data) throws JSONException {
         final Show show = new Show(data.getString("id"),
                 data.getString("title"),
-                data.getString("episodes"),
+                String.valueOf(data.getJSONArray("src").length()),
                 data.getString("poster"),
                 "eng",
                 this,
@@ -93,7 +93,7 @@ public class AnimePahe extends Provider {
     }
 
     @Override
-    public Show decode(JSONObject showJSON) throws JSONException {
+    public Show getShowFromSave(JSONObject showJSON) throws JSONException {
         final Show show = new Show(
                 showJSON.getString(StringHandler.SHOW_ID),
                 showJSON.getString(StringHandler.SHOW_TITLE),
@@ -114,7 +114,7 @@ public class AnimePahe extends Provider {
         try {
             new AnimePaheFetchDirectTask(show.getShowAdditional().getJSONArray("src").getString(ints[1])).executeAsync(new TaskExecutor.Callback<String>() {
                 @Override
-                public void onComplete(String result) throws Exception {
+                public void onComplete(final String result) {
                     resultURL.accept(Optional.of(result));
                 }
 
@@ -133,5 +133,8 @@ public class AnimePahe extends Provider {
         new AnimePaheEpisodeDownloadTask(activity, url, show.getTitle(), outDirectory, ints).executeAsync();
     }
 
+    @Override
+    public void handleImportMAL(String malURL, Consumer<List<Show>> matchingShows) {
 
+    }
 }

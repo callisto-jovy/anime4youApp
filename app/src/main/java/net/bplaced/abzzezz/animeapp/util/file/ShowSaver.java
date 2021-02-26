@@ -18,8 +18,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
+/**
+ * Class to save all shows to a shared preference file
+ */
 public class ShowSaver {
 
     /**
@@ -28,40 +32,63 @@ public class ShowSaver {
     private final SharedPreferences preferences;
     private final SharedPreferences.Editor editor;
     private final SharedPreferences publicPreferences;
-
+    /**
+     * List containing all shows.
+     */
     private final List<Show> shows = new ArrayList<>();
 
     @SuppressLint("CommitPrefEdits")
     public ShowSaver(final Context context) {
-        this.preferences = context.getSharedPreferences("List", Context.MODE_PRIVATE);
-        this.editor = preferences.edit();
-        this.publicPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        this.preferences = context.getSharedPreferences("List", Context.MODE_PRIVATE); //Create File to read and write from
+        this.editor = preferences.edit(); //Get editor for the shared preference
+        this.publicPreferences = PreferenceManager.getDefaultSharedPreferences(context); //Get the public preferences for settings
+        //List of empty shows, that will be removed after iterating
+        final List<Integer> emptyIndices = new ArrayList<>();
 
+        //Iterate over all preference entries, each one representing a show. then load this show from it's provider
         for (int i = 0; i < preferences.getAll().size(); i++) {
-            try {
-                final String iString = String.valueOf(i);
-                final JSONObject json = new JSONObject(preferences.getString(iString, "{}"));
-                this.shows.add(new Show(json));
-            } catch (JSONException e) {
-                Log.e("Show loading", "Loading shows");
-                e.printStackTrace();
+            final String preference = preferences.getString(String.valueOf(i), "");
+
+            if (preference.isEmpty()) {
+                Logger.log(String.format(Locale.ENGLISH, "Show at index %d is empty. Will be removed; Skipping entry", i), Logger.LogType.INFO);
+                emptyIndices.add(i);
+            } else {
+                try {
+                    this.shows.add(new Show(new JSONObject(preference))); //Add show; Show loads itself internally from the passed JSON object
+                } catch (final JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
+        //Remove all empty indices
+        emptyIndices.forEach(this::remove);
         Logger.log("Saver set up.", Logger.LogType.INFO);
     }
 
-
+    /**
+     * Commits a show to the preferences
+     * @param show show to add
+     */
     private void commitShow(final Show show) {
         final String preferenceSize = String.valueOf(preferences.getAll().size());
         editor.putString(preferenceSize, show.toString());
-        editor.commit();
+        Logger.log("State committing show: "+ editor.commit(), Logger.LogType.INFO);
     }
 
+    /**
+     * Updates a certain index
+     * @param show show to be updated
+     * @param index index to the show
+     */
     private void updateShow(final Show show, final int index) {
         editor.putString(String.valueOf(index), show.toString());
         editor.commit();
     }
 
+    /**
+     * Removes a show from a certain index
+     * @param index index for the show to be removed
+     */
     private void removeShow(final int index) {
         //Remove key (int)
         editor.remove(String.valueOf(index));
@@ -78,23 +105,23 @@ public class ShowSaver {
 
 
     /**
-     * Add anime with key and values to preference hashmap
+     * Add show with key and values to preference hashmap
      * then commit
      *
-     * @param show
+     * @param show show to be added
      */
     public void addShow(final Show show) throws JSONException {
-        if (publicPreferences.getBoolean("check_existing", false) && containsShow(show)) return;
+        if (publicPreferences.getBoolean("check_existing", false) && containsShow(show)) return; //Check if settings is checked, if so ignore duplicates
 
         this.shows.add(show);
         this.commitShow(show);
     }
 
     /**
-     * Add anime with key and values to preference hashmap
-     * then commit
      *
-     * @param jsonObject
+     * Not used anymore. Was used for anime4you. For compatibility and so no code is deleted this function is kept
+     *
+     *
      */
     public void addShow(final JSONObject jsonObject) throws JSONException {
         final Show show = new Show(jsonObject);
@@ -117,10 +144,10 @@ public class ShowSaver {
 
 
     /**
-     * Check if preferences contain a certain id
+     * Check if a show already exists
      *
-     * @param show to search
-     * @return id contained
+     * @param show to check
+     * @return show contained?
      */
     public boolean containsShow(final Show show) {
         return shows.contains(show);
@@ -129,7 +156,7 @@ public class ShowSaver {
     /**
      * Remove key from map then instantly commit
      *
-     * @param index
+     * @param index index to remove show from
      */
     public void remove(final int index) {
         shows.remove(index);
@@ -145,7 +172,7 @@ public class ShowSaver {
     }
 
     /**
-     * @return all size
+     * @return the show lists size
      */
     public int getShowSize() {
         return shows.size();

@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2020. Roman P.
+ * Copyright (c) 2021. Roman P.
  * All code is owned by Roman P. APIs are mentioned.
- * Last modified: 25.06.20, 15:05
+ * Last modified: 08.02.21, 18:39
  */
 
-package net.bplaced.abzzezz.animeapp.util.scripter;
+package net.bplaced.abzzezz.animeapp.util.tasks.anime4you;
 
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
-import net.bplaced.abzzezz.animeapp.util.provider.impl.Anime4YouHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.holders.Anime4YouHolder;
+import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;

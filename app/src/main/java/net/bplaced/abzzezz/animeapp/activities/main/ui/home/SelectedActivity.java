@@ -81,7 +81,7 @@ public class SelectedActivity extends AppCompatActivity {
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("offline_mode", false))
             OfflineImageLoader.loadImage(coverUrl, show, cover, this);
         else
-            Picasso.with(getApplicationContext()).load(coverUrl).resize(ImageUtil.DIMENSIONS[0], ImageUtil.DIMENSIONS[1]).into(cover);
+            Picasso.with(getApplicationContext()).load(coverUrl).resize(ImageUtil.IMAGE_COVER_DIMENSIONS[0], ImageUtil.IMAGE_COVER_DIMENSIONS[1]).into(cover);
 
 
         final ListView listView = findViewById(R.id.anime_episodes_grid);

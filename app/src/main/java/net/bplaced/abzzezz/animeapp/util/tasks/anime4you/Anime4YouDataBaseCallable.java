@@ -7,7 +7,6 @@
 package net.bplaced.abzzezz.animeapp.util.tasks.anime4you;
 
 import net.bplaced.abzzezz.animeapp.util.provider.Providers;
-import net.bplaced.abzzezz.animeapp.util.scripter.Anime4YouDBSearch;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import org.json.JSONObject;
 
@@ -26,7 +25,7 @@ public class Anime4YouDataBaseCallable implements Callable<Show> {
     @Override
     public Show call() {
         try {
-            return Providers.NULL.getProvider().getShow(new JSONObject(anime4YouDBSearch.getShowDetails("{\"aid\":\"" + id.concat("\""))));
+            return Providers.NULL.getProvider().getShowFromProvider(new JSONObject(anime4YouDBSearch.getShowDetails("{\"aid\":\"" + id.concat("\""))));
         } catch (final Exception e) {
             e.printStackTrace();
             return null;

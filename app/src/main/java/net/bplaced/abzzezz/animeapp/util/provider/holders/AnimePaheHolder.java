@@ -4,7 +4,7 @@
  * Last modified: 02.02.21, 15:43
  */
 
-package net.bplaced.abzzezz.animeapp.util.provider.impl;
+package net.bplaced.abzzezz.animeapp.util.provider.holders;
 
 import java.util.regex.Pattern;
 

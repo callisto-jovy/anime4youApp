@@ -90,8 +90,8 @@ public class JsUnpacker {
 
     private static class Unbase {
         private String alphabet = null;
-        private HashMap<String, Integer> dictionnary = null;
-        private int radix;
+        private HashMap<String, Integer> dictionary = null;
+        private final int radix;
 
         Unbase(int radix) {
             this.radix = radix;
@@ -109,9 +109,9 @@ public class JsUnpacker {
                     alphabet = ALPHABET_95;
                 }
 
-                dictionnary = new HashMap<>(95);
+                dictionary = new HashMap<>(95);
                 for (int i = 0; i < alphabet.length(); i++) {
-                    dictionnary.put(alphabet.substring(i, i + 1), i);
+                    dictionary.put(alphabet.substring(i, i + 1), i);
                 }
             }
         }
@@ -124,7 +124,7 @@ public class JsUnpacker {
             } else {
                 String tmp = new StringBuilder(str).reverse().toString();
                 for (int i = 0; i < tmp.length(); i++) {
-                    ret += Math.pow(radix, i) * dictionnary.get(tmp.substring(i, i + 1));
+                    ret += Math.pow(radix, i) * dictionary.get(tmp.substring(i, i + 1));
                 }
             }
             return ret;

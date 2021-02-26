@@ -38,9 +38,11 @@
     <fragment
             android:id="@+id/show_search"
             android:name="net.bplaced.abzzezz.animeapp.activities.main.ui.search.SearchFragment"
-            android:label="Download Tracker"
+            android:label="Search"
             tools:layout="@layout/simple_list_layout">
-        <action android:id="@+id/action_download_tracker_to_nav_changelog" app:destination="@id/nav_changelog"/>
+        <action
+                android:id="@+id/action_download_tracker_to_nav_changelog"
+                app:destination="@id/nav_changelog"/>
     </fragment>
 
     <fragment

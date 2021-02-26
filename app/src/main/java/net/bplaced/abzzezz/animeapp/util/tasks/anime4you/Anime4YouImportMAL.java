@@ -10,7 +10,7 @@ import ga.abzzezz.util.data.URLUtil;
 import ga.abzzezz.util.logging.Logger;
 import ga.abzzezz.util.stringing.StringUtil;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
-import net.bplaced.abzzezz.animeapp.util.provider.impl.Anime4YouHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.holders.Anime4YouHolder;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.ricecode.similarity.JaroStrategy;
 import net.ricecode.similarity.SimilarityStrategy;
@@ -60,7 +60,7 @@ public class Anime4YouImportMAL extends TaskExecutor implements Callable<String>
                 final JSONObject converted = new JSONObject();
 
                 converted.put("id", listObject.getString("aid"));
-                converted.put("image_url", COVER_DATABASE.concat(listObject.getString("image_id")));
+                converted.put("image_url", COVER_API.concat(listObject.getString("image_id")));
                 converted.put("episodes", listObject.getString("Letzte"));
                 converted.put("title", listObject.getString("titel"));
                 converted.put("language", listObject.getString("Untertitel"));

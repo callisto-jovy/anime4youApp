@@ -12,7 +12,7 @@ import android.content.Intent;
 import android.widget.Toast;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.util.IntentHelper;
-import net.bplaced.abzzezz.animeapp.util.tasks.EpisodeDownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.download.EpisodeDownloadTask;
 
 public class StopDownloadReceiver extends BroadcastReceiver {
 

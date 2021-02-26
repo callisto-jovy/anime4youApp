@@ -8,7 +8,7 @@ package net.bplaced.abzzezz.animeapp.util.tasks.twistmoe;
 
 
 import net.bplaced.abzzezz.animeapp.util.KeyUtil;
-import net.bplaced.abzzezz.animeapp.util.provider.impl.TwistmoeHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.holders.TwistmoeHolder;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import javax.crypto.BadPaddingException;
@@ -24,7 +24,6 @@ import java.util.Base64;
 import java.util.concurrent.Callable;
 
 public class TwistmoeDecodeSourcesTask extends TaskExecutor implements Callable<String>, TwistmoeHolder {
-
 
     private final String string;
 

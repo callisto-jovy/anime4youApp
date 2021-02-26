@@ -13,15 +13,12 @@ import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
 import net.bplaced.abzzezz.animeapp.util.provider.Providers;
-import net.bplaced.abzzezz.animeapp.util.provider.impl.Anime4YouHolder;
-import net.bplaced.abzzezz.animeapp.util.scripter.Anime4YouDBSearch;
+import net.bplaced.abzzezz.animeapp.util.provider.holders.Anime4YouHolder;
+import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouDBSearch;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouDataBaseCallable;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouEpisodeDownloadTask;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouSearchTask;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.VivoDecodeTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,6 +27,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+/**
+ * PROVIDER NOT LONGER IN USE; ANIME4YOU.one is no longer available
+ */
 public class Anime4You extends Provider implements Anime4YouHolder {
 
     public static final Anime4YouDBSearch ANIME_4_YOU_DB_SEARCH = new Anime4YouDBSearch();
@@ -70,7 +70,7 @@ public class Anime4You extends Provider implements Anime4YouHolder {
     }
 
     @Override
-    public JSONObject format(final Show show) throws JSONException {
+    public JSONObject formatShowForSave(final Show show) throws JSONException {
         return new JSONObject()
                 .put(StringHandler.SHOW_ID, show.getID())
                 .put(StringHandler.SHOW_IMAGE_URL, show.getImageURL())
@@ -82,19 +82,19 @@ public class Anime4You extends Provider implements Anime4YouHolder {
     }
 
     @Override
-    public Show getShow(final JSONObject data) throws JSONException {
+    public Show getShowFromProvider(final JSONObject data) throws JSONException {
         return new Show(
                 data.getString("aid"),
                 data.getString("titel"),
                 data.getString("Letzte"),
-                COVER_DATABASE.concat(data.getString("image_id")),
+                COVER_API.concat(data.getString("image_id")),
                 data.getString("Untertitel"),
                 Providers.NULL.getProvider());
     }
 
 
     @Override
-    public Show decode(JSONObject showJSON) throws JSONException {
+    public Show getShowFromSave(JSONObject showJSON) throws JSONException {
         return new Show(
                 showJSON.getString(StringHandler.SHOW_ID),
                 showJSON.getString(StringHandler.SHOW_TITLE),
@@ -102,6 +102,10 @@ public class Anime4You extends Provider implements Anime4YouHolder {
                 showJSON.getString(StringHandler.SHOW_IMAGE_URL),
                 showJSON.getString(StringHandler.SHOW_LANG),
                 Providers.NULL.getProvider());
+    }
+
+    @Override
+    public void handleImportMAL(String malURL, Consumer<List<Show>> matchingShows) {
     }
 
     @Override

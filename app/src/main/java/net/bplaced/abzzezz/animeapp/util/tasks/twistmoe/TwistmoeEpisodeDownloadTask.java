@@ -7,13 +7,15 @@
 package net.bplaced.abzzezz.animeapp.util.tasks.twistmoe;
 
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
+import net.bplaced.abzzezz.animeapp.util.connection.RBCWrapper;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
-import net.bplaced.abzzezz.animeapp.util.tasks.EpisodeDownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.download.EpisodeDownloadTask;
 
 import java.io.File;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.nio.channels.Channels;
 
 public class TwistmoeEpisodeDownloadTask extends EpisodeDownloadTask {
 
@@ -26,16 +28,29 @@ public class TwistmoeEpisodeDownloadTask extends EpisodeDownloadTask {
         if (!outDir.exists()) outDir.mkdir();
         this.outFile = new File(outDir, count[1] + ".mp4");
         try {
-            //Open new URL connection
-            final HttpURLConnection connection = URLUtil.createHTTPSURLConnection(url,
-                    new String[]{"User-Agent", StringHandler.USER_AGENT},
-                    new String[]{"Range", "f'bytes={pos}-"},
-                    new String[]{"Referer", "https://twist.moe/a/"});
-            URLUtil.copyFileFromURL(connection, outFile, fileOutputStream -> this.fileOutputStream = fileOutputStream);
-            return name.concat(": ") + count[1];
-        } catch (MalformedURLException e) {
-            cancel();
-            return name.concat(": ") + count[1];
+            final HttpURLConnection connection = URLUtil.createHTTPSURLConnection
+                    (
+                            url,
+                            new String[]{"User-Agent", StringHandler.USER_AGENT},
+                            new String[]{"Range", "f'bytes={pos}-"},
+                            new String[]{"Referer", "https://twist.moe/a/"}
+                    );
+
+            progressHandler.receiveTotalSize(connection.getContentLength());
+
+            URLUtil.copyFileFromRBC(new RBCWrapper(
+                            Channels.newChannel(connection.getInputStream()),
+                            connection.getContentLength(),
+                            progressHandler::onDownloadProgress),
+                    outFile,
+                    fileOutputStream -> this.fileOutputStream = fileOutputStream);
+
+            progressHandler.onDownloadCompleted(name.concat(": ") + count[1]);
+            return null;
+        } catch (final MalformedURLException e) {
+            progressHandler.onErrorThrown(getError(e));
+            this.cancel();
+            return null;
         }
     }
 }

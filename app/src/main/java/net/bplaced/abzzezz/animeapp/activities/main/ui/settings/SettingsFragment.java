@@ -6,10 +6,12 @@
 
 package net.bplaced.abzzezz.animeapp.activities.main.ui.settings;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,13 +21,13 @@ import ga.abzzezz.util.logging.Logger;
 import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
+import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import net.bplaced.abzzezz.animeapp.util.tasks.anime4you.Anime4YouImportMAL;
-import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 public class SettingsFragment extends Fragment {
 
@@ -71,26 +73,21 @@ public class SettingsFragment extends Fragment {
             });
 
             importMal.setOnPreferenceClickListener(preference -> {
-                new InputDialogBuilder(new InputDialogBuilder.InputDialogListener() {
-                    @Override
-                    public void onDialogInput(final String text) {
-                        new Anime4YouImportMAL(text).executeAsync(new TaskExecutor.Callback<String>() {
-                            @Override
-                            public void onComplete(final String result) {
-                                Toast.makeText(getActivity(), "Your Mal was imported", Toast.LENGTH_LONG).show();
-                            }
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Select your provider");
+                //Add all provider names to a array, skipping the null provider
+                final String[] providerNames = Arrays.stream(Providers.values()).filter(providers -> providers != Providers.NULL).map(Enum::name).toArray(String[]::new);
+                final EditText text = new EditText(getContext());
 
-                            @Override
-                            public void preExecute() {
-                            }
-                        });
-                    }
+                builder.setView(text);
 
-                    @Override
-                    public void onDialogDenied() {
+                builder.setItems(providerNames, (dialog, which) -> {
+                    //TODO: Import MAL
 
-                    }
-                }).showInput("Import MAL", "Import", getActivity());
+                    //Providers.valueOf(providerNames[which]).getProvider().importMAL()
+                }).setNegativeButton("Cancel", (dialog, which) -> {
+                });
+                builder.create().show();
                 return true;
             });
         }

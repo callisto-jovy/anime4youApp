@@ -8,7 +8,7 @@ package net.bplaced.abzzezz.animeapp.util.tasks.anime4you;
 
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
-import net.bplaced.abzzezz.animeapp.util.tasks.EpisodeDownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.download.EpisodeDownloadTask;
 
 import java.io.File;
 

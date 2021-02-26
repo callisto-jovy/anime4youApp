@@ -9,7 +9,7 @@ package net.bplaced.abzzezz.animeapp.util.tasks.animepahe;
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.provider.Providers;
-import net.bplaced.abzzezz.animeapp.util.provider.impl.AnimePaheHolder;
+import net.bplaced.abzzezz.animeapp.util.provider.holders.AnimePaheHolder;
 import net.bplaced.abzzezz.animeapp.util.provider.providers.AnimePahe;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
@@ -42,7 +42,7 @@ public class AnimePaheSearchTask extends TaskExecutor implements Callable<List<S
         final AnimePahe animePahe = (AnimePahe) Providers.ANIMEPAHE.getProvider();
         //TODO: Adds all results. Distinction needed?
         for (int i = 0; i < showsIn.length(); i++) {
-            final Show show = animePahe.getShow(new AnimePaheFetchCallable(showsIn.getJSONObject(i)).call());
+            final Show show = animePahe.getShowFromProvider(new AnimePaheFetchCallable(showsIn.getJSONObject(i)).call());
             if (!showsOut.contains(show)) showsOut.add(show);
 
         }
