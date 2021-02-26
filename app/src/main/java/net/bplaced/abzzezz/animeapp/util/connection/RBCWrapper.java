@@ -17,22 +17,15 @@ import java.util.function.Consumer;
 public class RBCWrapper implements ReadableByteChannel {
 
     private final Consumer<Integer> progressConsumer;
-    private final int expectedSize;
     private final ReadableByteChannel rbc;
-    private long readSoFar;
 
     public RBCWrapper(ReadableByteChannel rbc, int expectedSize, Consumer<Integer> progressConsumer) {
         this.progressConsumer = progressConsumer;
-        this.expectedSize = expectedSize;
         this.rbc = rbc;
     }
 
     public void close() throws IOException {
         rbc.close();
-    }
-
-    public long getReadSoFar() {
-        return readSoFar;
     }
 
     public boolean isOpen() {
@@ -41,12 +34,9 @@ public class RBCWrapper implements ReadableByteChannel {
 
     public int read(ByteBuffer bb) throws IOException {
         int n;
-        double progress;
 
         if ((n = rbc.read(bb)) > 0) {
-            readSoFar += n;
-            progress = expectedSize > 0 ? (double) readSoFar / (double) expectedSize * 100.0 : -1.0;
-            progressConsumer.accept((int) progress);
+            progressConsumer.accept(n);
         }
         return n;
     }
