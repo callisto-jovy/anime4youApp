@@ -6,7 +6,6 @@
 
 package net.bplaced.abzzezz.animeapp.util.provider;
 
-import net.bplaced.abzzezz.animeapp.util.provider.providers.AnimeCloud;
 import net.bplaced.abzzezz.animeapp.util.provider.providers.AnimePahe;
 import net.bplaced.abzzezz.animeapp.util.provider.providers.GogoAnime;
 import net.bplaced.abzzezz.animeapp.util.provider.providers.Twistmoe;
@@ -16,7 +15,6 @@ public enum Providers {
     GOGOANIME(new GogoAnime()),
     TWISTMOE(new Twistmoe()),
     ANIMEPAHE(new AnimePahe()),
-    ANIMECLOUD(new AnimeCloud()),
     //Null provider, for old providers; Skipped when iterating
     NULL(null);
 

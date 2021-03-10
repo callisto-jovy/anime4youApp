@@ -79,8 +79,7 @@ public class GogoAnimeFetcher {
                         if (matcher.find()) {
                             System.out.println(matcher.group());
                             return matcher.group().substring(3, matcher.group().length() - 1);
-                        }
-                        else return "";
+                        } else return "";
                     } catch (IOException e) {
                         e.printStackTrace();
                         return "";

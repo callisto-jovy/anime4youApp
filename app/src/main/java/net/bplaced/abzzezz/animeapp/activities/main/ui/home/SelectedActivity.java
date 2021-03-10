@@ -10,10 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -30,6 +27,8 @@ import net.bplaced.abzzezz.animeapp.activities.main.ui.player.PlayerActivity;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.player.StreamPlayer;
 import net.bplaced.abzzezz.animeapp.util.IntentHelper;
 import net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader;
+import net.bplaced.abzzezz.animeapp.util.provider.Provider;
+import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.ui.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder;
@@ -40,6 +39,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.concurrent.TimeUnit;
 
 public class SelectedActivity extends AppCompatActivity {
 
@@ -47,6 +47,9 @@ public class SelectedActivity extends AppCompatActivity {
     private File showDirectory;
 
     private Show show;
+
+
+    private Provider currentProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,38 +62,68 @@ public class SelectedActivity extends AppCompatActivity {
          */
         this.show = (Show) IntentHelper.getObjectForKey("show");
 
-        this.showDirectory = new File(getFilesDir(), show.getProvider().getName() + show.getTitle());
+        this.showDirectory = new File(getFilesDir(), show.getID());
 
-        final String coverUrl = show.getImageURL();
-
-        //Set text etc.
-        ((TextView) findViewById(R.id.selected_show_name)).setText(show.getTitle());
-        ((TextView) findViewById(R.id.selected_anime_episodes)).append(show.getEpisodes());
+        //Set the text
+        ((TextView) findViewById(R.id.selected_show_name)).setText(show.getShowTitle());
+        ((TextView) findViewById(R.id.selected_anime_episodes)).append(String.valueOf(show.getEpisodeCount()));
         ((TextView) findViewById(R.id.selected_anime_aid)).append(show.getID());
-        ((TextView) findViewById(R.id.selected_anime_language)).append(show.getLanguage());
-        ((TextView) findViewById(R.id.selected_anime_hoster)).append(show.getProvider().getName());
+
+        // ((TextView) findViewById(R.id.selected_anime_language)).append(show.getLanguage());
+
+        //TODO: Show provider
+        // ((TextView) findViewById(R.id.selected_anime_hoster)).append(show.getProvider().getName());
+
         ((TextView) findViewById(R.id.anime_directory_size)).append(FileUtil.calculateFileSize(showDirectory));
 
         final ImageView cover = findViewById(R.id.anime_cover_image);
         final Toolbar toolbar = findViewById(R.id.selected_anime_toolbar);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(show.getTitle());
+        Objects.requireNonNull(getSupportActionBar()).setTitle(show.getShowTitle());
+
         /*
          * If offline mode is enabled use image offline loader
          */
         if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("offline_mode", false))
-            OfflineImageLoader.loadImage(coverUrl, show, cover, this);
+            OfflineImageLoader.loadImage(show.getImageURL(), show, cover, this);
         else
-            Picasso.with(getApplicationContext()).load(coverUrl).resize(ImageUtil.IMAGE_COVER_DIMENSIONS[0], ImageUtil.IMAGE_COVER_DIMENSIONS[1]).into(cover);
+            Picasso.with(getApplicationContext()).load(show.getImageURL()).resize(ImageUtil.IMAGE_COVER_DIMENSIONS[0], ImageUtil.IMAGE_COVER_DIMENSIONS[1]).into(cover);
 
 
+        final Spinner provider_spinner = findViewById(R.id.provider_spinner);
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+        arrayAdapter.addAll(Arrays.stream(Providers.values()).filter(providers -> providers != Providers.NULL).map(Enum::name).toArray(String[]::new));
+        provider_spinner.setAdapter(arrayAdapter);
+
+        //TODO: Provider switching
+
+        provider_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Load episodes from selected provider
+                currentProvider = Providers.valueOf(arrayAdapter.getItem(position)).getProvider();
+
+                if (TimeUnit.MILLISECONDS.toMinutes(show.getTimestampDifference(currentProvider)) >= 5)
+                    currentProvider.getShowEpisodeReferrals(show, jsonArray -> show.addEpisodesForProvider(jsonArray, currentProvider));
+
+                final int providerEpisodeLength = show.getShowEpisodes(currentProvider).length();
+                //TODO: Remove "hack"
+                ((TextView) findViewById(R.id.selected_anime_episodes)).setText("Episodes:" + providerEpisodeLength); //Update count
+                episodeAdapter.setEpisodes(providerEpisodeLength);
+                refreshAdapter();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        //Set adapter
+        this.episodeAdapter = new EpisodeAdapter(show.getEpisodeCount(), getApplicationContext());
+
+        //Episode List view
         final ListView listView = findViewById(R.id.anime_episodes_grid);
-
-        /*
-         * Set Adapter
-         */
-        this.episodeAdapter = new EpisodeAdapter(Integer.parseInt(show.getEpisodes()), getApplicationContext());
-
         listView.setAdapter(episodeAdapter);
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
             final boolean isDownloaded = isEpisodeDownloaded(i);
@@ -105,7 +138,7 @@ public class SelectedActivity extends AppCompatActivity {
                             ionAlert.dismissWithAnimation();
                     }).show();
         });
-        findViewById(R.id.download_anime_button).setOnClickListener(listener -> getEpisode(getLatestEpisode(), Integer.parseInt(show.getEpisodes()), 0, false));
+        findViewById(R.id.download_anime_button).setOnClickListener(listener -> getEpisode(getLatestEpisode(), show.getEpisodeCount(), 0, false));
     }
 
 
@@ -121,35 +154,12 @@ public class SelectedActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    public int getLatestEpisode() {
-        if (showDirectory.list() != null) {
-            final OptionalInt highest = Arrays.stream(showDirectory.listFiles()).filter(File::isFile).map(s -> StringUtil.extractNumberI(s.getName().substring(0, s.getName().lastIndexOf(".")))).mapToInt(integer -> integer).max();
-            if (highest.isPresent()) return highest.getAsInt() + 1;
-        }
-        return 0;
-    }
-
-    public void refreshAdapter() {
-        episodeAdapter.notifyDataSetChanged();
-    }
-
-    private boolean isEpisodeDownloaded(final int index) {
-        if (showDirectory.list() != null) {
-            for (final File file : showDirectory.listFiles()) {
-                if (file.isFile()) {
-                    if (file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index)))
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * Items selected
      *
      * @param item selected item
-     * @return
+     * @return was item selected
      */
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
@@ -201,22 +211,21 @@ public class SelectedActivity extends AppCompatActivity {
     public void getEpisode(final int start, final int countMax, final int currentCount, final boolean stream) {
         Logger.log("Next episode: " + start, Logger.LogType.INFO);
         final int[] count = {currentCount, start};
-        /*
-         * Check if count is bigger than the max episodes to download
-         */
+
+        // Check if count is bigger than the max episodes to download
         if (count[0] >= countMax) {
             Logger.log("current episode exceeds max / start exceeds max", Logger.LogType.ERROR);
             return;
         }
 
-        show.getProvider().handleURLRequest(show, getApplicationContext(), optionalURL -> optionalURL.ifPresent(url -> {
+        currentProvider.handleURLRequest(show, getApplicationContext(), optionalURL -> optionalURL.ifPresent(url -> {
             if (stream) {
                 final Intent intent = new Intent(SelectedActivity.this, StreamPlayer.class);
                 intent.putExtra("stream", url);
                 startActivity(intent);
                 finish();
             } else
-                show.getProvider().handleDownload(this, url, show, showDirectory, count[0], count[1], countMax);
+                currentProvider.handleDownload(this, url, show, showDirectory, count[0], count[1], countMax);
         }), count[0], count[1], countMax);
 
     }
@@ -257,6 +266,30 @@ public class SelectedActivity extends AppCompatActivity {
         return Optional.empty();
     }
 
+    public int getLatestEpisode() {
+        if (showDirectory.listFiles() != null) {
+            final OptionalInt highest = Arrays.stream(showDirectory.listFiles()).filter(File::isFile).map(s -> StringUtil.extractNumberI(s.getName().substring(0, s.getName().lastIndexOf(".")))).mapToInt(integer -> integer).max();
+            if (highest.isPresent()) return highest.getAsInt() + 1;
+        }
+        return 0;
+    }
+
+    public void refreshAdapter() {
+        episodeAdapter.notifyDataSetChanged();
+    }
+
+    private boolean isEpisodeDownloaded(final int index) {
+        if (showDirectory.listFiles() != null) {
+            for (final File file : showDirectory.listFiles()) {
+                if (file.isFile()) {
+                    if (file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index)))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
     /**
      * Episode adapter
@@ -264,7 +297,7 @@ public class SelectedActivity extends AppCompatActivity {
     class EpisodeAdapter extends BaseAdapter {
 
         private final Context context;
-        private final int episodes;
+        private int episodes;
 
         public EpisodeAdapter(final int episodes, final Context context) {
             this.episodes = episodes;
@@ -286,6 +319,10 @@ public class SelectedActivity extends AppCompatActivity {
             return 0;
         }
 
+
+        public void setEpisodes(int episodes) {
+            this.episodes = episodes;
+        }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {

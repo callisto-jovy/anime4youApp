@@ -15,11 +15,13 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.squareup.picasso.Picasso;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
-import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
+import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
+import net.bplaced.abzzezz.animeapp.util.tasks.myanimelist.MyAnimeListSearchTask;
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -42,6 +44,21 @@ public class SearchFragment extends Fragment {
                 final SearchAdapter searchAdapter = (SearchAdapter) listView.getAdapter();
                 searchAdapter.getEntries().clear();
 
+                new MyAnimeListSearchTask(query).executeAsync(new TaskExecutor.Callback<List<Show>>() {
+                    @Override
+                    public void onComplete(List<Show> result) {
+                        searchAdapter.getEntries().addAll(result);
+                        searchAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void preExecute() {
+
+                    }
+                });
+                showSearch.clearFocus();
+
+                /*
                 for (final Providers value : Providers.values()) {
                     if (value == Providers.NULL) continue;
 
@@ -51,6 +68,8 @@ public class SearchFragment extends Fragment {
                     });
                 }
                 showSearch.clearFocus();
+
+                 */
                 return true;
             }
 
@@ -104,13 +123,16 @@ public class SearchFragment extends Fragment {
 
                 final TextView showTitle = convertView.findViewById(R.id.show_title);
                 final TextView showEpisodes = convertView.findViewById(R.id.show_episodes);
-                final TextView showLanguage = convertView.findViewById(R.id.show_language);
                 final TextView showYear = convertView.findViewById(R.id.show_provider);
+                final ImageView imageView = convertView.findViewById(R.id.show_image);
 
-                showTitle.append(showAtIndex.getTitle());
-                showEpisodes.append(showAtIndex.getEpisodes());
-                showLanguage.append(showAtIndex.getLanguage());
-                showYear.append(showAtIndex.getProvider().getName());
+                Picasso.with(context).load(showAtIndex.getImageURL()).into(imageView);
+
+                imageView.setAdjustViewBounds(true);
+
+                showTitle.append(showAtIndex.getShowTitle());
+                showEpisodes.append(String.valueOf(showAtIndex.getEpisodeCount()));
+                showYear.append("MAL");
 
             }
 

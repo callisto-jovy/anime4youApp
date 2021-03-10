@@ -6,125 +6,164 @@
 
 package net.bplaced.abzzezz.animeapp.util.show;
 
+import ga.abzzezz.util.logging.Logger;
+import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
-import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Show {
 
-    private String year;
-    private String id;
-    private String title;
-    private String episodes;
-    private String imageURL;
-    private String language;
+    private final String malID;
+    private final String showTitle;
+    private final String showReleaseYear;
+    private final String imageURL;
+    private final int episodeCount;
 
-    private Provider provider;
-    private JSONObject showAdditional;
+    private final JSONObject providers;
 
-    public Show(String id, String title, String episodes, String imageURL, String language, Provider provider, final JSONObject... showAdditional) {
-        this.id = id;
-        this.title = title;
-        this.episodes = episodes;
+    /**
+     * Basic Show object constructed from MAL data
+     *
+     * @param id              MAL ID
+     * @param title           Title fetched from MAL
+     * @param episodeCount    episode count
+     * @param imageURL        image url from MAL
+     * @param showReleaseYear the year the show was released
+     */
+    public Show(String id, String title, int episodeCount, String imageURL, final String showReleaseYear) {
+        this.malID = id;
+        this.showTitle = title;
+        this.episodeCount = episodeCount;
         this.imageURL = imageURL;
-        this.language = language;
-        this.provider = provider;
-        for (final JSONObject jsonObject : showAdditional) {
-            this.showAdditional = jsonObject;
+        this.showReleaseYear = showReleaseYear;
+        this.providers = new JSONObject();
+    }
+
+    /**
+     * Retrieve Show from formatted data
+     *
+     * @param showJSON showJSON to restore the show from
+     * @throws JSONException json
+     */
+    public Show(JSONObject showJSON) throws JSONException {
+        this.malID = showJSON.getString(StringHandler.SHOW_ID);
+        this.showTitle = showJSON.getString(StringHandler.SHOW_TITLE);
+        this.episodeCount = showJSON.getInt(StringHandler.SHOW_EPISODE_COUNT);
+        this.imageURL = showJSON.getString(StringHandler.SHOW_IMAGE_URL);
+        this.showReleaseYear = showJSON.getString(StringHandler.SHOW_YEAR);
+        this.providers = showJSON.getJSONObject("provider_info");
+    }
+
+    /**
+     * @param provider
+     * @return
+     */
+    public JSONArray getShowEpisodes(final Provider provider) {
+        try {
+            final String providerName = provider.getName();
+            if (!providers.has(providerName)) {
+                Logger.log("Cannot retrieve provider information. No json object with the given provider was found", Logger.LogType.ERROR);
+                return new JSONArray();
+            }
+
+            final JSONObject providerJSON = providers.getJSONObject(providerName); //Retrieve information
+            return providerJSON.getJSONArray("episodes");
+        } catch (final JSONException e) {
+            e.printStackTrace();
+            return new JSONArray();
         }
     }
 
-    public Show(JSONObject showJSON) throws JSONException {
-        this.provider = Providers.getProvider(showJSON.getString(StringHandler.SHOW_PROVIDER));
-        final Show thisShow = provider.getShowFromSave(showJSON);
-
-        this.id = thisShow.getID();
-        this.title = thisShow.getTitle();
-        this.episodes = thisShow.getEpisodes();
-        this.imageURL = thisShow.getImageURL();
-        this.language = thisShow.getLanguage();
-        this.showAdditional = thisShow.getShowAdditional();
+    public long getTimestampDifference(final Provider provider) {
+        try {
+            final JSONObject providerJSON = getProviderJSON(provider);
+            if (providerJSON.has("time")) {
+                return System.currentTimeMillis() - providerJSON.getLong("time");
+            } else return System.currentTimeMillis();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return System.currentTimeMillis();
+        }
     }
 
-    public Show(JSONObject showJSON, Providers provider) throws JSONException {
-        this.id = showJSON.getString(StringHandler.SHOW_ID);
-        this.title = showJSON.getString(StringHandler.SHOW_TITLE);
-        this.episodes = showJSON.getString(StringHandler.SHOW_EPISODE_COUNT);
-        this.imageURL = showJSON.getString(StringHandler.SHOW_IMAGE_URL);
-        this.language = showJSON.getString(StringHandler.SHOW_LANG);
-        this.provider = provider.getProvider();
+    public void addEpisodesForProvider(final JSONArray episodes, final Provider provider) {
+        try {
+            final JSONObject providerJSON = providers.getJSONObject(provider.getName()); //Retrieve information
+            providerJSON.put("episodes", episodes); //Update
+            providerJSON.put("time", System.currentTimeMillis());
+            this.updateProviderJSON(provider, providerJSON);
+        } catch (final JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public JSONObject getProviderJSON(final Provider provider) throws JSONException {
+        if (providers.has(provider.getName())) {
+            return providers.getJSONObject(provider.getName());
+        } else {
+            return new JSONObject();
+        }
+    }
+
+    public void updateProviderJSON(final Provider provider, final JSONObject providerJSON) {
+        try {
+            this.providers.put(provider.getName(), providerJSON);
+            this.updateShow();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateShow() {
+        final int index = AnimeAppMain.getInstance().getShowSaver().getIndex(this);
+        if (index == -1) {
+            throw new IndexOutOfBoundsException("Index out of range");
+        } else
+            AnimeAppMain.getInstance().getShowSaver().refreshShow(this, index);
     }
 
     @Override
     public String toString() {
         try {
-            return provider.formatShowForSave(this).toString();
+            final JSONObject jsonObject = new JSONObject();
+            jsonObject
+                    .put(StringHandler.SHOW_ID, getID())
+                    .put(StringHandler.SHOW_TITLE, getShowTitle())
+                    .put(StringHandler.SHOW_YEAR, getShowReleaseYear())
+                    .put(StringHandler.SHOW_IMAGE_URL, getImageURL())
+                    .put(StringHandler.SHOW_EPISODE_COUNT, getEpisodeCount())
+                    .put("provider_info", providers);
+            return jsonObject.toString();
         } catch (final JSONException e) {
             e.printStackTrace();
             return "";
         }
     }
 
-    public void setYear(String year) {
-        this.year = year;
-    }
-
-    public JSONObject getShowAdditional() {
-        return showAdditional;
-    }
-
-    public String getYear() {
-        return year;
+    public String getShowReleaseYear() {
+        return showReleaseYear;
     }
 
     public String getID() {
-        return id;
+        return malID;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getShowTitle() {
+        return showTitle;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getEpisodes() {
-        return episodes;
-    }
-
-    public void setEpisodes(String episodes) {
-        this.episodes = episodes;
+    public int getEpisodeCount() {
+        return episodeCount;
     }
 
     public String getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public JSONObject getProviders() {
+        return providers;
     }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public Provider getProvider() {
-        return provider;
-    }
-
-    public void setProvider(Provider provider) {
-        this.provider = provider;
-    }
-
 }

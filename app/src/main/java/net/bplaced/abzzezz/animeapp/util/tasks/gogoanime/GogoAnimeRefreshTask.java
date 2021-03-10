@@ -6,6 +6,7 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
+import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import org.json.JSONArray;
@@ -29,15 +30,15 @@ public class GogoAnimeRefreshTask extends TaskExecutor implements Callable<Show>
      */
     @Override
     public Show call() throws Exception {
-        final int start = showIn.getShowAdditional().getInt("ep_start");
-        final int end = showIn.getShowAdditional().getInt("ep_end");
+        final int start = showIn.getProviderJSON(Providers.GOGOANIME.getProvider()).getInt("ep_start");
+        final int end = showIn.getProviderJSON(Providers.GOGOANIME.getProvider()).getInt("ep_end");
         final String[] fetchedDirectURLs = GogoAnimeFetcher.fetchIDs(showIn.getID(), start, end);
 
         final JSONArray episodes = new JSONArray();
 
         for (final String fetchedDirectURL : fetchedDirectURLs) episodes.put(fetchedDirectURL);
 
-        showIn.getShowAdditional().put("episodes", episodes);
+        showIn.addEpisodesForProvider(episodes, Providers.GOGOANIME.getProvider());
         return showIn;
     }
 }

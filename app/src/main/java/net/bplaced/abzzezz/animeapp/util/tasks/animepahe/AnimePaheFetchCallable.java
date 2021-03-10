@@ -27,8 +27,18 @@ public class AnimePaheFetchCallable implements Callable<JSONObject>, AnimePaheHo
     public JSONObject call() throws Exception {
         final HttpsURLConnection httpsURLConnection = URLUtil.createHTTPSURLConnection(String.format(EPISODE_API, showJSON.getString("id")), new String[]{"User-Agent", RandomUserAgent.getRandomUserAgent()});
         final JSONArray collectedLines = new JSONObject(URLUtil.collectLines(httpsURLConnection, "")).getJSONArray("data");
+        final JSONArray sources = new JSONArray();
+
+        for (int i = 0; i < collectedLines.length(); i++) {
+            final JSONObject dataJSONObject = collectedLines.getJSONObject(i);
+            sources.put(new JSONObject()
+                    .put("anime_id", dataJSONObject.getInt("anime_id"))
+                    .put("session", dataJSONObject.getString("session")
+                    ));
+        }
+
         httpsURLConnection.disconnect();
-        showJSON.put("src", collectedLines);
+        showJSON.put("src", sources);
         return showJSON;
     }
 }

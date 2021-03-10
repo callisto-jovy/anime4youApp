@@ -8,7 +8,6 @@ package net.bplaced.abzzezz.animeapp.util.tasks.animepahe;
 
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
-import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.provider.holders.AnimePaheHolder;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
@@ -16,7 +15,7 @@ import org.json.JSONObject;
 
 import java.util.concurrent.Callable;
 
-public class AnimePaheRefreshTask extends TaskExecutor implements Callable<Show>, AnimePaheHolder {
+public class AnimePaheRefreshTask extends TaskExecutor implements Callable<JSONObject>, AnimePaheHolder {
 
     private final Show showIn;
 
@@ -24,14 +23,13 @@ public class AnimePaheRefreshTask extends TaskExecutor implements Callable<Show>
         this.showIn = showIn;
     }
 
-    public void executeAsync(final Callback<Show> callback) {
+    public void executeAsync(final Callback<JSONObject> callback) {
         super.executeAsync(this, callback);
     }
 
     @Override
-    public Show call() throws Exception {
-        final String collected = URLUtil.collectLines(URLUtil.createHTTPSURLConnection(String.format(SEARCH_API, showIn.getTitle()), new String[]{"User-Agent", RandomUserAgent.getRandomUserAgent()}), "");
-
-        return Providers.ANIMEPAHE.getProvider().getShowFromProvider(new AnimePaheFetchCallable(new JSONObject(collected).getJSONArray("data").getJSONObject(0)).call());
+    public JSONObject call() throws Exception {
+        final String collected = URLUtil.collectLines(URLUtil.createHTTPSURLConnection(String.format(SEARCH_API, showIn.getShowTitle()), new String[]{"User-Agent", RandomUserAgent.getRandomUserAgent()}), "");
+        return new AnimePaheFetchCallable(new JSONObject(collected).getJSONArray("data").getJSONObject(0)).call();
     }
 }

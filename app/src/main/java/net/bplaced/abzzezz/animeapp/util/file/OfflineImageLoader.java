@@ -24,14 +24,15 @@ public class OfflineImageLoader {
 
     /**
      * Downloads a bitmap from a URL and saves it to the image storage folder
-     * @param url URL (String) to download the image from
-     * @param show Show the image will be associated with
+     *
+     * @param url       URL (String) to download the image from
+     * @param show      Show the image will be associated with
      * @param imageView imageView to load the image into
-     * @param context context for picasso image grabbing
+     * @param context   context for picasso image grabbing
      */
     public static void loadImage(final String url, final Show show, final ImageView imageView, final Context context) {
         //Get image Bitmap file
-        final File imageBitmap = new File(AnimeAppMain.getInstance().getImageStorage(), show.getProvider().getName() + show.getID());
+        final File imageBitmap = new File(AnimeAppMain.getInstance().getImageStorage(), show.getID());
         if (!imageBitmap.exists()) {
             //Create new task
             new TaskExecutor().executeAsync(() -> {

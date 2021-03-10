@@ -16,7 +16,8 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
-import com.arthenica.mobileffmpeg.*;
+import com.arthenica.mobileffmpeg.Config;
+import com.arthenica.mobileffmpeg.FFmpeg;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
@@ -50,17 +51,14 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
     protected final String url;
     protected final String name;
     protected final File outDir;
+    protected final EpisodeDownloadProgressHandler progressHandler;
     protected boolean cancel;
     protected File outFile;
+    protected FileOutputStream fileOutputStream; //Fileoutputstream, can be closed if canceled
     private NotificationManagerCompat notificationManagerCompat;
     private NotificationCompat.Builder notification;
     private int notifyID;
-
     private int totalBytes, progress;
-
-    protected final EpisodeDownloadProgressHandler progressHandler;
-
-    protected FileOutputStream fileOutputStream; //Fileoutputstream, can be closed if canceled
 
     public EpisodeDownloadTask(SelectedActivity application, String url, String name, File outDir, int[] count) {
         this.application = application;
@@ -225,7 +223,7 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
         progressHandler.receiveTotalSize(totalSegments);
 
         Config.enableLogCallback(message -> {
-            if(message.getText().contains("Opening"))  {
+            if (message.getText().contains("Opening")) {
                 progressHandler.onDownloadProgress(1);
             }
         });
@@ -234,7 +232,7 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
             if (returnCode == RETURN_CODE_SUCCESS) {
                 progressHandler.onDownloadCompleted(name.concat(": ") + count[1]);
                 Log.i(Config.TAG, "Async command execution completed successfully.");
-            } else if(returnCode == RETURN_CODE_CANCEL) {
+            } else if (returnCode == RETURN_CODE_CANCEL) {
                 try {
                     onComplete("Canceled");
                 } catch (final Exception e) {

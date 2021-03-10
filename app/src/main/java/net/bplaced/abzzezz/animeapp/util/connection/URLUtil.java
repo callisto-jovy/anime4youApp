@@ -34,8 +34,9 @@ public class URLUtil {
 
     /**
      * Creates a HTTPS URL Connection
-     * @param urlIn url connection url
-     * @param requestMethod requestMethod
+     *
+     * @param urlIn             url connection url
+     * @param requestMethod     requestMethod
      * @param requestProperties request property array to be used
      * @return return pre configured connection
      * @throws IOException url invalid
@@ -51,8 +52,9 @@ public class URLUtil {
 
     /**
      * Creates a HTTP URL Connection
-     * @param urlIn url connection url
-     * @param requestMethod requestMethod
+     *
+     * @param urlIn             url connection url
+     * @param requestMethod     requestMethod
      * @param requestProperties request property array to be used
      * @return return pre configured connection
      * @throws IOException url invalid
@@ -68,7 +70,8 @@ public class URLUtil {
 
     /**
      * Creates a HTTPS URL connection
-     * @param urlIn url connection url
+     *
+     * @param urlIn             url connection url
      * @param requestProperties request property array to be used
      * @return returns a pre configured https url connection
      * @throws IOException url invalid
@@ -83,7 +86,8 @@ public class URLUtil {
 
     /**
      * Creates a HTTP URL connection
-     * @param urlIn url connection url
+     *
+     * @param urlIn             url connection url
      * @param requestProperties request property array to be used
      * @return returns a pre configured http url connection
      * @throws IOException url invalid
@@ -98,9 +102,10 @@ public class URLUtil {
 
     /**
      * Creates a HTTPS URL connection
-     * @param urlIn url connection url
+     *
+     * @param urlIn             url connection url
      * @param connectionTimeout connection timeout
-     * @param readTimeout read timeout
+     * @param readTimeout       read timeout
      * @param requestProperties request property array to be used
      * @return returns a pre configured http url connection
      * @throws IOException url invalid
@@ -117,9 +122,10 @@ public class URLUtil {
 
     /**
      * Creates a HTTPS URL connection
-     * @param urlIn url connection url
+     *
+     * @param urlIn             url connection url
      * @param connectionTimeout connection timeout
-     * @param readTimeout read timeout
+     * @param readTimeout       read timeout
      * @param requestProperties request property array to be used
      * @return returns a pre configured http url connection
      * @throws IOException url invalid
@@ -211,11 +217,12 @@ public class URLUtil {
         fileOutputStream.getChannel().transferFrom(Channels.newChannel(src.getInputStream()), 0, Long.MAX_VALUE);
         fileOutputStream.close();
     }
+
     /**
      * Copies file from url
      *
-     * @param src  to copy from
-     * @param dest destination to copy to
+     * @param src                      to copy from
+     * @param dest                     destination to copy to
      * @param fileOutputStreamConsumer consumer that is accepted
      * @throws IOException @
      */
@@ -229,8 +236,8 @@ public class URLUtil {
     /**
      * Copies file from url
      *
-     * @param readableByteChannel to copy from
-     * @param dest destination to copy to
+     * @param readableByteChannel      to copy from
+     * @param dest                     destination to copy to
      * @param fileOutputStreamConsumer consumer that is accepted
      * @throws IOException @
      */

@@ -6,12 +6,7 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
-import net.bplaced.abzzezz.animeapp.util.provider.Providers;
-import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
-import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -19,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class GogoAnimeSearchTask extends TaskExecutor implements Callable<List<Show>> {
+public class GogoAnimeSearchTask extends TaskExecutor implements Callable<List<JSONObject>> {
 
     private final String searchQuery;
 
@@ -27,13 +22,15 @@ public class GogoAnimeSearchTask extends TaskExecutor implements Callable<List<S
         this.searchQuery = searchQuery;
     }
 
-    public void executeAsync(Callback<List<Show>> callback) {
+    public void executeAsync(Callback<List<JSONObject>> callback) {
         super.executeAsync(this, callback);
     }
 
+
     @Override
-    public List<Show> call() throws IOException {
-        final List<Show> showsOut = new ArrayList<>();
+    public List<JSONObject> call() throws IOException {
+
+      /*  final List<JSONObject> showsOut = new ArrayList<>();
 
         final String[] urls = GogoAnimeFetcher.getURLsFromSearch(searchQuery);
 
@@ -65,5 +62,8 @@ public class GogoAnimeSearchTask extends TaskExecutor implements Callable<List<S
             }
         }
         return showsOut;
+
+       */
+        return new ArrayList<>();
     }
 }

@@ -89,9 +89,9 @@ public class JsUnpacker {
     }
 
     private static class Unbase {
+        private final int radix;
         private String alphabet = null;
         private HashMap<String, Integer> dictionary = null;
-        private final int radix;
 
         Unbase(int radix) {
             this.radix = radix;

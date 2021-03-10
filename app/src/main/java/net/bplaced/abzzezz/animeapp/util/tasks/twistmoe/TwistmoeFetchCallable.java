@@ -46,7 +46,7 @@ public class TwistmoeFetchCallable implements Callable<JSONObject>, TwistmoeHold
         showDetails.put("url", slug)
                 .put("title", fetchedDetails.getString("title"))
                 .put("id", fetchedDetails.getString("id"))
-                .put("sources", sources)
+                .put("src", sources)
                 .put("episodes", sources.length());
         return showDetails;
     }

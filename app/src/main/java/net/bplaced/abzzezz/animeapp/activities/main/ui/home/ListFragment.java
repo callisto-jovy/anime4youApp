@@ -81,10 +81,16 @@ public class ListFragment extends Fragment {
 
             for (int i = 0; i < AnimeAppMain.getInstance().getShowSaver().getShowSize(); i++) {
                 int finalI = i;
-                AnimeAppMain.getInstance().getShowSaver().getShow(i).ifPresent(show -> show.getProvider().refreshShow(show, refreshedShow -> {
-                    AnimeAppMain.getInstance().getShowSaver().refreshShow(refreshedShow, finalI);
-                    Toast.makeText(getContext(), "Refreshed show:" + refreshedShow.getTitle(), Toast.LENGTH_SHORT).show();
-                }));
+                AnimeAppMain.getInstance().getShowSaver().getShow(i).ifPresent(show -> {
+                    //TODO: Reimplement
+/*
+                    show.getProvider().refreshShow(show, refreshedShow -> {
+                        AnimeAppMain.getInstance().getShowSaver().refreshShow(refreshedShow, finalI);
+                        Toast.makeText(getContext(), "Refreshed show:" + refreshedShow.getShowTitle(), Toast.LENGTH_SHORT).show();
+                    })
+
+ */
+                });
             }
             swipeRefreshLayout.setRefreshing(false);
         });
@@ -152,7 +158,7 @@ public class ListFragment extends Fragment {
             final Optional<Show> itemToRemove = (Optional<Show>) getItem(index);
             itemToRemove.ifPresent(show -> {
                 this.size--;
-                final File dir = new File(getActivity().getFilesDir(), show.getTitle());
+                final File dir = new File(getActivity().getFilesDir(), show.getShowTitle());
                 if (dir.listFiles() != null && dir.listFiles().length > 0) {
                     new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
                             .setTitleText("Delete all remaining episodes?")

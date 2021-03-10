@@ -21,6 +21,8 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/notice.txt'
         exclude 'META-INF/ASL2.0'
+        pickFirst "META-INF/INDEX.LIST"
+        pickFirst "META-INF/io.netty.versions.properties"
     }
 
     compileOptions {
@@ -60,4 +62,6 @@ dependencies {
     //Android app install
     implementation 'com.blankj:utilcodex:1.30.1'
     implementation 'com.arthenica:mobile-ffmpeg-full:4.4'
+    implementation 'net.sandrohc:reactive-jikan:1.0.0'
+
 }

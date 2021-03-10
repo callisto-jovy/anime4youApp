@@ -6,7 +6,7 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -45,5 +45,15 @@
             android:id="@+id/show_language"
             android:layout_marginTop="0dp"
             android:layout_below="@+id/show_episodes"/>
+
+    <ImageView
+            android:layout_width="89dp"
+            android:layout_height="93dp"
+            tools:srcCompat="@tools:sample/avatars"
+            android:id="@+id/show_image"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_alignParentTop="true"/>
 
 </RelativeLayout>

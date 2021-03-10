@@ -21,8 +21,8 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
-import net.bplaced.abzzezz.animeapp.util.file.ShowSaver;
 import net.bplaced.abzzezz.animeapp.util.scripter.StringHandler;
+import net.bplaced.abzzezz.animeapp.util.show.ShowSaver;
 import net.bplaced.abzzezz.animeapp.util.tasks.PermissionTask;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 

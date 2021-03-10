@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2020. Roman P.
+ * Copyright (c) 2021. Roman P.
  * All code is owned by Roman P. APIs are mentioned.
- * Last modified: 25.06.20, 14:08
+ * Last modified: 07.02.21, 18:14
  */
 
-package net.bplaced.abzzezz.animeapp.util.file;
+package net.bplaced.abzzezz.animeapp.util.show;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
-import net.bplaced.abzzezz.animeapp.util.show.Show;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,17 +65,19 @@ public class ShowSaver {
 
     /**
      * Commits a show to the preferences
+     *
      * @param show show to add
      */
     private void commitShow(final Show show) {
         final String preferenceSize = String.valueOf(preferences.getAll().size());
         editor.putString(preferenceSize, show.toString());
-        Logger.log("State committing show: "+ editor.commit(), Logger.LogType.INFO);
+        Logger.log("State committing show: " + editor.commit(), Logger.LogType.INFO);
     }
 
     /**
      * Updates a certain index
-     * @param show show to be updated
+     *
+     * @param show  show to be updated
      * @param index index to the show
      */
     private void updateShow(final Show show, final int index) {
@@ -87,6 +87,7 @@ public class ShowSaver {
 
     /**
      * Removes a show from a certain index
+     *
      * @param index index for the show to be removed
      */
     private void removeShow(final int index) {
@@ -111,17 +112,15 @@ public class ShowSaver {
      * @param show show to be added
      */
     public void addShow(final Show show) throws JSONException {
-        if (publicPreferences.getBoolean("check_existing", false) && containsShow(show)) return; //Check if settings is checked, if so ignore duplicates
+        if (publicPreferences.getBoolean("check_existing", false) && containsShow(show))
+            return; //Check if settings is checked, if so ignore duplicates
 
         this.shows.add(show);
         this.commitShow(show);
     }
 
     /**
-     *
      * Not used anymore. Was used for anime4you. For compatibility and so no code is deleted this function is kept
-     *
-     *
      */
     public void addShow(final JSONObject jsonObject) throws JSONException {
         final Show show = new Show(jsonObject);
@@ -161,6 +160,16 @@ public class ShowSaver {
     public void remove(final int index) {
         shows.remove(index);
         this.removeShow(index);
+    }
+
+    /**
+     * Returns the index of the supplied show object
+     *
+     * @param show show to get the index
+     * @return the show's index, returns -1 if the show wasn't found
+     */
+    public int getIndex(final Show show) {
+        return shows.indexOf(show);
     }
 
     /**
