@@ -6,9 +6,9 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.twistmoe;
 
+import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.provider.holders.TwistmoeHolder;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.ricecode.similarity.JaroStrategy;
 import net.ricecode.similarity.SimilarityStrategy;
@@ -38,7 +38,7 @@ public class TwistmoeSearchTask extends TaskExecutor implements Callable<List<JS
     public List<JSONObject> call() throws Exception {
         final List<JSONObject> showsOut = new ArrayList<>();
 
-        final HttpsURLConnection connection = URLUtil.createHTTPSURLConnection(SHOW_API, new String[]{"x-access-token", getRequestToken()}, new String[]{"User-Agent", StringHandler.USER_AGENT}, new String[]{"Referer", "https://twist.moe/"});
+        final HttpsURLConnection connection = URLUtil.createHTTPSURLConnection(SHOW_API, new String[]{"x-access-token", getRequestToken()}, new String[]{"User-Agent", Constant.USER_AGENT}, new String[]{"Referer", "https://twist.moe/"});
         connection.connect();
         final JSONArray shows = new JSONArray(URLUtil.collectLines(connection, ""));
 
@@ -47,8 +47,6 @@ public class TwistmoeSearchTask extends TaskExecutor implements Callable<List<JS
         for (int i = 0; i < shows.length(); i++) {
             final JSONObject showJSON = shows.getJSONObject(i);
             //TODO: Maybe sort array with the string similarity?? Only ofc if it's size is more than one
-            System.out.println(showJSON);
-
             if (showJSON.isNull("mal_id")) {
                 if (stringSimilarity.score(showJSON.getString("title"), showTitle) > 0.8 || stringSimilarity.score(showJSON.getString("alt_title"), showTitle) > 0.8) {
                     showsOut.add(new TwistmoeFetchCallable(showJSON.getJSONObject("slug").getString("slug")).call());

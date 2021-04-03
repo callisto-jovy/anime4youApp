@@ -7,7 +7,7 @@
 package net.bplaced.abzzezz.animeapp.util.tasks.twistmoe;
 
 
-import net.bplaced.abzzezz.animeapp.util.KeyUtil;
+import net.bplaced.abzzezz.animeapp.util.crypto.KeyUtil;
 import net.bplaced.abzzezz.animeapp.util.provider.holders.TwistmoeHolder;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 

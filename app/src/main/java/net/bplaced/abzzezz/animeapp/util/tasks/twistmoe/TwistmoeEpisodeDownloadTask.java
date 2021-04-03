@@ -7,9 +7,9 @@
 package net.bplaced.abzzezz.animeapp.util.tasks.twistmoe;
 
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
+import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.connection.RBCWrapper;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.download.EpisodeDownloadTask;
 
 import java.io.File;
@@ -30,7 +30,7 @@ public class TwistmoeEpisodeDownloadTask extends EpisodeDownloadTask {
             final HttpURLConnection connection = URLUtil.createHTTPSURLConnection
                     (
                             url,
-                            new String[]{"User-Agent", StringHandler.USER_AGENT},
+                            new String[]{"User-Agent", Constant.USER_AGENT},
                             new String[]{"Range", "f'bytes={pos}-"},
                             new String[]{"Referer", "https://twist.moe/a/"}
                     );

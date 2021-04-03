@@ -6,6 +6,9 @@
 
 package net.bplaced.abzzezz.animeapp.util.connection;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -248,4 +251,14 @@ public class URLUtil {
         fileOutputStream.close();
     }
 
+    /**
+     * Checks if the user is connected to the internet
+     *
+     * @param context context to supply
+     * @return if the user is offline, false if he's not
+     */
+    public static boolean isOffline(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() == null || !cm.getActiveNetworkInfo().isConnectedOrConnecting();
+    }
 }

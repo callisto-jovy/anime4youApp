@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import ga.abzzezz.util.data.URLUtil;
 import net.bplaced.abzzezz.animeapp.R;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
+import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import java.net.URL;
@@ -29,7 +29,7 @@ public class ChangelogFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.simple_list_layout, container, false);
-        new TaskExecutor().executeAsync(() -> URLUtil.getURLContentAsArray(new URL(StringHandler.APP_CHANGELOG_TXT)), new TaskExecutor.Callback<ArrayList<String>>() {
+        new TaskExecutor().executeAsync(() -> URLUtil.getURLContentAsArray(new URL(Constant.APP_CHANGELOG_TXT)), new TaskExecutor.Callback<ArrayList<String>>() {
             @Override
             public void onComplete(ArrayList<String> result) {
                 requireActivity().runOnUiThread(() -> {

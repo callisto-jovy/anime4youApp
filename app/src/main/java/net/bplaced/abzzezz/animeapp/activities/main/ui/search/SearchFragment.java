@@ -18,8 +18,8 @@ import androidx.fragment.app.Fragment;
 import com.squareup.picasso.Picasso;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
+import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.tasks.myanimelist.MyAnimeListSearchTask;
 import org.json.JSONException;
@@ -40,7 +40,7 @@ public class SearchFragment extends Fragment {
         showSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                if (StringHandler.isOffline(getContext())) return true;
+                if (URLUtil.isOffline(getContext())) return true;
                 final SearchAdapter searchAdapter = (SearchAdapter) listView.getAdapter();
                 searchAdapter.getEntries().clear();
 

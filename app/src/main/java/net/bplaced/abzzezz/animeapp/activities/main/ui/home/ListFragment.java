@@ -37,7 +37,6 @@ public class ListFragment extends Fragment {
     private AnimeAdapter animeAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        AnimeAppMain.getInstance().checkPermission(getActivity());
         final View root = inflater.inflate(R.layout.list_fragment_layout, container, false);
 
         final GridView gridView = root.findViewById(R.id.anime_grid);

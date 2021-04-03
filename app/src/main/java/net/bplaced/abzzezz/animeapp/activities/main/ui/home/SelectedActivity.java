@@ -27,11 +27,11 @@ import net.bplaced.abzzezz.animeapp.activities.main.DrawerMainMenu;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.player.PlayerActivity;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.player.StreamPlayer;
 import net.bplaced.abzzezz.animeapp.util.IntentHelper;
+import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
 import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.ui.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder;
 import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder.InputDialogListener;
@@ -89,17 +89,19 @@ public class SelectedActivity extends AppCompatActivity {
         //Configure swipe refresh layout
         final SwipeRefreshLayout swipeRefreshLayout = this.findViewById(R.id.selected_show_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            if (StringHandler.isOffline(Objects.requireNonNull(getApplicationContext()))) return;
+            if (URLUtil.isOffline(Objects.requireNonNull(getApplicationContext()))) return;
 
             final long showTimestampDifference = show.getTimestampDifference(currentProvider);
 
             if (TimeUnit.MILLISECONDS.toMinutes(showTimestampDifference) >= 5) {
-                currentProvider.getShowEpisodeReferrals(show, jsonArray -> show.addEpisodesForProvider(jsonArray, currentProvider)); //Update episodes
-                Toast.makeText(this,
-                        String.format("Refreshed episodes for %s, new episode count %d", show.getShowTitle(),
-                                show.getEpisodeCount()),
-                        Toast.LENGTH_SHORT
-                ).show();
+                currentProvider.getShowEpisodeReferrals(show, jsonArray -> {
+                    show.addEpisodesForProvider(jsonArray, currentProvider);
+                    Toast.makeText(this,
+                            String.format("Refreshed episodes for %s, new episode count for provider %d", show.getShowTitle(),
+                                    (jsonArray.length() + 1)),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }); //Update episodes
             } else {
                 Toast.makeText(
                         this,

@@ -6,28 +6,23 @@
 
 package net.bplaced.abzzezz.animeapp.activities.main.ui.settings;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import ga.abzzezz.util.logging.Logger;
 import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
-import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 
 public class SettingsFragment extends Fragment {
 
@@ -42,25 +37,24 @@ public class SettingsFragment extends Fragment {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-            final Preference clearOfflineImages = findPreference("clear_offline_images_button");
-            final Preference copySdCard = findPreference("copy_sd_card");
-            final Preference importMal = findPreference("import_mal");
 
-            clearOfflineImages.setOnPreferenceClickListener(preference -> {
+            findPreference("clear_offline_images_button").setOnPreferenceClickListener(preference -> {
                 new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
                         .setTitleText("Delete all offline images?")
                         .setContentText("If you are offline and there are no caches images wont be loaded!")
                         .setConfirmText("Yes, delete!")
                         .setConfirmClickListener(ionAlert -> {
-                            for (File imageFile : AnimeAppMain.getInstance().getImageStorage().listFiles())
-                                Logger.log("Deleting file: " + imageFile.getName() + "- Success: " + imageFile.delete(), Logger.LogType.INFO);
-                            ionAlert.dismissWithAnimation();
+                            if (AnimeAppMain.getInstance().getImageStorage().exists() && AnimeAppMain.getInstance().getImageStorage().listFiles() != null) {
+                                for (final File imageFile : AnimeAppMain.getInstance().getImageStorage().listFiles())
+                                    Logger.log("Deleting file: " + imageFile.getName() + "- Success: " + imageFile.delete(), Logger.LogType.INFO);
+                                ionAlert.dismissWithAnimation();
+                            }
                         }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
                         .show();
                 return true;
             });
 
-            copySdCard.setOnPreferenceClickListener(preference -> {
+            findPreference("copy_sd_card").setOnPreferenceClickListener(preference -> {
                 new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
                         .setTitleText("Move files?")
                         .setConfirmText("Move !")
@@ -69,25 +63,6 @@ public class SettingsFragment extends Fragment {
                             ionAlert.dismissWithAnimation();
                         }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
                         .show();
-                return true;
-            });
-
-            importMal.setOnPreferenceClickListener(preference -> {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Select your provider");
-                //Add all provider names to a array, skipping the null provider
-                final String[] providerNames = Arrays.stream(Providers.values()).filter(providers -> providers != Providers.NULL).map(Enum::name).toArray(String[]::new);
-                final EditText text = new EditText(getContext());
-
-                builder.setView(text);
-
-                builder.setItems(providerNames, (dialog, which) -> {
-                    //TODO: Import MAL
-
-                    //Providers.valueOf(providerNames[which]).getProvider().importMAL()
-                }).setNegativeButton("Cancel", (dialog, which) -> {
-                });
-                builder.create().show();
                 return true;
             });
         }

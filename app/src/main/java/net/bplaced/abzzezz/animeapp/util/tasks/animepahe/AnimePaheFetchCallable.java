@@ -25,8 +25,8 @@ public class AnimePaheFetchCallable implements Callable<JSONObject>, AnimePaheHo
 
     @Override
     public JSONObject call() throws Exception {
-        final HttpsURLConnection httpsURLConnection = URLUtil.createHTTPSURLConnection(String.format(EPISODE_API, showJSON.getString("id")), new String[]{"User-Agent", RandomUserAgent.getRandomUserAgent()});
-        final JSONArray collectedLines = new JSONObject(URLUtil.collectLines(httpsURLConnection, "")).getJSONArray("data");
+        final HttpsURLConnection episodeAPIConnection = URLUtil.createHTTPSURLConnection(String.format(EPISODE_API, showJSON.getString("id")), new String[]{"User-Agent", RandomUserAgent.getRandomUserAgent()});
+        final JSONArray collectedLines = new JSONObject(URLUtil.collectLines(episodeAPIConnection, "")).getJSONArray("data");
         final JSONArray sources = new JSONArray();
 
         for (int i = 0; i < collectedLines.length(); i++) {
@@ -37,7 +37,7 @@ public class AnimePaheFetchCallable implements Callable<JSONObject>, AnimePaheHo
                     ));
         }
 
-        httpsURLConnection.disconnect();
+        episodeAPIConnection.disconnect();
         showJSON.put("src", sources);
         return showJSON;
     }

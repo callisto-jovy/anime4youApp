@@ -8,10 +8,10 @@ package net.bplaced.abzzezz.animeapp.util.tasks.animepahe;
 
 import com.arthenica.mobileffmpeg.FFmpeg;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
+import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
 import net.bplaced.abzzezz.animeapp.util.provider.holders.AnimePaheHolder;
 import net.bplaced.abzzezz.animeapp.util.string.JsUnpacker;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.download.EpisodeDownloadTask;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -82,7 +82,7 @@ public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements
         //Output
         ffmpegArguments.add(outFile.getPath());
 
-        this.ffmpegTask = this.startFFDefaultTask(ffmpegArguments, m3u8Src, new String[]{"Referer", url}, new String[]{"User-Agent", StringHandler.USER_AGENT});
+        this.ffmpegTask = this.startFFDefaultTask(ffmpegArguments, m3u8Src, new String[]{"Referer", url}, new String[]{"User-Agent", Constant.USER_AGENT});
         return null;
     }
 

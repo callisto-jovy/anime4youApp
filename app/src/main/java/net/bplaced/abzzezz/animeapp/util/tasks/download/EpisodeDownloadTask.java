@@ -22,12 +22,12 @@ import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
+import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.IntentHelper;
 import net.bplaced.abzzezz.animeapp.util.M3U8Util;
 import net.bplaced.abzzezz.animeapp.util.connection.RBCWrapper;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.receiver.StopDownloadReceiver;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import java.io.File;
@@ -129,7 +129,7 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
         this.outFile = new File(outDir, count[1] + ".mp4");
         try {
             final URLConnection urlConnection = URLUtil.createURLConnection(url, 0, 0,
-                    new String[]{"User-Agent", StringHandler.USER_AGENT});
+                    new String[]{"User-Agent", Constant.USER_AGENT});
 
             URLUtil.copyFileFromRBC(new RBCWrapper(
                             Channels.newChannel(urlConnection.getInputStream()),

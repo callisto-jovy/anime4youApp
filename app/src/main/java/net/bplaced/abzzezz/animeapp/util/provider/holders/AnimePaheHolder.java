@@ -10,13 +10,13 @@ import java.util.regex.Pattern;
 
 public interface AnimePaheHolder {
 
-    String SEARCH_API = "https://animepahe.com/api?m=search&q=%s";
+    String SEARCH_API = "https://animepahe.com/api?m=search&q=%s"; //Animepahe's search api, with pre-made format
 
-    String EPISODE_API = "https://animepahe.com/api?m=release&id=%s&sort=episode_asc&page=1";
+    String EPISODE_API = "https://animepahe.com/api?m=release&id=%s&sort=episode_asc&page=1"; //Animepahe's episode api, with pre-made format returns all the episodes available
 
-    String STREAM_API = "https://animepahe.com/api?m=embed&id=%s&session=%s&p=kwik";
+    String STREAM_API = "https://animepahe.com/api?m=embed&id=%s&session=%s&p=kwik"; //Animepahe's stream episode api, with pre-made format
 
     String ANIME_PAHE_REFERER = "https://animepahe.com/";
 
-    Pattern videoSrcPattern = Pattern.compile("const source='(.*?)'");
+    Pattern videoSrcPattern = Pattern.compile("const source='(.*?)'"); //Video source pattern to extract the direct video url...
 }

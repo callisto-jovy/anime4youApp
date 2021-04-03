@@ -20,8 +20,8 @@ import com.blankj.utilcode.util.AppUtils;
 import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.BuildConfig;
+import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
 
 import java.io.File;
 import java.net.URL;
@@ -42,7 +42,7 @@ public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExec
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public File call() throws Exception {
-        final boolean updateNeeded = AnimeAppMain.getInstance().getVersion() < Float.parseFloat(URLUtil.collectLines(new URL(StringHandler.APP_VERSION_TXT), ""));
+        final boolean updateNeeded = AnimeAppMain.getInstance().getVersion() < Float.parseFloat(URLUtil.collectLines(new URL(Constant.APP_VERSION_TXT), ""));
         Logger.log("Update needed: " + updateNeeded, Logger.LogType.INFO);
         if (updateNeeded) {
             AnimeAppMain.getInstance().setVersionOutdated(true);
@@ -50,7 +50,7 @@ public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExec
             final File outFile = File.createTempFile("update", ".apk", context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
             final Uri outFileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", outFile);
 
-            final DownloadManager.Request request = new DownloadManager.Request(Uri.parse(StringHandler.UPDATE_APK));
+            final DownloadManager.Request request = new DownloadManager.Request(Uri.parse(Constant.UPDATE_APK));
             request.setDescription("Downloading File: ".concat("Update"));
             request.setTitle("Update");
             request.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_DOWNLOADS, outFile.getName());

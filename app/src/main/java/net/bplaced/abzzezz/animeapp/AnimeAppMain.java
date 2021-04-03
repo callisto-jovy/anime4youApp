@@ -12,8 +12,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -21,10 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
+import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.show.ShowSaver;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
-import net.bplaced.abzzezz.animeapp.util.tasks.PermissionTask;
-import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import java.io.File;
 
@@ -76,33 +72,6 @@ public class AnimeAppMain {
     }
 
     /**
-     * Check if user has access to the app
-     *
-     * @param context context to make toast on
-     */
-    public void checkPermission(final Context context) {
-        new PermissionTask().executeAsync(new TaskExecutor.Callback<Boolean>() {
-            @Override
-            public void onComplete(final Boolean permit) {
-                if (permit) {
-                    Logger.log("Unregistered device", Logger.LogType.INFO);
-
-                    final ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                    final ClipData clip = ClipData.newPlainText("ID", androidID);
-                    clipboard.setPrimaryClip(clip);
-
-                    System.exit(0);
-                    Toast.makeText(context, "You are not registered. Please contact the developer and give him your clipboard id", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void preExecute() {
-            }
-        });
-    }
-
-    /**
      * Checks permissions and internet connection
      *
      * @param activity Activity to make toast on & request permissions
@@ -116,7 +85,7 @@ public class AnimeAppMain {
                 Manifest.permission.FOREGROUND_SERVICE};
 
         activity.requestPermissions(permissions, 101);
-        if (StringHandler.isOffline(activity))
+        if (URLUtil.isOffline(activity))
             Toast.makeText(activity, "You are not connected to the internet. If Images are not cached they will not show.", Toast.LENGTH_LONG).show();
     }
 

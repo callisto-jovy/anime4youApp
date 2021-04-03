@@ -6,8 +6,8 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
+import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -91,7 +91,7 @@ public class GogoAnimeFetcher {
      * @throws IOException url error
      */
     public static String[] getURLsFromSearch(final String searchQuery) throws IOException {
-        final Document document = Jsoup.connect(String.format(SEARCH_URL, searchQuery)).userAgent(StringHandler.USER_AGENT).get();
+        final Document document = Jsoup.connect(String.format(SEARCH_URL, searchQuery)).userAgent(Constant.USER_AGENT).get();
         return document.getElementsByClass("name").stream().map(element -> BASE_URL + element.select("a").attr("href")).toArray(String[]::new);
     }
 

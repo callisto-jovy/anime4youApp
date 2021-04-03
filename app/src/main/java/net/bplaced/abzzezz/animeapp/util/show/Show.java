@@ -6,10 +6,9 @@
 
 package net.bplaced.abzzezz.animeapp.util.show;
 
-import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
+import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
-import net.bplaced.abzzezz.animeapp.util.string.StringHandler;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,11 +50,11 @@ public class Show {
      * @throws JSONException json
      */
     public Show(final JSONObject showJSON) throws JSONException {
-        this.malID = showJSON.getString(StringHandler.SHOW_ID);
-        this.showTitle = showJSON.getString(StringHandler.SHOW_TITLE);
-        this.episodeCount = showJSON.getInt(StringHandler.SHOW_EPISODE_COUNT);
-        this.imageURL = showJSON.getString(StringHandler.SHOW_IMAGE_URL);
-        this.showScore = showJSON.getDouble(StringHandler.SHOW_SCORE);
+        this.malID = showJSON.getString(Constant.SHOW_ID);
+        this.showTitle = showJSON.getString(Constant.SHOW_TITLE);
+        this.episodeCount = showJSON.optInt(Constant.SHOW_EPISODE_COUNT);
+        this.imageURL = showJSON.getString(Constant.SHOW_IMAGE_URL);
+        this.showScore = showJSON.optDouble(Constant.SHOW_SCORE, 0);
         this.providers = showJSON.getJSONObject("provider_info");
     }
 
@@ -66,19 +65,7 @@ public class Show {
      * @return JSONArray with all episode referrals
      */
     public JSONArray getShowEpisodes(final Provider provider) {
-        try {
-            final String providerName = provider.getName();
-            if (!providers.has(providerName)) {
-                Logger.log("Cannot retrieve provider information. No json object with the given provider was found", Logger.LogType.ERROR);
-                return new JSONArray();
-            }
-
-            final JSONObject providerJSON = providers.getJSONObject(providerName); //Retrieve information
-            return providerJSON.getJSONArray("episodes");
-        } catch (final JSONException e) {
-            e.printStackTrace();
-            return new JSONArray();
-        }
+        return getProviderJSON(provider).map(jsonObject -> jsonObject.optJSONArray("episodes")).orElse(new JSONArray());
     }
 
     /**
@@ -113,7 +100,7 @@ public class Show {
      * @return the provider's json object, wrapped in an optional. Returns Optional.empty() if no key was found
      */
     public Optional<JSONObject> getProviderJSON(final Provider provider) {
-        return Optional.ofNullable(providers.optJSONObject(provider.getName()));
+        return Optional.ofNullable(providers.optJSONObject(provider.getName()) == null ? new JSONObject() : providers.optJSONObject(provider.getName()));
     }
 
     /**
@@ -150,11 +137,11 @@ public class Show {
         try {
             final JSONObject jsonObject = new JSONObject();
             jsonObject
-                    .put(StringHandler.SHOW_ID, getID())
-                    .put(StringHandler.SHOW_TITLE, getShowTitle())
-                    .put(StringHandler.SHOW_SCORE, getShowScore())
-                    .put(StringHandler.SHOW_IMAGE_URL, getImageURL())
-                    .put(StringHandler.SHOW_EPISODE_COUNT, getEpisodeCount())
+                    .put(Constant.SHOW_ID, getID())
+                    .put(Constant.SHOW_TITLE, getShowTitle())
+                    .put(Constant.SHOW_SCORE, getShowScore())
+                    .put(Constant.SHOW_IMAGE_URL, getImageURL())
+                    .put(Constant.SHOW_EPISODE_COUNT, getEpisodeCount())
                     .put("provider_info", providers);
             return jsonObject.toString();
         } catch (final JSONException e) {
