@@ -133,12 +133,14 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
         if (!outDir.exists()) outDir.mkdir();
         this.outFile = new File(outDir, count[1] + ".mp4");
         try {
-            final URLConnection urlConnection = URLUtil.createURLConnection(url, 0, 0,
+            final URLConnection connection = URLUtil.createURLConnection(url, 0, 0,
                     new String[]{"User-Agent", Constant.USER_AGENT});
 
+            progressHandler.receiveTotalSize(connection.getContentLength());
+
             URLUtil.copyFileFromRBC(new RBCWrapper(
-                            Channels.newChannel(urlConnection.getInputStream()),
-                            urlConnection.getContentLength(),
+                            Channels.newChannel(connection.getInputStream()),
+                            connection.getContentLength(),
                             progressHandler::onDownloadProgress
                     ),
                     outFile,

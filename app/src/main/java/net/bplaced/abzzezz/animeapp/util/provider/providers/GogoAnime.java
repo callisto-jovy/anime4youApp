@@ -12,7 +12,10 @@ import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import net.bplaced.abzzezz.animeapp.util.tasks.gogoanime.*;
+import net.bplaced.abzzezz.animeapp.util.tasks.gogoanime.GogoAnimeEpisodeDownloadTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.gogoanime.GogoAnimeFetchDirectTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.gogoanime.GogoAnimeRefreshTask;
+import net.bplaced.abzzezz.animeapp.util.tasks.gogoanime.GogoAnimeSearchTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,7 +63,7 @@ public class GogoAnime extends Provider {
 
                             show.updateProviderJSON(GogoAnime.this, providerJSON);
 
-                            showReferrals.accept(resultJSON.getJSONArray("src"));
+                            showReferrals.accept(resultJSON.getJSONArray("referrals"));
                         } catch (final JSONException e) {
                             e.printStackTrace();
                         }
@@ -75,36 +78,14 @@ public class GogoAnime extends Provider {
         });
     }
 
-    /*
-    @Override
-    public Show getShowFromProvider(JSONObject data) throws JSONException {
-        final JSONArray episodes = data.getJSONArray("episodes");
-        return new Show(
-                data.getString(StringHandler.SHOW_ID),
-                data.getString(StringHandler.SHOW_TITLE),
-                String.valueOf(episodes.length()),
-                data.getString(StringHandler.SHOW_IMAGE_URL),
-                data.getString(StringHandler.SHOW_LANG),
-                this, new JSONObject()
-                .put("episodes", episodes)
-                .put("ep_start", data.getInt("ep_start"))
-                .put("ep_end", data.getInt("ep_end")));
-    }
-
-
-     */
-
-
     @Override
     public void handleURLRequest(Show show, Context context, Consumer<Optional<String>> resultURL, int... ints) {
         try {
             final JSONArray episodes = show.getShowEpisodes(this);
-            final String apiURL = String.format(GogoAnimeFetcher.API_URL, episodes.getString(episodes.length() - (ints[1] + 1)));
-
-            new GogoAnimeFetchDirectTask(apiURL).executeAsync(new TaskExecutor.Callback<String>() {
+            new GogoAnimeFetchDirectTask(episodes.getString(episodes.length() - (ints[1] + 1))).executeAsync(new TaskExecutor.Callback<Optional<String>>() {
                 @Override
-                public void onComplete(final String result) {
-                    resultURL.accept(Optional.of(result));
+                public void onComplete(final Optional<String> result) {
+                    resultURL.accept(result);
                 }
 
                 @Override

@@ -35,18 +35,6 @@ public class SplashScreen extends AppCompatActivity {
         ((TextView) findViewById(R.id.version_text)).append("v." + BuildConfig.VERSION_NAME);   //Set version text
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-
-            //TODO: Reimplement
-            /*
-            for (int i = 0; i < AnimeAppMain.getInstance().getShowSaver().getShowSize(); i++) {
-                int finalI = i;
-                AnimeAppMain.getInstance().getShowSaver().getShow(i).ifPresent(show -> show.getProvider().refreshShow(show, refreshedShow -> {
-                    AnimeAppMain.getInstance().getShowSaver().refreshShow(refreshedShow, finalI);
-                    Toast.makeText(getApplicationContext(), "Refreshed show:" + refreshedShow.getShowTitle(), Toast.LENGTH_SHORT).show();
-                }));
-            }
-
-             */
             //Start menu
             startActivity(new Intent(this, DrawerMainMenu.class));
             finish();

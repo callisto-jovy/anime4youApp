@@ -34,39 +34,15 @@
   <component name="ChangeListManager">
     <list default="true" id="073d73e0-45c8-4f1c-9113-eff2883226e0" name="Default Changelist" comment="More design">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/AnimeAppMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/AnimeAppMain.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/DrawerMainMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/DrawerMainMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/changelog/ChangelogFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/changelog/ChangelogFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/ListFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/ListFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/home/SelectedActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/search/SearchFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/search/SearchFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/settings/SettingsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/settings/SettingsFragment.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/splash/SplashScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/activities/main/ui/splash/SplashScreen.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/file/OfflineImageLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/file/OfflineImageLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/provider/providers/AnimePahe.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/provider/providers/AnimePahe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/receiver/StopDownloadReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/receiver/StopDownloadReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/download/EpisodeDownloadTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/download/EpisodeDownloadTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/myanimelist/MyAnimeListSearchTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/myanimelist/MyAnimeListSearchTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/twistmoe/TwistmoeEpisodeDownloadTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/twistmoe/TwistmoeEpisodeDownloadTask.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/ui/InputDialogBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/ui/InputDialogBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_drawer_main_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/content_drawer_main_menu.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/drawer_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_drawer.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/episode_item_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_episode.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/nav_header_drawer_main_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/nav_header_drawer.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/search_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_search.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/selected_show_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_selected_show.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/settings_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/show_item_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_show.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/show_list_item_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_shows.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/show_search_item_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/item_search.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/simple_list_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/layout_simple_list.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/splash_screen_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_splash_screen.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/activity_drawer_main_menu_drawer.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/menu/activity_drawer_main_menu_drawer.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/menu/anime_selected_toolbar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/menu/anime_selected_toolbar.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/navigation/mobile_navigation.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/navigation/mobile_navigation.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/root_preferences.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/root_preferences.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/provider/providers/GogoAnime.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/provider/providers/GogoAnime.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/animepahe/AnimePaheFetchDirectTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/animepahe/AnimePaheFetchDirectTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/gogoanime/GogoAnimeFetchDirectTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/gogoanime/GogoAnimeFetchDirectTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/gogoanime/GogoAnimeFetcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/gogoanime/GogoAnimeFetcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/gogoanime/GogoAnimeRefreshTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/gogoanime/GogoAnimeRefreshTask.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/gogoanime/GogoAnimeSearchTask.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/net/bplaced/abzzezz/animeapp/util/tasks/gogoanime/GogoAnimeSearchTask.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,9 +94,9 @@
         <option value="Enum" />
         <option value="Interface" />
         <option value="Kotlin Class" />
-        <option value="Class" />
         <option value="layoutResourceFile" />
         <option value="valueResourceFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -163,7 +139,7 @@
     <property name="aspect.path.notification.shown" value="true" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="ignore.preview.features.used" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Other/Affenbot" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.16601562" />
     <property name="project.structure.side.proportion" value="0.5506135" />
@@ -264,6 +240,17 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method v="2">
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="anime4youApp [analyzeDebugAndroidTestDependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
@@ -462,7 +449,7 @@
       <workItem from="1617656840383" duration="534000" />
       <workItem from="1617723137373" duration="9160000" />
       <workItem from="1617732999721" duration="6429000" />
-      <workItem from="1617740276127" duration="1154000" />
+      <workItem from="1617740276127" duration="4148000" />
     </task>
     <task id="LOCAL-00001" summary="Vidoza download">
       <created>1608413239013</created>
@@ -702,7 +689,14 @@
       <option name="project" value="LOCAL" />
       <updated>1617472705613</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="Material design, renaming, refactoring + bug squashing (grid view scrolling issues, etc.)">
+      <created>1617741994201</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1617741994201</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -733,7 +727,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Providers almost done" />
     <MESSAGE value="Providers done. Cleanup required. Added swipe to refresh" />
     <MESSAGE value="Refactoring &amp; starting to implement twist.moe" />
     <MESSAGE value="Twist.moe implementation" />
@@ -758,7 +751,8 @@
     <MESSAGE value="Designing" />
     <MESSAGE value="More design" />
     <MESSAGE value="I am stupid + material design" />
-    <option name="LAST_COMMIT_MESSAGE" value="I am stupid + material design" />
+    <MESSAGE value="Material design, renaming, refactoring + bug squashing (grid view scrolling issues, etc.)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Material design, renaming, refactoring + bug squashing (grid view scrolling issues, etc.)" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>

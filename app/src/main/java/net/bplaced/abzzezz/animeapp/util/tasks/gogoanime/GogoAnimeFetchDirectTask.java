@@ -11,15 +11,17 @@ import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 
-public class GogoAnimeFetchDirectTask extends TaskExecutor implements Callable<String> {
+public class GogoAnimeFetchDirectTask extends TaskExecutor implements Callable<Optional<String>> {
 
-    private final String formattedIn;
+    private final String referral;
 
-    public GogoAnimeFetchDirectTask(final String formattedIn) {
-        this.formattedIn = formattedIn;
+    public GogoAnimeFetchDirectTask(final String referral) {
+        this.referral = referral;
     }
 
     /**
@@ -32,7 +34,7 @@ public class GogoAnimeFetchDirectTask extends TaskExecutor implements Callable<S
         return new JSONObject(in).getJSONArray("source").getJSONObject(0).getString("file");
     }
 
-    public void executeAsync(Callback<String> callback) {
+    public void executeAsync(final Callback<Optional<String>> callback) {
         super.executeAsync(this, callback);
     }
 
@@ -40,9 +42,15 @@ public class GogoAnimeFetchDirectTask extends TaskExecutor implements Callable<S
     TODO: Only fetches the episodes for now. Add URL to additional json!
      */
     @Override
-    public String call() throws Exception {
-        return getVidURL(URLUtil.collectLines(new URL(formattedIn), ""));
+    public Optional<String> call() throws Exception {
+        return GogoAnimeFetcher.fetchIDLink(referral).map(s -> {
+            try {
+                return getVidURL(URLUtil.collectLines(new URL(s), ""));
+            } catch (final JSONException | IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        });
     }
-
 
 }

@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.stream.IntStream;
 
-public class AnimePaheFetchDirectTask extends TaskExecutor implements Callable<String>, AnimePaheHolder {
+public class AnimePaheFetchDirectTask extends TaskExecutor implements Callable<Optional<String>>, AnimePaheHolder {
 
     private final String episodeJSON;
 
@@ -29,12 +29,12 @@ public class AnimePaheFetchDirectTask extends TaskExecutor implements Callable<S
         this.episodeJSON = episodeJSON;
     }
 
-    public void executeAsync(Callback<String> callback) {
+    public void executeAsync(Callback<Optional<String>> callback) {
         super.executeAsync(this, callback);
     }
 
     @Override
-    public String call() throws Exception {
+    public Optional<String> call() throws Exception {
         final JSONObject episodeJSONObject = new JSONObject(this.episodeJSON); //Supply the json from the episode
         final String id = episodeJSONObject.getString("anime_id");
         final String session = episodeJSONObject.getString("session");
@@ -63,8 +63,7 @@ public class AnimePaheFetchDirectTask extends TaskExecutor implements Callable<S
                                 .orElse(0)))
                 .map(optional -> //Map the result to the corresponding url
                         optional.map(jsonObject -> jsonObject.optString("url"))
-                                .orElse(""))
-                .orElse(""); //Return nothing if no max is found, etc.
+                                .orElse("")); //Return nothing if no max is found, etc.
 
     }
 }

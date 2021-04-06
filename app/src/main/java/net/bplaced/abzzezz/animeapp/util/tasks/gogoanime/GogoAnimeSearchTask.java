@@ -7,7 +7,6 @@
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,17 +42,12 @@ public class GogoAnimeSearchTask extends TaskExecutor implements Callable<List<J
                 final String episodeStart = fetcher.getEpisodeStart();
                 final String episodeEnd = fetcher.getEpisodeEnd();
 
-                final JSONArray episodes = new JSONArray();
-
-                for (final String fetchedDirectURL : fetcher.getFetchedDirectURLs())
-                    episodes.put(fetchedDirectURL);
-
                 showsOut.add(
                         new JSONObject()
                                 .put("id", id)
                                 .put("ep_start", episodeStart)
                                 .put("ep_end", episodeEnd)
-                                .put("episodes", fetcher.getFetchedDirectURLs())
+                                .put("referrals", fetcher.getFetchedDirectURLs())
                 );
             } catch (final IOException | JSONException e) {
                 e.printStackTrace();

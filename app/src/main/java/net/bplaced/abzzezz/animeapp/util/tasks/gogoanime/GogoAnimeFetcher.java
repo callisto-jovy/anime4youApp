@@ -8,6 +8,7 @@ package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
 import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
+import org.json.JSONArray;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,8 +17,10 @@ import org.jsoup.nodes.Element;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 
 /**
  * Uses Jsoup and JSON
@@ -38,8 +41,7 @@ public class GogoAnimeFetcher {
 
     public static final File DOWNLOAD_DIRECTORY = new File(System.getProperty("user.home") + "/Desktop", "Gogo Anime Downloader");
 
-    private final String showTitle;
-    private final String[] fetchedDirectURLs;
+    private final JSONArray fetchedDirectURLs;
     private final Document showDocument;
 
     public GogoAnimeFetcher(final String urlIn) throws IOException {
@@ -47,40 +49,47 @@ public class GogoAnimeFetcher {
         if (!DOWNLOAD_DIRECTORY.exists()) DOWNLOAD_DIRECTORY.mkdir();
 
         this.showDocument = createGogoConnection(urlIn, RandomUserAgent.getRandomUserAgent()).get();
-        this.showTitle = this.sanitizeString(showDocument.title());
-
-        this.fetchedDirectURLs = this.fetchIDs();
+        this.fetchedDirectURLs = this.fetchReferrals();
     }
 
-    public static String[] fetchIDs(final String idIn, final int epiStart, final int epiEnd) throws IOException {
+    public static JSONArray fetchReferrals(final String idIn, final int epiStart, final int epiEnd) throws IOException {
         final String userAgent = RandomUserAgent.getRandomUserAgent();
 
-        final int id = Integer.parseInt(idIn);
+        final int id = Integer.parseInt(idIn); //Parse id
 
-        /*
-         * Grab episodes & fetch ids
-         */
-
-        final String episodesURL = String.format(Locale.ENGLISH, EPISODE_API_URL, epiStart, epiEnd, id);
-        final Document episodesDocument = createGogoCdn(episodesURL, userAgent).get();
+        final String episodesURL = String.format(Locale.ENGLISH, EPISODE_API_URL, epiStart, epiEnd, id); //Format episode request URL
+        final Document episodesDocument = createGogoCdn(episodesURL, userAgent).get(); //Create httpsurlconnection
 
         return episodesDocument.body().getElementById("episode_related").children().stream()
                 .map(element -> BASE_URL + element.selectFirst("a").attr("href").trim())
-                .map(episodeURL -> {
-                    try {
-                        final Document episodeDocument = createGogoCdn(episodesURL, userAgent).get();
-                        final String src = episodeDocument.selectFirst("iframe").attr("src");
+                .collect(
+                        Collector.of(
+                                JSONArray::new, //init accumulator
+                                JSONArray::put, //processing each element
+                                JSONArray::put  //confluence 2 accumulators in parallel execution
+                        ));
+    }
 
-                        final Matcher matcher = PATTERN.matcher(src);
-                        if (matcher.find()) {
-                            System.out.println(matcher.group());
-                            return matcher.group().substring(3, matcher.group().length() - 1);
-                        } else return "";
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return "";
-                    }
-                }).toArray(String[]::new);
+    /**
+     * Fetches the id to an episode using it's site's referral
+     *
+     * @param referral referral to the site
+     * @return the
+     */
+    public static Optional<String> fetchIDLink(final String referral) {
+        try {
+            final Document episodeDocument = createGogoCdn(referral, Constant.USER_AGENT).get();
+
+            final String src = episodeDocument.selectFirst("iframe").attr("src");
+            final Matcher matcher = PATTERN.matcher(src);
+
+            if (matcher.find()) {
+                return Optional.of(String.format(API_URL, matcher.group().substring(3, matcher.group().length() - 1)));
+            } else return Optional.empty();
+        } catch (final IOException e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
     /**
@@ -146,7 +155,7 @@ public class GogoAnimeFetcher {
      * @return String array containing all ids for the direct url
      * @throws IOException some connection goes wrong
      */
-    private String[] fetchIDs() throws IOException {
+    private JSONArray fetchReferrals() throws IOException {
         final String userAgent = RandomUserAgent.getRandomUserAgent();
 
         final Element body = showDocument.body();
@@ -155,29 +164,23 @@ public class GogoAnimeFetcher {
         final int epiStart = Integer.parseInt(body.selectFirst("#episode_page a.active").attr("ep_start"));
         final int epiEnd = Integer.parseInt(body.selectFirst("#episode_page a.active").attr("ep_end"));
 
-        /*
-         * Grab episodes & fetch ids
-         */
-
         final String episodesURL = String.format(Locale.ENGLISH, EPISODE_API_URL, epiStart, epiEnd, id);
+
         final Document episodesDocument = createGogoCdn(episodesURL, userAgent).get();
-
-        return episodesDocument.body().getElementById("episode_related").children().stream()
+        return episodesDocument
+                .body()
+                .getElementById("episode_related")
+                .children()
+                .stream()
                 .map(element -> BASE_URL + element.selectFirst("a").attr("href").trim())
-                .map(episodeURL -> {
-                    try {
-                        final Document episodeDocument = createGogoCdn(episodeURL, userAgent).get();
-                        final String src = episodeDocument.selectFirst("iframe").attr("src");
-
-                        final Matcher matcher = PATTERN.matcher(src);
-                        if (matcher.find())
-                            return matcher.group().substring(3, matcher.group().length() - 1);
-                        else return "";
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        return "";
-                    }
-                }).toArray(String[]::new);
+                .collect(
+                        Collector.of
+                                (
+                                        JSONArray::new, //init accumulator
+                                        JSONArray::put, //processing each element
+                                        JSONArray::put  //confluence 2 accumulators in parallel execution
+                                )
+                );
     }
 
     /**
@@ -191,7 +194,7 @@ public class GogoAnimeFetcher {
         return string.replaceAll("[\u0000-\u001f<>:\"/\\\\|?*\u007f]+", "").trim();
     }
 
-    public String[] getFetchedDirectURLs() {
+    public JSONArray getFetchedDirectURLs() {
         return fetchedDirectURLs;
     }
 }

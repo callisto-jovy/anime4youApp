@@ -253,15 +253,20 @@ public class SelectedActivity extends AppCompatActivity {
         }
 
         currentProvider.handleURLRequest(show, getApplicationContext(),
-                optionalURL -> optionalURL.ifPresent(url -> {
-                    if (stream) {
-                        final Intent intent = new Intent(SelectedActivity.this, StreamPlayer.class);
-                        intent.putExtra("stream", url);
-                        startActivity(intent);
-                        finish();
-                    } else
-                        currentProvider.handleDownload(this, url, show, showDirectory, count[0], count[1], countMax);
-                }), count[0], count[1], countMax);
+                optionalURL -> {
+                    if (optionalURL.isPresent()) {
+                        final String url = optionalURL.get();
+                        if (stream) {
+                            final Intent intent = new Intent(SelectedActivity.this, StreamPlayer.class);
+                            intent.putExtra("stream", url);
+                            startActivity(intent);
+                            finish();
+                        } else
+                            currentProvider.handleDownload(this, url, show, showDirectory, count[0], count[1], countMax);
+                    } else {
+                        Toast.makeText(this, String.format("No link found for episode %d with provider %s", count[1], currentProvider.getName()), Toast.LENGTH_SHORT).show();
+                    }
+                }, count[0], count[1], countMax);
     }
 
     /**

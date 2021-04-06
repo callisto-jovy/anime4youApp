@@ -85,10 +85,10 @@ public class AnimePahe extends Provider {
     @Override
     public void handleURLRequest(final Show show, final Context context, final Consumer<Optional<String>> resultURL, final int... ints) {
         try {
-            new AnimePaheFetchDirectTask(show.getShowEpisodes(this).getString(ints[1])).executeAsync(new TaskExecutor.Callback<String>() {
+            new AnimePaheFetchDirectTask(show.getShowEpisodes(this).getString(ints[1])).executeAsync(new TaskExecutor.Callback<Optional<String>>() {
                 @Override
-                public void onComplete(final String result) {
-                    resultURL.accept(Optional.of(result));
+                public void onComplete(final Optional<String> result) {
+                    resultURL.accept(result);
                 }
 
                 @Override
