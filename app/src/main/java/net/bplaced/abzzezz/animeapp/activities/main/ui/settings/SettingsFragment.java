@@ -7,13 +7,16 @@
 package net.bplaced.abzzezz.animeapp.activities.main.ui.settings;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceFragmentCompat;
+import com.afollestad.materialdialogs.MaterialDialog;
 import ga.abzzezz.util.logging.Logger;
 import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
@@ -40,28 +43,67 @@ public class SettingsFragment extends Fragment {
 
             findPreference("storage_clear_cache").setOnPreferenceClickListener(preference -> {
                 new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
-                        .setTitleText("Delete all offline images?")
-                        .setContentText("If you are offline and there are no caches images wont be loaded!")
-                        .setConfirmText("Yes, delete!")
+                        .setTitleText(getString(R.string.offline_images_delete_all_title))
+                        .setContentText(getString(R.string.offline_images_delete_all_content))
+                        .setConfirmText(getString(R.string.offline_images_delete_all_confirm))
                         .setConfirmClickListener(ionAlert -> {
                             if (AnimeAppMain.getInstance().getImageStorage().exists() && AnimeAppMain.getInstance().getImageStorage().listFiles() != null) {
                                 for (final File imageFile : AnimeAppMain.getInstance().getImageStorage().listFiles())
                                     Logger.log("Deleting file: " + imageFile.getName() + "- Success: " + imageFile.delete(), Logger.LogType.INFO);
                                 ionAlert.dismissWithAnimation();
                             }
-                        }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
+                        }).setCancelText(getString(R.string.abort))
+                        .setCancelClickListener(IonAlert::dismissWithAnimation)
                         .show();
+                return true;
+            });
+
+            findPreference("sync_mal").setOnPreferenceChangeListener((preference, v) -> {
+                final boolean[] newValue = {(boolean) v};
+
+                if (newValue[0]) {
+
+                    new MaterialDialog.Builder(getContext())
+                            .title("Myanimelist credentials")
+                            .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                            .customView(R.layout.dialog_two_input_password, false)
+                            .positiveText("Sync")
+                            .onPositive((dialog, which) -> {
+                                assert dialog.getCustomView() != null : "Custom view is null";
+
+                                final EditText usernameEditText = dialog.getCustomView().findViewById(R.id.dialog_two_input_username);
+                                final EditText password = dialog.getCustomView().findViewById(R.id.dialog_two_input_password);
+                                final String username = usernameEditText.getText().toString().trim();
+
+                                AnimeAppMain.getInstance().getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
+                                    if (processFinished) {
+                                        new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
+                                                .setTitleText("Sync done")
+                                                .show();
+
+                                    } else {
+                                        new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
+                                                .setTitleText("Sync was not successful")
+                                                .setConfirmText("Done")
+                                                .show();
+                                        newValue[0] = false;
+
+                                    }
+                                });
+                            }).show();
+                }
                 return true;
             });
 
             findPreference("copy_sd_card").setOnPreferenceClickListener(preference -> {
                 new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
-                        .setTitleText("Move files?")
-                        .setConfirmText("Move !")
+                        .setTitleText(getString(R.string.move_files_title))
+                        .setConfirmText(getString(R.string.move_files_confirm))
                         .setConfirmClickListener(ionAlert -> {
                             moveFiles();
                             ionAlert.dismissWithAnimation();
-                        }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
+                        }).setCancelText(getString(R.string.abort))
+                        .setCancelClickListener(IonAlert::dismissWithAnimation)
                         .show();
                 return true;
             });
@@ -104,5 +146,4 @@ public class SettingsFragment extends Fragment {
             }
         }
     }
-
 }

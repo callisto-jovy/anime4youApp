@@ -18,5 +18,5 @@ public interface AnimePaheHolder {
 
     String ANIME_PAHE_REFERER = "https://animepahe.com/";
 
-    Pattern videoSrcPattern = Pattern.compile("const source='(.*?)'"); //Video source pattern to extract the direct video url...
+    Pattern VIDEO_SRC_PATTERN = Pattern.compile("const source='(.*?)'"); //Video source pattern to extract the direct video url...
 }

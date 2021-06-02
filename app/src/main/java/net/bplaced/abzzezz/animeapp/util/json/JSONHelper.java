@@ -6,6 +6,8 @@
 
 package net.bplaced.abzzezz.animeapp.util.json;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Optional;
@@ -20,6 +22,17 @@ public class JSONHelper {
      */
     public static Optional<JSONObject> getJSONObject(final JSONObject jsonObject, final String key) {
         return Optional.ofNullable(jsonObject.optJSONObject(key));
+    }
+
+    public static boolean[] getBooleanArray(final JSONArray jsonArray, final int fallback) throws JSONException {
+        if (jsonArray == null) return new boolean[fallback];
+
+        final boolean[] booleans = new boolean[jsonArray.length()];
+        for (int i = 0; i < jsonArray.length(); i++) {
+            booleans[i] = jsonArray.getBoolean(i);
+        }
+
+        return booleans;
     }
 
 }

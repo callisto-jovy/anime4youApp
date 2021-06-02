@@ -9,8 +9,17 @@
         xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-            app:title="@string/global_settings">
+            app:title="@string/global_sync">
+        <SwitchPreferenceCompat
+                app:key="sync_mal"
+                app:title="@string/sync_mal"
+                app:summaryOn="@string/sync_mal_attachment_summary_on"
+                app:summaryOff="@string/sync_mal_attachment_summary_off"/>
 
+    </PreferenceCategory>
+
+    <PreferenceCategory
+            app:title="@string/global_settings">
         <SwitchPreferenceCompat
                 app:key="check_existing"
                 app:title="@string/check_list_for_existing"
@@ -27,8 +36,8 @@
                 app:key="image_compression"
                 app:title="@string/image_compression_strength"
                 app:defaultValue="50"/>
-
     </PreferenceCategory>
+
     <PreferenceCategory
             android:title="@string/global_video">
         <ListPreference

@@ -10,39 +10,34 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.squareup.picasso.Picasso;
 import ga.abzzezz.util.data.FileUtil;
 import ga.abzzezz.util.logging.Logger;
-import ga.abzzezz.util.stringing.StringUtil;
-import id.ionbit.ionalert.IonAlert;
+import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.main.DrawerMainMenu;
-import net.bplaced.abzzezz.animeapp.activities.main.ui.player.PlayerActivity;
+import net.bplaced.abzzezz.animeapp.activities.main.ui.other.EpisodeBottomSheet;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.player.StreamPlayer;
-import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.IntentHelper;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
-import net.bplaced.abzzezz.animeapp.util.crypto.Cloudflare;
 import net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
 import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
-import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.ui.ImageUtil;
 import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder;
 import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder.InputDialogListener;
 
 import java.io.File;
-import java.net.HttpCookie;
-import java.util.*;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -101,27 +96,6 @@ public class SelectedActivity extends AppCompatActivity {
             final long showTimestampDifference = show.getTimestampDifference(requestedProvider); //Get the time difference between the saved episodes and the current system internal time
 
             if (TimeUnit.MILLISECONDS.toMinutes(showTimestampDifference) >= 5) { //Lets the user only refresh every five minutes
-                if (requestedProvider == Providers.ANIFLIX.getProvider()) {
-
-
-                    Cloudflare cf = new Cloudflare("https://www2.aniflix.tv/api/show/shinsekai-yori");
-                    cf.setUser_agent(Constant.USER_AGENT);
-                    cf.getCookies(new TaskExecutor.Callback<List<HttpCookie>>() {
-                        @Override
-                        public void onComplete(List<HttpCookie> result) throws Exception {
-                            //convert the cookielist to a map
-                            Map<String, String> cookies = Cloudflare.List2Map(result);
-                            Log.d("COOKIES : ", cookies.toString());
-                        }
-
-                        @Override
-                        public void preExecute() {
-
-                        }
-                    });
-                    return;
-                }
-
                 requestedProvider.getShowEpisodeReferrals(show, jsonArray -> {
                     show.addEpisodesForProvider(jsonArray, requestedProvider); //Adds the episodes to the provider
 
@@ -185,35 +159,16 @@ public class SelectedActivity extends AppCompatActivity {
         final GridView gridView = findViewById(R.id.show_episode_item_grid);
         gridView.setAdapter(episodeAdapter);
 
-        gridView.setOnItemLongClickListener((parent, view, position, id) -> {
-            if (isEpisodeDownloaded(position)) {
-                new IonAlert(SelectedActivity.this, IonAlert.WARNING_TYPE)
-                        .setTitleText("Delete file?")
-                        .setContentText("Won't be able to recover this file!")
-                        .setConfirmText("Yes, delete!")
-                        .setConfirmClickListener(ionAlert -> {
-                            episodeAdapter.deleteItem(position);
-                            ionAlert.dismissWithAnimation();
-                        }).setCancelText("Abort").setCancelClickListener(IonAlert::dismissWithAnimation)
-                        .show();
-            } else getEpisode(position, 1, 0, false);
-            return true;
+        gridView.setOnItemClickListener((adapterView, view, index, l) -> {
+            final EpisodeBottomSheet episodeBottomSheet = new EpisodeBottomSheet(SelectedActivity.this, showCover, index);
+            episodeBottomSheet.show(getSupportFragmentManager(), "Episode Bottom Sheet");
         });
-        gridView.setOnItemClickListener((adapterView, view, i, l) -> {
-            //TODO: Rework?
-            final boolean isDownloaded = isEpisodeDownloaded(i);
-            new IonAlert(SelectedActivity.this, IonAlert.NORMAL_TYPE)
-                    .setConfirmText("Stream")
-                    .setConfirmClickListener(ionAlert -> getEpisode(i, 1, 0, true))
-                    .setCancelText(isDownloaded ? "Play" : "Cancel")
-                    .setCancelClickListener(ionAlert -> {
-                        if (isDownloaded)
-                            playEpisodeFromSave(i);
-                        else
-                            ionAlert.dismissWithAnimation();
-                    }).show();
-        });
-        findViewById(R.id.download_show_button).setOnClickListener(listener -> getEpisode(getLatestEpisode(), show.getEpisodeCount(), 0, false));
+
+        findViewById(R.id.download_show_button).setOnClickListener(listener ->
+                getEpisode(AnimeAppMain.getInstance().getShowSaver().getLatestEpisode(showDirectory),
+                        show.getEpisodeCount(),
+                        0,
+                        false));
     }
 
     /**
@@ -242,7 +197,7 @@ public class SelectedActivity extends AppCompatActivity {
             final InputDialogBuilder dialogBuilder = new InputDialogBuilder(new InputDialogListener() {
                 @Override
                 public void onDialogInput(final String text) {
-                    getEpisode(getLatestEpisode(), Integer.parseInt(text), 0, false);
+                    getEpisode(AnimeAppMain.getInstance().getShowSaver().getLatestEpisode(showDirectory), Integer.parseInt(text), 0, false);
                 }
 
                 @Override
@@ -250,6 +205,21 @@ public class SelectedActivity extends AppCompatActivity {
                 }
             });
             dialogBuilder.showInput("Download bound", "Enter bound", this);
+        } else if (itemID == R.id.set_show_status) {
+            // watching, completed, on_hold, dropped, plan_to_watch
+            final String[] map = new String[]{"watching", "completed", "on_hold", "dropped", "plan_to_watch"};
+            new MaterialDialog.Builder(this)
+                    .items(getString(R.string.show_status_item_watching),
+                            getString(R.string.show_status_item_completed),
+                            getString(R.string.show_status_item_on_hold),
+                            getString(R.string.show_status_item_dropped),
+                            getString(R.string.show_status_item_plan_to_watch))
+                    .itemsCallback((dialog, itemView, position, text) -> {
+                        AnimeAppMain.getInstance().getMyAnimeList().updateShowState(getShow(), map[position]);
+                    })
+                    .build()
+                    .show();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -293,94 +263,31 @@ public class SelectedActivity extends AppCompatActivity {
                         } else
                             currentProvider.handleDownload(this, url, show, showDirectory, count[0], count[1], countMax);
                     } else {
-                        Toast.makeText(this, String.format("No link found for episode %d with provider %s", count[1], currentProvider.getName()), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, String.format(Locale.ENGLISH, "No link found for episode %d with provider %s", count[1], currentProvider.getName()), Toast.LENGTH_SHORT).show();
                     }
                 }, count[0], count[1], countMax);
     }
 
-    /**
-     * Play episode from file
-     *
-     * @param index episode
-     */
-    private void playEpisodeFromSave(final int index) {
-        Intent intent = null;
-        final Optional<File> videoFile = this.getEpisodeFile(index);
+    public File getShowDirectory() {
+        return showDirectory;
+    }
 
-        if (videoFile.isPresent()) {
-            final int mode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(this).getString("video_player_preference", "0"));
-            if (mode == 0) {
-                intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), getApplicationContext().getPackageName() + ".provider", videoFile.get()), "video/mp4");
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            } else if (mode == 1) {
-                intent = new Intent(getApplicationContext(), PlayerActivity.class);
-                intent.putExtra("path", videoFile.get().getAbsolutePath());
-            }
-            if (intent == null) {
-                Toast.makeText(this, "Cannot use selected player", Toast.LENGTH_SHORT).show();
-            } else
-                startActivity(Objects.requireNonNull(intent));
-        }
+    public Show getShow() {
+        return show;
     }
 
     /**
-     * Get episode file from index
+     * Delete file
      *
-     * @param index the requested index
-     * @return optional with the file or empty
+     * @param index episode to delete (index)
      */
-    public Optional<File> getEpisodeFile(final int index) {
-        if (showDirectory.listFiles() != null) {
-            final String indexString = String.valueOf(index);
-            for (final File file : showDirectory.listFiles()) {
-                if (file.isFile() && file.getName().substring(0, file.getName().lastIndexOf(".")).equals(indexString)) {
-                    return Optional.of(file);
-                }
-            }
-        }
-        return Optional.empty();
+    public void deleteItem(final int index) {
+        //Get episode file, delete then notify dataset changes
+        AnimeAppMain.getInstance().getShowSaver().getEpisodeFile(index, showDirectory).ifPresent(file -> {
+            Logger.log("Deleted: " + file.delete(), Logger.LogType.INFO);
+            refreshAdapter();
+        });
     }
-
-    /**
-     * Get the show's last episode, e.g. the file with the highest integer
-     *
-     * @return the highest integer found, comparing all the different filenames
-     */
-    public int getLatestEpisode() {
-        if (showDirectory.listFiles() != null) {
-            try (final Stream<File> files = Arrays.stream(showDirectory.listFiles())) {
-                final OptionalInt highest = files
-                        .filter(File::isFile)
-                        .map(s -> StringUtil.extractNumberI(s.getName().substring(0, s.getName().lastIndexOf("."))))
-                        .mapToInt(integer -> integer)
-                        .max();
-                if (highest.isPresent()) return highest.getAsInt() + 1;
-                else return 0;
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * Check if a certain episode is downloaded
-     * TODO: Create and update a local index
-     *
-     * @param index index to search for
-     * @return if the file has been found
-     */
-    private boolean isEpisodeDownloaded(final int index) {
-        if (showDirectory.listFiles() != null) {
-            for (final File file : showDirectory.listFiles()) {
-                if (file.isFile()) {
-                    if (file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index)))
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
-
 
     /**
      * Refresh the grid layout's adapter eg. notify any data set changes
@@ -428,27 +335,15 @@ public class SelectedActivity extends AppCompatActivity {
                 view = LayoutInflater.from(context).inflate(R.layout.item_episode, parent, false);
             } else view = convertView;
 
-            final TextView textView = view.findViewById(R.id.episode_int_text_view);
-            textView.setText(String.valueOf(position));
+            final CheckedTextView checkedTextView = view.findViewById(R.id.episode_int_text_view);
+            checkedTextView.setText(String.valueOf(position));
+            checkedTextView.setChecked(show.getEpisodesWatched() >= position); //Every episode watched is marked (TODO: Episodes not watched in order)
             //Highlight downloaded episodes, i.e. give those text views a different color
-            if (isEpisodeDownloaded(position))
-                textView.setTextColor(getColor(R.color.colorAccent));
-            else textView.setTextColor(defaultTextColor); //Revert text color back to default
+            if (AnimeAppMain.getInstance().getShowSaver().isEpisodeDownloaded(position, showDirectory))
+                checkedTextView.setTextColor(getColor(R.color.colorAccent));
+            else checkedTextView.setTextColor(defaultTextColor); //Revert text color back to default
 
             return view;
-        }
-
-        /**
-         * Delete file
-         *
-         * @param index episode to delete (index)
-         */
-        public void deleteItem(final int index) {
-            //Get episode file, delete then notify dataset changes
-            getEpisodeFile(index).ifPresent(file -> {
-                Logger.log("Deleted: " + file.delete(), Logger.LogType.INFO);
-                notifyDataSetChanged();
-            });
         }
     }
 }

@@ -49,7 +49,7 @@ public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements
             return null;
         }
 
-        final Matcher videoSrcMatcher = videoSrcPattern.matcher(jsUnpacker.unpack()); //Prepare matcher with unpacked javascript
+        final Matcher videoSrcMatcher = VIDEO_SRC_PATTERN.matcher(jsUnpacker.unpack()); //Prepare matcher with unpacked javascript
 
         String m3u8Src = "";
         while (videoSrcMatcher.find()) {

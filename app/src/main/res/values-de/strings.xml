@@ -32,4 +32,13 @@
     <string name="offline_mode_attachment_summary_off">Anime-Cover werden nicht zusätzlich zwischengespeichert, bei offline Nutzung empfiehlt es sich diese Option zu aktivieren.</string>
     <string name="offline_mode">Offline-Modus</string>
     <string name="placeholder_todo">In Bearbeitung</string>
+    <string name="global_sync">Synchronisieren</string>
+    <string name="sync_mal">Mit MyAnimeList synchronisieren</string>
+    <string name="sync_mal_attachment_summary_on">Alle Animes werden mit deiner MyAnimeList synchronisiert</string>
+    <string name="sync_mal_attachment_summary_off">Deine Animes werden nicht mit deiner MyanimeList synchronisiert</string>
+    <string name="offline_images_delete_all_title">Sollen alle offline gespeicherten Cover gelöscht werden?</string>
+    <string name="offline_images_delete_all_content">Solltest offline sein und die Cover sind nicht gespeichert, so werden diese nicht angezeigt werden</string>
+    <string name="offline_images_delete_all_confirm">Löschen</string>
+    <string name="move_files_title">Alle Folgen in den internen Speicher verschieben?</string>
+    <string name="move_files_confirm">Verschieben</string>
 </resources>

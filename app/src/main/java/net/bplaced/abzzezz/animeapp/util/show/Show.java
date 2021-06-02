@@ -8,22 +8,26 @@ package net.bplaced.abzzezz.animeapp.util.show;
 
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.util.Constant;
+import net.bplaced.abzzezz.animeapp.util.datatypes.ArrayHelper;
+import net.bplaced.abzzezz.animeapp.util.json.JSONHelper;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class Show {
 
-    private final String malID;
-    private final String showTitle;
-    private final double showScore;
-    private final String imageURL;
-    private final int episodeCount;
+    private final String malID; //the Myanimelist show id
+    private final String showTitle; //the show's title
+    private final double showScore; //the show's score, mostly rounded to two digits
+    private final String imageURL; //the image url
+    private final int episodeCount; //the total amount of episodes
+    private boolean[] episodesWatched; //Keep track of all the individual episodes watched
 
-    private final JSONObject providers;
+    private final JSONObject providers; //Provider information for each provider
 
     /**
      * Basic Show object constructed from MAL data
@@ -40,8 +44,33 @@ public class Show {
         this.episodeCount = episodeCount;
         this.imageURL = imageURL;
         this.showScore = showScore;
+        this.episodesWatched = new boolean[episodeCount];
         this.providers = new JSONObject();
     }
+
+    /**
+     * Basic Show object constructed from MAL data with episodes watched
+     *
+     * @param id           MAL ID
+     * @param title        Title fetched from MAL
+     * @param episodeCount episode count
+     * @param imageURL     image url from MAL
+     * @param showScore    the year the show was released
+     */
+    public Show(String id, String title, int episodeCount, String imageURL, final double showScore, final int episodesWatched) {
+        this.malID = id;
+        this.showTitle = title;
+        this.episodeCount = episodeCount;
+        this.imageURL = imageURL;
+        this.showScore = showScore;
+        this.episodesWatched = new boolean[episodeCount];
+        if (episodesWatched > episodeCount)
+            Arrays.fill(this.episodesWatched, true);
+        else
+            Arrays.fill(this.episodesWatched, 0, episodesWatched, true);
+        this.providers = new JSONObject();
+    }
+
 
     /**
      * Retrieve Show from formatted data
@@ -55,6 +84,7 @@ public class Show {
         this.episodeCount = showJSON.optInt(Constant.SHOW_EPISODE_COUNT);
         this.imageURL = showJSON.getString(Constant.SHOW_IMAGE_URL);
         this.showScore = showJSON.optDouble(Constant.SHOW_SCORE, 0);
+        this.episodesWatched = JSONHelper.getBooleanArray(showJSON.optJSONArray(Constant.SHOW_EPISODES_WATCHED), episodeCount);
         this.providers = showJSON.getJSONObject("provider_info");
     }
 
@@ -143,18 +173,18 @@ public class Show {
     @Override
     public String toString() {
         try {
-            final JSONObject jsonObject = new JSONObject();
-            jsonObject
+            return new JSONObject()
                     .put(Constant.SHOW_ID, getID())
                     .put(Constant.SHOW_TITLE, getShowTitle())
                     .put(Constant.SHOW_SCORE, getShowScore())
                     .put(Constant.SHOW_IMAGE_URL, getImageURL())
                     .put(Constant.SHOW_EPISODE_COUNT, getEpisodeCount())
-                    .put("provider_info", providers);
-            return jsonObject.toString();
+                    .put(Constant.SHOW_EPISODE_COUNT, getEpisodesWatched())
+                    .put("provider_info", providers)
+                    .toString();
         } catch (final JSONException e) {
             e.printStackTrace();
-            return "";
+            return "{}"; //Empty json object
         }
     }
 
@@ -176,5 +206,21 @@ public class Show {
 
     public String getImageURL() {
         return imageURL;
+    }
+
+    public boolean[] getEpisodesWatched0() {
+        return episodesWatched;
+    }
+
+    public int getEpisodesWatched() {
+        return ArrayHelper.getTotalTruthsInArray(getEpisodesWatched0());
+    }
+
+    public void setEpisodesWatched(boolean[] episodesWatched) {
+        this.episodesWatched = episodesWatched;
+    }
+
+    public void setEpisodesWatched(final int index, final boolean b) {
+        this.episodesWatched[index] = b;
     }
 }

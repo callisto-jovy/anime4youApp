@@ -72,23 +72,6 @@ public class GogoAnimeFetcher implements GogoAnimeHolder {
                         ));
     }
 
-
-    /**
-     * Fetches all ids from the given url
-     *
-     * @return String array containing all ids for the direct url
-     * @throws IOException some connection goes wrong
-     */
-    private JSONArray fetchReferrals() throws IOException {
-        final Element body = showDocument.body();
-        final int id = Integer.parseInt(body.selectFirst("input#movie_id").val());
-        final int epiStart = Integer.parseInt(body.selectFirst("#episode_page a.active").attr("ep_start"));
-        final int epiEnd = Integer.parseInt(body.selectFirst("#episode_page a.active").attr("ep_end"));
-
-        return collectReferrals(epiStart, epiEnd, id);
-    }
-
-
     /**
      * Fetches the id to an episode using it's site's referral
      *
@@ -148,6 +131,21 @@ public class GogoAnimeFetcher implements GogoAnimeHolder {
      */
     private static Connection createGogoCdn(final String url, final String userAgent) {
         return Jsoup.connect(url).userAgent(userAgent).header("authority", "ajax.gogocdn.net");
+    }
+
+    /**
+     * Fetches all ids from the given url
+     *
+     * @return String array containing all ids for the direct url
+     * @throws IOException some connection goes wrong
+     */
+    private JSONArray fetchReferrals() throws IOException {
+        final Element body = showDocument.body();
+        final int id = Integer.parseInt(body.selectFirst("input#movie_id").val());
+        final int epiStart = Integer.parseInt(body.selectFirst("#episode_page a.active").attr("ep_start"));
+        final int epiEnd = Integer.parseInt(body.selectFirst("#episode_page a.active").attr("ep_end"));
+
+        return collectReferrals(epiStart, epiEnd, id);
     }
 
     /**

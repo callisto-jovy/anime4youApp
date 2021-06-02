@@ -11,12 +11,13 @@
         android:layout_gravity="center"
         android:layout_margin="5dp">
 
-    <TextView
+    <CheckedTextView
             android:layout_gravity="center"
             android:maxLength="30"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/episode_int_text_view"
+            android:checked="false"
             android:text="@string/app_name"/>
 </com.google.android.material.card.MaterialCardView>

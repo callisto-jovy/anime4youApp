@@ -24,7 +24,6 @@ import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.bplaced.abzzezz.animeapp.util.tasks.myanimelist.MyAnimeListSearchTask;
 import net.bplaced.abzzezz.animeapp.util.ui.ImageUtil;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,12 +105,8 @@ public class SearchFragment extends Fragment {
             final Show showAtIndex = (Show) getItem(position);
 
             view.setOnClickListener(listener -> {
-                try {
-                    AnimeAppMain.getInstance().getShowSaver().addShow(showAtIndex);
-                    Toast.makeText(context, "Added show!", Toast.LENGTH_SHORT).show();
-                } catch (final JSONException e) {
-                    e.printStackTrace();
-                }
+                AnimeAppMain.getInstance().getShowSaver().addShow(showAtIndex);
+                Toast.makeText(context, "Added show!", Toast.LENGTH_SHORT).show();
             });
 
             final TextView showTitle = view.findViewById(R.id.search_show_title_text_view);

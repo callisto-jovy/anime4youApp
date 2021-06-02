@@ -48,7 +48,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
@@ -62,11 +62,12 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2' // Picasso
     implementation 'com.github.oktavianto:ionalert:1.0.4' //Alerts
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'com.google.android.exoplayer:exoplayer:2.13.3' //Exo -player
+    implementation 'com.google.android.exoplayer:exoplayer:2.14.0' //Exo -player
     implementation 'org.jsoup:jsoup:1.13.1' //JSOUP
     implementation 'net.ricecode:string-similarity:1.0.0' //String comparisons
     implementation 'com.blankj:utilcodex:1.30.1' //Android app install
     implementation 'com.arthenica:mobile-ffmpeg-full:4.4' //FFMPEG
     implementation 'net.sandrohc:reactive-jikan:1.0.0' //Mal api
-    implementation 'com.eclipsesource.j2v8:j2v8_android:3.0.5@aar'
+    implementation 'com.afollestad.material-dialogs:core:0.9.2.3'
+
 }

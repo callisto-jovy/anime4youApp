@@ -24,13 +24,13 @@ public class TwistmoeFetchCallable implements Callable<JSONObject>, TwistmoeHold
 
     @Override
     public JSONObject call() throws Exception {
-        HttpsURLConnection connection = URLUtil.createHTTPSURLConnection(SHOW_API + slug, requestHeaders);
+        HttpsURLConnection connection = URLUtil.createHTTPSURLConnection(SHOW_API + slug, REQUEST_HEADERS);
         connection.connect();
 
 
         final JSONObject fetchedDetails = new JSONObject(URLUtil.collectLines(connection, ""));
 
-        connection = URLUtil.createHTTPSURLConnection(SHOW_API + slug + "/sources/", requestHeaders);
+        connection = URLUtil.createHTTPSURLConnection(SHOW_API + slug + "/sources/", REQUEST_HEADERS);
         connection.connect();
 
         final JSONArray fetchedSources = new JSONArray(URLUtil.collectLines(connection, ""));

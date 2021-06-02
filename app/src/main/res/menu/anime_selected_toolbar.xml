@@ -7,6 +7,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-            android:title="Download Bound"
+            android:title="@string/download_bound_menu_item"
             android:id="@+id/download_bound"/>
+    <item
+            android:title="@string/show_status_menu_item"
+            android:id="@+id/set_show_status"/>
 </menu>

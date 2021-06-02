@@ -53,9 +53,9 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
     protected final String name;
     protected final File outDir;
     protected final EpisodeDownloadProgressHandler progressHandler;
-    private boolean cancel;
     protected File outFile;
     protected FileOutputStream fileOutputStream; //Fileoutputstream, can be closed if canceled
+    private boolean cancel;
     private NotificationManagerCompat notificationManagerCompat;
     private NotificationCompat.Builder notification;
     private int notifyID;

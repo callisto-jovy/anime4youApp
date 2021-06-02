@@ -9,6 +9,7 @@ package net.bplaced.abzzezz.animeapp.activities.main.ui.home;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.squareup.picasso.Picasso;
 import ga.abzzezz.util.logging.Logger;
 import id.ionbit.ionalert.IonAlert;
@@ -68,6 +71,42 @@ public class ListFragment extends Fragment {
                     .setCancelClickListener(IonAlert::dismissWithAnimation)
                     .show();
         }
+        //Configure swipe refresh layout
+        final SwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.shows_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if (!AnimeAppMain.getInstance().getMyAnimeList().isSyncable()) {
+                AnimeAppMain.getInstance().getMyAnimeList().startSync(aBoolean -> {
+                    if (!aBoolean)
+                        new MaterialDialog.Builder(getContext())
+                                .title("Myanimelist credentials")
+                                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
+                                .customView(R.layout.dialog_two_input_password, false)
+                                .positiveText("Sync")
+                                .onPositive((dialog, which) -> {
+                                    assert dialog.getCustomView() != null : "Custom view is null";
+
+                                    final EditText usernameEditText = dialog.getCustomView().findViewById(R.id.dialog_two_input_username);
+                                    final EditText password = dialog.getCustomView().findViewById(R.id.dialog_two_input_password);
+                                    final String username = usernameEditText.getText().toString().trim();
+
+                                    AnimeAppMain.getInstance().getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
+                                        if (processFinished)
+                                            new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
+                                                    .setTitleText("Sync done")
+                                                    .show();
+                                        else
+                                            new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
+                                                    .setTitleText("Sync was not successful")
+                                                    .setConfirmText("Done")
+                                                    .show();
+                                    });
+                                }).show();
+                });
+            }
+            swipeRefreshLayout.setRefreshing(false);
+        });
+
+
         return root;
     }
 

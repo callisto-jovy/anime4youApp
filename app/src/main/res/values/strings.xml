@@ -19,23 +19,36 @@
     <!-- Strings for general use -->
     <string name="show_title">Title: %s</string>
     <string name="show_episodes">Episodes: %d</string>
+    <string name="show_episode">Episode: %d</string>
+
     <string name="show_score">Score: %.2f</string>
     <string name="show_id">Id: %s</string>
+
+    <string name="abort">Abort</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
 
 
     <!-- Preference Titles -->
     <string name="global_settings">Settings</string>
     <string name="global_video">Video</string>
     <string name="global_storage">Storage</string>
+    <string name="global_sync">Sync</string>
+
 
     <!-- Preferences -->
 
     <!-- General -->
+    <string name="check_list_for_existing">Check list for existing Anime</string>
     <string name="check_list_attachment_summary_on">Checks anime already exists</string>
     <string name="check_list_attachment_summary_off">Does not check. Entries can be duplicated</string>
+
     <string name="download_delay">Download delay (seconds)</string>
     <string name="image_compression_strength">Image compression strength</string>
-    <string name="check_list_for_existing">Check list for existing Anime</string>
+
+    <string name="sync_mal">Sync with MyAnimeList</string>
+    <string name="sync_mal_attachment_summary_on">Synchronizes your MyAnimeList with this app\'s list</string>
+    <string name="sync_mal_attachment_summary_off">Do not synchronize with MyAnimeList</string>
 
 
     <!-- Video  -->
@@ -51,4 +64,28 @@
     <string name="offline_mode_attachment_summary_off">Images are only cached through lazy loading. If this cache is lost, they won\'t display</string>
     <string name="offline_mode">Offline mode</string>
     <string name="placeholder_todo">TODO</string>
+
+    <!-- Strings -->
+    <string name="offline_images_delete_all_title">Delete all offline images?</string>
+    <string name="offline_images_delete_all_content">If you are offline and there are no caches images wont be loaded!</string>
+    <string name="offline_images_delete_all_confirm">Yes, delete!</string>
+
+    <string name="move_files_title">Move files?</string>
+    <string name="move_files_confirm">Yes, move</string>
+    <string name="download_button_text">Download</string>
+    <string name="episode_properties">Episode Properties</string>
+    <string name="mark_watched_button_text">Mark as watched</string>
+    <string name="delete_button_text">delete</string>
+    <string name="play_episode_button">Play</string>
+    <string name="mark_unwatched_button_text">Mark was unwatched</string>
+    <string name="download_bound_menu_item">Download Bound</string>
+    <string name="show_status_menu_item">Set show status</string>
+
+    <string name="show_status_item_watching">Watching</string>
+    <string name="show_status_item_completed">Completed</string>
+    <string name="show_status_item_on_hold">On Hold</string>
+    <string name="show_status_item_dropped">Dropped</string>
+    <string name="show_status_item_plan_to_watch">Plan to watch</string>
+
+
 </resources>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021. Roman P.
+  ~ All code is owned by Roman P. APIs are mentioned.
+  ~ Last modified: 02.06.21, 18:53
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/activity_selected_show_bottom_sheet_dialog"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <TextView
+            android:text="@string/episode_properties"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLength="50"
+            android:textSize="18sp"
+            android:padding="15dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/selected_show_bottom_sheet_episode_properties_text_view"
+            android:textStyle="bold"/>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/selected_show_bottom_sheet_episode_properties_text_view"
+            android:background="@color/md_divider_black"
+            />
+
+    <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@id/selected_show_bottom_sheet_episode_properties_text_view"
+            android:id="@+id/selected_show_bottom_sheet_inner_layout"
+            android:padding="2dp"
+            android:layout_marginBottom="20dp">
+
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars"
+                android:layout_alignParentStart="true"
+                android:id="@+id/selected_show_bottom_sheet_cover_image_view"
+                />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="50"
+                android:textSize="20sp"
+                android:layout_alignTop="@id/selected_show_bottom_sheet_cover_image_view"
+                android:layout_toEndOf="@id/selected_show_bottom_sheet_cover_image_view"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/selected_show_bottom_sheet_title_text_view"/>
+
+        <TextView
+                android:text="@string/show_episode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/selected_show_bottom_sheet_title_text_view"
+                android:layout_toEndOf="@id/selected_show_bottom_sheet_cover_image_view"
+                android:id="@+id/selected_show_bottom_sheet_episode_text_view"/>
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@id/selected_show_bottom_sheet_inner_layout"
+            android:layout_marginBottom="20dp">
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/md_divider_black"
+                />
+
+        <Button
+                android:text="@string/download_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:id="@+id/selected_show_bottom_sheet_left_button"/>
+
+
+        <Button
+                android:text="@string/mark_watched_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/selected_show_bottom_sheet_left_button"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/selected_show_bottom_sheet_mark_as_watched_button"/>
+
+        <Button
+                android:text="@string/delete_button_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_toEndOf="@id/selected_show_bottom_sheet_mark_as_watched_button"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/selected_show_button_sheet_delete_button"/>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -7,13 +7,11 @@
 package net.bplaced.abzzezz.animeapp.util.connection;
 
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomUserAgent {
 
-    private static final List<String> USER_AGENTS = Arrays.asList(
+    private static final String[] USER_AGENTS = new String[]{
             "Mozilla/5.0 (compatible; MSIE 10.6; Windows NT 6.1; Trident/5.0; InfoPath.2; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 2.0.50727) 3gpp-gba UNTRUSTED/1.0",
             "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
             "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)",
@@ -1629,9 +1627,9 @@ public class RandomUserAgent {
             "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.6) Gecko/2009011913  Firefox",
             "Mozilla/5.0 (Windows; U; Windows NT 5.1; de-DE; rv:1.9.2.20) Gecko/20110803 Firefox",
             "Mozilla/5.0 (Macintosh; U; PPC Mac OS X Mach-O; rv:1.8.1.16) Gecko/20080702 Firefox",
-            "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.13) Gecko/20080313 Firefox");
+            "Mozilla/5.0 (Macintosh; U; Intel Mac OS X; en-US; rv:1.8.1.13) Gecko/20080313 Firefox"};
 
     public static String getRandomUserAgent() {
-        return USER_AGENTS.get(ThreadLocalRandom.current().nextInt(USER_AGENTS.size() - 1));
+        return USER_AGENTS[ThreadLocalRandom.current().nextInt(USER_AGENTS.length - 1)];
     }
 }

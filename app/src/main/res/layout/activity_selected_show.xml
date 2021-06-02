@@ -11,6 +11,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/activity_selected_show"
         tools:context=".activities.main.ui.home.SelectedActivity"
         >
 
@@ -143,7 +144,7 @@
             android:id="@+id/show_provider_spinner"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/selected_show_swipe_refresh_layout"
+            app:layout_constraintBottom_toTopOf="@+id/shows_swipe_refresh_layout"
             app:layout_constraintTop_toBottomOf="@+id/selected_show_cover_image_view"
             android:spinnerMode="dropdown"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

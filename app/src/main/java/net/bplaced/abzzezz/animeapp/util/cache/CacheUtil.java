@@ -13,10 +13,8 @@ import java.util.Optional;
 
 public class CacheUtil extends JSONObject {
 
-    private final File cache;
-
     public final File cacheConfig;
-
+    private final File cache;
     private final Map<String, Cache> expirationKeyMap = new HashMap<>();
 
     private final JSONObject cacheConfigMap;

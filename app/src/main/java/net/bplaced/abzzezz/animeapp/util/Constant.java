@@ -8,8 +8,6 @@ package net.bplaced.abzzezz.animeapp.util;
 
 import net.bplaced.abzzezz.animeapp.util.connection.RandomUserAgent;
 
-import java.text.DecimalFormat;
-
 //TODO: Maybe move to an interface for implementation
 public class Constant {
 
@@ -25,8 +23,6 @@ public class Constant {
     public static final String SHOW_EPISODE_COUNT = "episodes";
     public static final String SHOW_TITLE = "title";
     public static final String SHOW_SCORE = "score";
+    public static final String SHOW_EPISODES_WATCHED = "episodes_watched_0"; //Ensure backwards compatibility & no weird bugs
 
-    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##.##");
-
-    public static final String VIDOZA_SCRIPT = "call(); function call() { vidoza = $.ajax({type: 'POST',url: '/check_video.php',async: false,success: function(data){},data: {vidhash:\"%s\"}}).responseJSON[\"url\"];return vidoza;}";
 }

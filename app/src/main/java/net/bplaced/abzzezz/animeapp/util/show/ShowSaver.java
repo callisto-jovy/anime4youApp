@@ -11,13 +11,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
 import ga.abzzezz.util.logging.Logger;
+import ga.abzzezz.util.stringing.StringUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.io.File;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Class to save all shows to a shared preference file
@@ -111,7 +111,7 @@ public class ShowSaver {
      *
      * @param show show to be added
      */
-    public void addShow(final Show show) throws JSONException {
+    public void addShow(final Show show) {
         if (publicPreferences.getBoolean("check_existing", false) && containsShow(show))
             return; //Check if settings is checked, if so ignore duplicates
 
@@ -186,5 +186,63 @@ public class ShowSaver {
     public int getShowSize() {
         return shows.size();
     }
+
+    /**
+     * Get episode file from index
+     *
+     * @param index the requested index
+     * @return optional with the file or empty
+     */
+    public Optional<File> getEpisodeFile(final int index, final File showDirectory) {
+        if (showDirectory.listFiles() != null) {
+            final String indexString = String.valueOf(index);
+            for (final File file : showDirectory.listFiles()) {
+                if (file.isFile() && file.getName().substring(0, file.getName().lastIndexOf(".")).equals(indexString)) {
+                    return Optional.of(file);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Get the show's last episode, e.g. the file with the highest integer
+     *
+     * @return the highest integer found, comparing all the different filenames
+     */
+    public int getLatestEpisode(final File showDirectory) {
+        if (showDirectory.listFiles() != null) {
+            try (final Stream<File> files = Arrays.stream(showDirectory.listFiles())) {
+                final OptionalInt highest = files
+                        .filter(File::isFile)
+                        .map(s -> StringUtil.extractNumberI(s.getName().substring(0, s.getName().lastIndexOf("."))))
+                        .mapToInt(integer -> integer)
+                        .max();
+                if (highest.isPresent()) return highest.getAsInt() + 1;
+                else return 0;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Check if a certain episode is downloaded
+     * TODO: Create and update a local index
+     *
+     * @param index index to search for
+     * @return if the file has been found
+     */
+    public boolean isEpisodeDownloaded(final int index, final File showDirectory) {
+        if (showDirectory.listFiles() != null) {
+            for (final File file : showDirectory.listFiles()) {
+                if (file.isFile()) {
+                    if (file.getName().substring(0, file.getName().lastIndexOf(".")).equals(String.valueOf(index)))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
 }
