@@ -12,17 +12,18 @@ import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import net.sandrohc.jikan.Jikan;
 import net.sandrohc.jikan.factory.UserAnimeQueryFactory;
+import net.sandrohc.jikan.model.enums.UserAnimeWatchingStatus;
 import reactor.core.publisher.Flux;
 
 import java.util.concurrent.Callable;
 
 public class MyAnimeListSyncTask extends TaskExecutor implements Callable<Boolean>, MyAnimeListHolder {
 
-    private final String user;
+    private final String username;
     private final Jikan jikan;
 
-    public MyAnimeListSyncTask(final Jikan jikan, final String user) {
-        this.user = user;
+    public MyAnimeListSyncTask(final Jikan jikan, final String username) {
+        this.username = username;
         this.jikan = jikan;
     }
 
@@ -36,11 +37,13 @@ public class MyAnimeListSyncTask extends TaskExecutor implements Callable<Boolea
         //Watching = 1
         final UserAnimeQueryFactory animeQueryFactory = jikan
                 .query()
-                .user(user)
+                .user(username)
                 .anime();
 
         //Adds all planed to watch and watching shows
-        Flux.concat(animeQueryFactory.list(1).execute(), animeQueryFactory.list(6).execute())
+        Flux.concat(
+                animeQueryFactory.list(0).status(UserAnimeWatchingStatus.WATCHING).execute(),
+                animeQueryFactory.list(0).status(UserAnimeWatchingStatus.PLAN_TO_WATCH).execute())
                 .toStream()
                 .forEach(userAnime ->
                         AnimeAppMain.getInstance().getShowSaver().addShow(
@@ -50,7 +53,8 @@ public class MyAnimeListSyncTask extends TaskExecutor implements Callable<Boolea
                                         userAnime.totalEpisodes,
                                         userAnime.image_url,
                                         userAnime.score,
-                                        userAnime.watchedEpisodes
+                                        userAnime.watchedEpisodes,
+                                        userAnime.watchingStatus
                                 )));
         return true;
     }

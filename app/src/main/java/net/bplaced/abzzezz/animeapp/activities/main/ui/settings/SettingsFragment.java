@@ -6,8 +6,8 @@
 
 package net.bplaced.abzzezz.animeapp.activities.main.ui.settings;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceFragmentCompat;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
+import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import ga.abzzezz.util.logging.Logger;
 import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
@@ -37,6 +39,7 @@ public class SettingsFragment extends Fragment {
     }
 
     public static class SettingsFragmentInner extends PreferenceFragmentCompat {
+        @SuppressLint("CheckResult")
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -62,35 +65,36 @@ public class SettingsFragment extends Fragment {
                 final boolean[] newValue = {(boolean) v};
 
                 if (newValue[0]) {
+                    final MaterialDialog dialog = new MaterialDialog(getContext(), new BottomSheet());
+                    dialog.title(null, "Myanimelist credentials");
+                    DialogCustomViewExtKt.customView(dialog, R.layout.dialog_two_input_password, null, false, true, false, true);
 
-                    new MaterialDialog.Builder(getContext())
-                            .title("Myanimelist credentials")
-                            .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                            .customView(R.layout.dialog_two_input_password, false)
-                            .positiveText("Sync")
-                            .onPositive((dialog, which) -> {
-                                assert dialog.getCustomView() != null : "Custom view is null";
+                    dialog.positiveButton(null, "Sync", materialDialog -> {
+                        assert materialDialog.getView() != null : "Custom view is null";
 
-                                final EditText usernameEditText = dialog.getCustomView().findViewById(R.id.dialog_two_input_username);
-                                final EditText password = dialog.getCustomView().findViewById(R.id.dialog_two_input_password);
-                                final String username = usernameEditText.getText().toString().trim();
+                        final EditText usernameEditText = materialDialog.getView().findViewById(R.id.dialog_two_input_username);
+                        final EditText password = materialDialog.getView().findViewById(R.id.dialog_two_input_password);
+                        final String username = usernameEditText.getText().toString().trim();
 
-                                AnimeAppMain.getInstance().getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
-                                    if (processFinished) {
-                                        new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
-                                                .setTitleText("Sync done")
-                                                .show();
+                        AnimeAppMain.getInstance().getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
+                            if (processFinished) {
+                                new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
+                                        .setTitleText("Sync done")
+                                        .setConfirmClickListener(IonAlert::dismissWithAnimation)
+                                        .show();
 
-                                    } else {
-                                        new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
-                                                .setTitleText("Sync was not successful")
-                                                .setConfirmText("Done")
-                                                .show();
-                                        newValue[0] = false;
-
-                                    }
-                                });
-                            }).show();
+                            } else {
+                                new IonAlert(getActivity(), IonAlert.ERROR_TYPE)
+                                        .setTitleText("Sync was not successful")
+                                        .setConfirmText("Done")
+                                        .setConfirmClickListener(IonAlert::dismissWithAnimation)
+                                        .show();
+                                newValue[0] = false;
+                            }
+                        });
+                        return null;
+                    });
+                    dialog.show();
                 }
                 return true;
             });
@@ -105,6 +109,11 @@ public class SettingsFragment extends Fragment {
                         }).setCancelText(getString(R.string.abort))
                         .setCancelClickListener(IonAlert::dismissWithAnimation)
                         .show();
+                return true;
+            });
+
+            findPreference("clear_list").setOnPreferenceClickListener(preference -> {
+                AnimeAppMain.getInstance().getShowSaver().clear();
                 return true;
             });
         }

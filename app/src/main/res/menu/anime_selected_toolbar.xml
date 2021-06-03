@@ -12,4 +12,7 @@
     <item
             android:title="@string/show_status_menu_item"
             android:id="@+id/set_show_status"/>
+    <item
+            android:title="@string/score_menu_item"
+            android:id="@+id/set_show_score"/>
 </menu>

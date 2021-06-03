@@ -25,4 +25,5 @@ public class Constant {
     public static final String SHOW_SCORE = "score";
     public static final String SHOW_EPISODES_WATCHED = "episodes_watched_0"; //Ensure backwards compatibility & no weird bugs
 
+    public static final String SHOW_WATCHING_STATUS = "status_watching";
 }

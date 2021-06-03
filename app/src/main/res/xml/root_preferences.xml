@@ -74,6 +74,9 @@
                 android:summary="@string/storage_copy_files_summary"
                 android:key="copy_sd_card"/>
 
+        <Preference
+                android:title="Clear list"
+                android:key="clear_list"/>
 
     </PreferenceCategory>
 

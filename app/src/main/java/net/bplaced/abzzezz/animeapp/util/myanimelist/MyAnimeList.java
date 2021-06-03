@@ -39,6 +39,8 @@ public class MyAnimeList implements MyAnimeListHolder {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
         this.editor = preferences.edit();
         this.wasAccountAdded = preferences.getBoolean("account_added", false);
+        if (wasAccountAdded) this.username = preferences.getString("username", "");
+
         this.myToken = Optional.of(preferences.getString("token", "")).map(s -> {
             try {
                 return new MyAnimeListToken(new JSONObject(s));
@@ -49,15 +51,22 @@ public class MyAnimeList implements MyAnimeListHolder {
         }).orElse(null);
     }
 
+    /**
+     * Method called when setting up the sync for the first time
+     *
+     * @param username myanimelist username
+     * @param password myanimelist password
+     * @param onReturn consumer boolean, acts as a return statement
+     */
     public void setupSync(final String username, final String password, final Consumer<Boolean> onReturn) {
         Logger.log("Setting up sync", Logger.LogType.INFO);
-        //If the account was added directly sync
 
+        //If the account was added directly sync
         if (isWasAccountAdded() && myToken != null) {
             startSync(onReturn);
             return;
         }
-
+        //Retrieve the token for the first time & add it, then start the sync
         retrieveToken(username, password, tokenRetrieved -> {
             if (tokenRetrieved) {
                 this.username = username;
@@ -72,7 +81,11 @@ public class MyAnimeList implements MyAnimeListHolder {
         });
     }
 
-
+    /**
+     * Method that is called whenever the sync is started, checks if the account was added, the token is valid, etc.
+     *
+     * @param onReturn consumer that acts like a return statement
+     */
     public void startSync(final Consumer<Boolean> onReturn) {
         if (!isSyncAccount()) return;
 
@@ -80,15 +93,17 @@ public class MyAnimeList implements MyAnimeListHolder {
             onReturn.accept(false);
             return;
         }
+        //Check if the token needs a refresh
+        checkToken(unused -> startSync(onReturn));
 
-        if (checkSync()) {
-            refreshToken(unused -> startSync(onReturn));
-            return;
-        }
-
-        sync(onReturn);
+        sync(onReturn); //Start the "real" sync
     }
 
+    /**
+     * Starts a new Sync-Task to add all the user's shows to the local list
+     *
+     * @param onReturn Consumer that acts as an callback
+     */
     private void sync(final Consumer<Boolean> onReturn) {
         new MyAnimeListSyncTask(getJikan(), username).executeAsync(new TaskExecutor.Callback<Boolean>() {
             @Override
@@ -104,16 +119,13 @@ public class MyAnimeList implements MyAnimeListHolder {
     }
 
     public void updateShowEpisodes(final Show show) {
-        if (checkSync()) {
-            refreshToken(unused -> updateShowEpisodes(show));
-            return;
-        }
+        this.checkToken(unused -> updateShowEpisodes(show));
 
         if (isSyncable())
             new MyAnimeListUpdateEntryTask(show.getID(), myToken, new String[]{"num_episodes_watched", String.valueOf(show.getEpisodesWatched())}).executeAsync(new TaskExecutor.Callback<Integer>() {
                 @Override
-                public void onComplete(Integer result) {
-                    Logger.log("Status code:" + result, Logger.LogType.INFO);
+                public void onComplete(final Integer responseCode) {
+                    Logger.log("Status code:" + responseCode, Logger.LogType.INFO);
                 }
 
                 @Override
@@ -124,16 +136,30 @@ public class MyAnimeList implements MyAnimeListHolder {
     }
 
     public void updateShowState(final Show show, final String status) {
-        if (checkSync()) {
-            refreshToken(unused -> updateShowEpisodes(show));
-            return;
-        }
+        this.checkToken(unused -> updateShowState(show, status));
 
         if (isSyncable())
             new MyAnimeListUpdateEntryTask(show.getID(), myToken, new String[]{"status", status}).executeAsync(new TaskExecutor.Callback<Integer>() {
                 @Override
-                public void onComplete(Integer result) {
-                    Logger.log("Status code:" + result, Logger.LogType.INFO);
+                public void onComplete(final Integer responseCode) {
+                    Logger.log("Status code:" + responseCode, Logger.LogType.INFO);
+                }
+
+                @Override
+                public void preExecute() {
+
+                }
+            });
+    }
+
+    public void updateShowScore(final Show show, final int score) {
+        this.checkToken(unused -> updateShowScore(show, score));
+
+        if (isSyncable())
+            new MyAnimeListUpdateEntryTask(show.getID(), myToken, new String[]{"score", String.valueOf(score)}).executeAsync(new TaskExecutor.Callback<Integer>() {
+                @Override
+                public void onComplete(final Integer responseCode) {
+                    Logger.log("Status code:" + responseCode, Logger.LogType.INFO);
                 }
 
                 @Override
@@ -183,6 +209,15 @@ public class MyAnimeList implements MyAnimeListHolder {
                 Logger.log("Refreshing token", Logger.LogType.INFO);
             }
         });
+    }
+
+    /**
+     * Checks if the token is still valid and if not starts a new task to refresh it
+     *
+     * @param afterCheck consumer with a void accepted, used as an callback, to wait for the refresh to be completed
+     */
+    private void checkToken(final Consumer<Void> afterCheck) {
+        if (checkSync()) refreshToken(afterCheck);
     }
 
     /**

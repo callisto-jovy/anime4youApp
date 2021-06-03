@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021. Roman P.
+  ~ All code is owned by Roman P. APIs are mentioned.
+  ~ Last modified: 02.06.21, 18:06
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/dialog_two_in">
+
+
+    <com.google.android.material.slider.Slider
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:indeterminate="false"
+            android:stepSize="1"
+            android:valueFrom="0"
+            android:valueTo="10"/>
+
+
+</RelativeLayout>

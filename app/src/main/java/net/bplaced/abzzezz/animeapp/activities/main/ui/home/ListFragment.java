@@ -6,10 +6,10 @@
 
 package net.bplaced.abzzezz.animeapp.activities.main.ui.home;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +19,15 @@ import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
+import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import com.squareup.picasso.Picasso;
 import ga.abzzezz.util.logging.Logger;
 import id.ionbit.ionalert.IonAlert;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.util.IntentHelper;
+import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.file.OfflineImageLoader;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.ui.ImageUtil;
@@ -34,6 +37,7 @@ import java.util.Optional;
 
 public class ListFragment extends Fragment {
 
+    @SuppressLint("CheckResult")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_shows, container, false);
 
@@ -74,39 +78,47 @@ public class ListFragment extends Fragment {
         //Configure swipe refresh layout
         final SwipeRefreshLayout swipeRefreshLayout = root.findViewById(R.id.shows_swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            if (!AnimeAppMain.getInstance().getMyAnimeList().isSyncable()) {
+            if (URLUtil.isOffline(getContext())) {
+                swipeRefreshLayout.setRefreshing(false);
+                return;
+            }
+
+            if (AnimeAppMain.getInstance().getMyAnimeList().isSyncable()) {
                 AnimeAppMain.getInstance().getMyAnimeList().startSync(aBoolean -> {
-                    if (!aBoolean)
-                        new MaterialDialog.Builder(getContext())
-                                .title("Myanimelist credentials")
-                                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)
-                                .customView(R.layout.dialog_two_input_password, false)
-                                .positiveText("Sync")
-                                .onPositive((dialog, which) -> {
-                                    assert dialog.getCustomView() != null : "Custom view is null";
+                    if (!aBoolean) {
+                        final MaterialDialog dialog = new MaterialDialog(getContext(), new BottomSheet());
+                        dialog.title(null, "Myanimelist credentials");
+                        DialogCustomViewExtKt.customView(dialog, R.layout.dialog_two_input_password, null, false, true, false, true);
 
-                                    final EditText usernameEditText = dialog.getCustomView().findViewById(R.id.dialog_two_input_username);
-                                    final EditText password = dialog.getCustomView().findViewById(R.id.dialog_two_input_password);
-                                    final String username = usernameEditText.getText().toString().trim();
+                        dialog.positiveButton(null, "Sync", materialDialog -> {
+                            assert materialDialog.getView() != null : "Custom view is null";
 
-                                    AnimeAppMain.getInstance().getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
-                                        if (processFinished)
-                                            new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
-                                                    .setTitleText("Sync done")
-                                                    .show();
-                                        else
-                                            new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
-                                                    .setTitleText("Sync was not successful")
-                                                    .setConfirmText("Done")
-                                                    .show();
-                                    });
-                                }).show();
+                            final EditText usernameEditText = materialDialog.getView().findViewById(R.id.dialog_two_input_username);
+                            final EditText password = materialDialog.getView().findViewById(R.id.dialog_two_input_password);
+                            final String username = usernameEditText.getText().toString().trim();
+
+                            AnimeAppMain.getInstance().getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
+                                if (processFinished)
+                                    new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
+                                            .setTitleText("Sync done")
+                                            .setConfirmClickListener(IonAlert::dismissWithAnimation)
+                                            .show();
+                                else
+                                    new IonAlert(getActivity(), IonAlert.ERROR_TYPE)
+                                            .setTitleText("Sync was not successful")
+                                            .setConfirmText("Done")
+                                            .setConfirmClickListener(IonAlert::dismissWithAnimation)
+                                            .show();
+                            });
+                            return null;
+                        });
+                        dialog.show();
+                    }
+                    showAdapter.notifyDataSetChanged();
+                    swipeRefreshLayout.setRefreshing(false);
                 });
             }
-            swipeRefreshLayout.setRefreshing(false);
         });
-
-
         return root;
     }
 

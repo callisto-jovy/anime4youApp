@@ -32,8 +32,8 @@ public class MyAnimeListUpdateEntryTask extends TaskExecutor implements Callable
     }
 
 
-    public void executeAsync(Callback<Integer> callback) {
-        super.executeAsync(this, callback);
+    public void executeAsync(Callback<Integer> responseCode) {
+        super.executeAsync(this, responseCode);
     }
 
     @Override

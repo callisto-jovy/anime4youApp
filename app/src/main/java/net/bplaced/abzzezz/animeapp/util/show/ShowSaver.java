@@ -71,7 +71,8 @@ public class ShowSaver {
     private void commitShow(final Show show) {
         final String preferenceSize = String.valueOf(preferences.getAll().size());
         editor.putString(preferenceSize, show.toString());
-        Logger.log("State committing show: " + editor.commit(), Logger.LogType.INFO);
+
+        editor.commit();
     }
 
     /**
@@ -245,4 +246,12 @@ public class ShowSaver {
     }
 
 
+    public void clear() {
+        for (int i = 0; i < shows.size(); i++) {
+            editor.remove(String.valueOf(i));
+        }
+        shows.clear();
+        editor.commit();
+
+    }
 }

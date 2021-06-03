@@ -25,7 +25,6 @@ import java.util.concurrent.TimeUnit;
 
 public class MyAnimeListTokenTask extends TaskExecutor implements Callable<Optional<MyAnimeListToken>>, MyAnimeListHolder {
 
-
     private final String username, password;
 
     public MyAnimeListTokenTask(final String username, final String password) {

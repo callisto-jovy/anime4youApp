@@ -8,14 +8,34 @@ package net.bplaced.abzzezz.animeapp.util.datatypes;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ArrayHelper {
-
+    /**
+     * Counts all the "truths" in a given array
+     *
+     * @param array array to examine
+     * @return the total amount of "true" indices
+     */
     public static int getTotalTruthsInArray(final boolean[] array) {
         int i = 0;
         for (final boolean b : array) {
             if (b) i++;
+        }
+        return i;
+    }
+
+    /**
+     * Counts all the ... in the given array
+     *
+     * @param array array to examine
+     * @return the total amount of "true" indices
+     */
+    public static <V> int getTotalInArray(final V[] array, final Predicate<V> predicate) {
+        int i = 0;
+        for (final V v0 : array) {
+            if (predicate.test(v0)) i++;
         }
         return i;
     }

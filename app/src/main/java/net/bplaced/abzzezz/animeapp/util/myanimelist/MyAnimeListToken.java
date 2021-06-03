@@ -24,8 +24,8 @@ public class MyAnimeListToken {
     }
 
     public MyAnimeListToken(final JSONObject jsonObject) throws JSONException {
-        this.refreshToken = jsonObject.getString("access_T");
-        this.accessToken = jsonObject.getString("refresh_T");
+        this.accessToken = jsonObject.getString("access_T");
+        this.refreshToken = jsonObject.getString("refresh_T");
         this.tokenType = jsonObject.getString("t_type");
         this.expiration = jsonObject.getLong("exp");
     }

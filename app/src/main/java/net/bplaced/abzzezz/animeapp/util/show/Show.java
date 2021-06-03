@@ -11,6 +11,7 @@ import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.datatypes.ArrayHelper;
 import net.bplaced.abzzezz.animeapp.util.json.JSONHelper;
 import net.bplaced.abzzezz.animeapp.util.provider.Provider;
+import net.sandrohc.jikan.model.enums.UserAnimeWatchingStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,10 +23,12 @@ public class Show {
 
     private final String malID; //the Myanimelist show id
     private final String showTitle; //the show's title
-    private final double showScore; //the show's score, mostly rounded to two digits
+    private double showScore; //the show's score, mostly rounded to two digits
     private final String imageURL; //the image url
     private final int episodeCount; //the total amount of episodes
-    private boolean[] episodesWatched; //Keep track of all the individual episodes watched
+    private final boolean[] episodesWatched; //Keep track of all the individual episodes watched
+
+    private final UserAnimeWatchingStatus watchingStatus;
 
     private final JSONObject providers; //Provider information for each provider
 
@@ -45,6 +48,7 @@ public class Show {
         this.imageURL = imageURL;
         this.showScore = showScore;
         this.episodesWatched = new boolean[episodeCount];
+        this.watchingStatus = UserAnimeWatchingStatus.UNKNOWN;
         this.providers = new JSONObject();
     }
 
@@ -57,7 +61,7 @@ public class Show {
      * @param imageURL     image url from MAL
      * @param showScore    the year the show was released
      */
-    public Show(String id, String title, int episodeCount, String imageURL, final double showScore, final int episodesWatched) {
+    public Show(String id, String title, int episodeCount, String imageURL, final double showScore, final int episodesWatched, final UserAnimeWatchingStatus watchingStatus) {
         this.malID = id;
         this.showTitle = title;
         this.episodeCount = episodeCount;
@@ -68,6 +72,7 @@ public class Show {
             Arrays.fill(this.episodesWatched, true);
         else
             Arrays.fill(this.episodesWatched, 0, episodesWatched, true);
+        this.watchingStatus = watchingStatus;
         this.providers = new JSONObject();
     }
 
@@ -85,6 +90,7 @@ public class Show {
         this.imageURL = showJSON.getString(Constant.SHOW_IMAGE_URL);
         this.showScore = showJSON.optDouble(Constant.SHOW_SCORE, 0);
         this.episodesWatched = JSONHelper.getBooleanArray(showJSON.optJSONArray(Constant.SHOW_EPISODES_WATCHED), episodeCount);
+        this.watchingStatus = UserAnimeWatchingStatus.fromNumber(showJSON.optInt(Constant.SHOW_WATCHING_STATUS));
         this.providers = showJSON.getJSONObject("provider_info");
     }
 
@@ -179,13 +185,22 @@ public class Show {
                     .put(Constant.SHOW_SCORE, getShowScore())
                     .put(Constant.SHOW_IMAGE_URL, getImageURL())
                     .put(Constant.SHOW_EPISODE_COUNT, getEpisodeCount())
-                    .put(Constant.SHOW_EPISODE_COUNT, getEpisodesWatched())
+                    .put(Constant.SHOW_WATCHING_STATUS, getWatchingStatus().order)
+                    .put(Constant.SHOW_EPISODES_WATCHED, getEpisodesWatched())
                     .put("provider_info", providers)
                     .toString();
         } catch (final JSONException e) {
             e.printStackTrace();
             return "{}"; //Empty json object
         }
+    }
+
+    public UserAnimeWatchingStatus getWatchingStatus() {
+        return watchingStatus;
+    }
+
+    public void setShowScore(double showScore) {
+        this.showScore = showScore;
     }
 
     public double getShowScore() {
@@ -214,10 +229,6 @@ public class Show {
 
     public int getEpisodesWatched() {
         return ArrayHelper.getTotalTruthsInArray(getEpisodesWatched0());
-    }
-
-    public void setEpisodesWatched(boolean[] episodesWatched) {
-        this.episodesWatched = episodesWatched;
     }
 
     public void setEpisodesWatched(final int index, final boolean b) {
