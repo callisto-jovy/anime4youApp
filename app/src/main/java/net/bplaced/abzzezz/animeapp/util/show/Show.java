@@ -23,14 +23,13 @@ public class Show {
 
     private final String malID; //the Myanimelist show id
     private final String showTitle; //the show's title
-    private double showScore; //the show's score, mostly rounded to two digits
     private final String imageURL; //the image url
     private final int episodeCount; //the total amount of episodes
     private final boolean[] episodesWatched; //Keep track of all the individual episodes watched
-
-    private final UserAnimeWatchingStatus watchingStatus;
-
+    private UserAnimeWatchingStatus watchingStatus;
     private final JSONObject providers; //Provider information for each provider
+    private double showScore; //the show's score, mostly rounded to two digits
+    private final int ownScore; //the user's own score
 
     /**
      * Basic Show object constructed from MAL data
@@ -49,6 +48,7 @@ public class Show {
         this.showScore = showScore;
         this.episodesWatched = new boolean[episodeCount];
         this.watchingStatus = UserAnimeWatchingStatus.UNKNOWN;
+        this.ownScore = 0;
         this.providers = new JSONObject();
     }
 
@@ -59,14 +59,15 @@ public class Show {
      * @param title        Title fetched from MAL
      * @param episodeCount episode count
      * @param imageURL     image url from MAL
-     * @param showScore    the year the show was released
+     * @param ownScore     the year the show was released
      */
-    public Show(String id, String title, int episodeCount, String imageURL, final double showScore, final int episodesWatched, final UserAnimeWatchingStatus watchingStatus) {
+    public Show(String id, String title, int episodeCount, String imageURL, final int ownScore, final int episodesWatched, final UserAnimeWatchingStatus watchingStatus) {
         this.malID = id;
         this.showTitle = title;
         this.episodeCount = episodeCount;
         this.imageURL = imageURL;
-        this.showScore = showScore;
+        this.ownScore = ownScore;
+        this.showScore = 0; //TODO: Get the show's actual score
         this.episodesWatched = new boolean[episodeCount];
         if (episodesWatched > episodeCount)
             Arrays.fill(this.episodesWatched, true);
@@ -89,6 +90,7 @@ public class Show {
         this.episodeCount = showJSON.optInt(Constant.SHOW_EPISODE_COUNT);
         this.imageURL = showJSON.getString(Constant.SHOW_IMAGE_URL);
         this.showScore = showJSON.optDouble(Constant.SHOW_SCORE, 0);
+        this.ownScore = showJSON.optInt(Constant.SHOW_OWN_SCORE);
         this.episodesWatched = JSONHelper.getBooleanArray(showJSON.optJSONArray(Constant.SHOW_EPISODES_WATCHED), episodeCount);
         this.watchingStatus = UserAnimeWatchingStatus.fromNumber(showJSON.optInt(Constant.SHOW_WATCHING_STATUS));
         this.providers = showJSON.getJSONObject("provider_info");
@@ -131,6 +133,7 @@ public class Show {
                 providerJSON.put("time", System.currentTimeMillis()); //Add the timestamp for later comparison
             } catch (final JSONException e) {
                 e.printStackTrace();
+                return;
             }
             //Finally, update the provider json
             this.updateProviderJSON(provider, providerJSON);
@@ -183,6 +186,7 @@ public class Show {
                     .put(Constant.SHOW_ID, getID())
                     .put(Constant.SHOW_TITLE, getShowTitle())
                     .put(Constant.SHOW_SCORE, getShowScore())
+                    .put(Constant.SHOW_OWN_SCORE, getOwnScore())
                     .put(Constant.SHOW_IMAGE_URL, getImageURL())
                     .put(Constant.SHOW_EPISODE_COUNT, getEpisodeCount())
                     .put(Constant.SHOW_WATCHING_STATUS, getWatchingStatus().order)
@@ -195,16 +199,25 @@ public class Show {
         }
     }
 
+
+    public void setWatchingStatus(UserAnimeWatchingStatus watchingStatus) {
+        this.watchingStatus = watchingStatus;
+    }
+
+    public int getOwnScore() {
+        return ownScore;
+    }
+
     public UserAnimeWatchingStatus getWatchingStatus() {
         return watchingStatus;
     }
 
-    public void setShowScore(double showScore) {
-        this.showScore = showScore;
-    }
-
     public double getShowScore() {
         return showScore;
+    }
+
+    public void setShowScore(double showScore) {
+        this.showScore = showScore;
     }
 
     public String getID() {

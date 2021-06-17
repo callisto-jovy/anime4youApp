@@ -27,10 +27,12 @@ import java.util.function.Consumer;
 
 public class MyAnimeList implements MyAnimeListHolder {
 
-    private boolean wasAccountAdded;
+    /**
+     * TODO: Directly sync new additions
+     */
     private final SharedPreferences preferences;
     private final SharedPreferences.Editor editor;
-
+    private boolean wasAccountAdded;
     private MyAnimeListToken myToken;
     private String username;
 
@@ -118,6 +120,11 @@ public class MyAnimeList implements MyAnimeListHolder {
         });
     }
 
+    /**
+     * Starts a new async task to update the show's episodes
+     *
+     * @param show show to update
+     */
     public void updateShowEpisodes(final Show show) {
         this.checkToken(unused -> updateShowEpisodes(show));
 
@@ -135,14 +142,21 @@ public class MyAnimeList implements MyAnimeListHolder {
             });
     }
 
-    public void updateShowState(final Show show, final String status) {
+    /**
+     * Starts a new async task to update the show's watching status
+     *
+     * @param show   show to apply the update to
+     * @param status myanimelistwatchingstatus to get the status
+     */
+    public void updateShowState(final Show show, final MyAnimeListWatchingStatus status) {
         this.checkToken(unused -> updateShowState(show, status));
 
         if (isSyncable())
-            new MyAnimeListUpdateEntryTask(show.getID(), myToken, new String[]{"status", status}).executeAsync(new TaskExecutor.Callback<Integer>() {
+            new MyAnimeListUpdateEntryTask(show.getID(), myToken, new String[]{"status", status.getString()}).executeAsync(new TaskExecutor.Callback<Integer>() {
                 @Override
                 public void onComplete(final Integer responseCode) {
                     Logger.log("Status code:" + responseCode, Logger.LogType.INFO);
+                    show.setWatchingStatus(status.getUserAnimeWatchingStatus());
                 }
 
                 @Override
@@ -160,6 +174,7 @@ public class MyAnimeList implements MyAnimeListHolder {
                 @Override
                 public void onComplete(final Integer responseCode) {
                     Logger.log("Status code:" + responseCode, Logger.LogType.INFO);
+                    show.setShowScore(score);
                 }
 
                 @Override

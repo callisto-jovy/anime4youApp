@@ -33,8 +33,6 @@ public class MyAnimeListSyncTask extends TaskExecutor implements Callable<Boolea
 
     @Override
     public Boolean call() throws Exception {
-        //Plan to watch = 6
-        //Watching = 1
         final UserAnimeQueryFactory animeQueryFactory = jikan
                 .query()
                 .user(username)

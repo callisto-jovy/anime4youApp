@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
 import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
+import com.afollestad.materialdialogs.input.DialogInputExtKt;
 import com.afollestad.materialdialogs.list.DialogSingleChoiceExtKt;
 import com.google.android.material.slider.Slider;
 import com.squareup.picasso.Picasso;
@@ -38,8 +40,6 @@ import net.bplaced.abzzezz.animeapp.util.provider.Provider;
 import net.bplaced.abzzezz.animeapp.util.provider.Providers;
 import net.bplaced.abzzezz.animeapp.util.show.Show;
 import net.bplaced.abzzezz.animeapp.util.ui.ImageUtil;
-import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder;
-import net.bplaced.abzzezz.animeapp.util.ui.InputDialogBuilder.InputDialogListener;
 
 import java.io.File;
 import java.util.Arrays;
@@ -66,7 +66,6 @@ public class SelectedActivity extends AppCompatActivity {
 
         this.show = (Show) IntentHelper.getObjectForKey("show"); //Receive show object from intent helper
         this.showDirectory = new File(getFilesDir(), show.getID()); //Set the show's directory
-
 
         //Fill in labels
         ((TextView) this.findViewById(R.id.selected_show_title_text_view)).setText(show.getShowTitle());
@@ -114,7 +113,8 @@ public class SelectedActivity extends AppCompatActivity {
                         refreshAdapter(); //Refresh the adapter so all changes are shown
                     }
                     //Display a little message
-                    Toast.makeText(this,
+                    Toast.makeText(
+                            this,
                             String.format(Locale.ENGLISH, "Refreshed episodes for %s, new episode count for provider %s %d", show.getShowTitle(), requestedProvider.getName(), jsonArray.length()),
                             Toast.LENGTH_SHORT
                     ).show();
@@ -123,8 +123,7 @@ public class SelectedActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(
                         this,
-                        String.format(Locale.ENGLISH, "You have already refreshed %d minutes ago. Please wait five minutes",
-                                TimeUnit.MILLISECONDS.toMinutes(showTimestampDifference)),
+                        String.format(Locale.ENGLISH, "You have already refreshed %d minutes ago. Please wait five minutes", TimeUnit.MILLISECONDS.toMinutes(showTimestampDifference)),
                         Toast.LENGTH_SHORT
                 ).show();
             }
@@ -140,6 +139,7 @@ public class SelectedActivity extends AppCompatActivity {
         try (final Stream<Providers> providerStream = Stream.of(Providers.values())) {
             arrayAdapter.addAll(providerStream.filter(provider -> provider != Providers.NULL).map(Enum::name).toArray(String[]::new));
         }
+
         providerSpinner.setAdapter(arrayAdapter);
 
         providerSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -164,16 +164,17 @@ public class SelectedActivity extends AppCompatActivity {
         this.episodeAdapter = new EpisodeAdapter(show.getEpisodeCount(), this);
 
         //Episode list view
-        final GridView gridView = findViewById(R.id.show_episode_item_grid);
-        gridView.setAdapter(episodeAdapter);
+        final GridView episodeGrid = findViewById(R.id.show_episode_item_grid);
+        episodeGrid.setAdapter(episodeAdapter);
 
-        gridView.setOnItemClickListener((adapterView, view, index, l) -> {
+        episodeGrid.setOnItemClickListener((adapterView, view, index, l) -> {
             final EpisodeBottomSheet episodeBottomSheet = new EpisodeBottomSheet(SelectedActivity.this, showCover, index);
             episodeBottomSheet.show(getSupportFragmentManager(), "Episode Bottom Sheet");
         });
 
         findViewById(R.id.download_show_button).setOnClickListener(listener ->
-                getEpisode(AnimeAppMain.getInstance().getShowSaver().getLatestEpisode(showDirectory),
+                getEpisode(
+                        AnimeAppMain.getInstance().getShowSaver().getLatestEpisode(showDirectory),
                         show.getEpisodeCount(),
                         0,
                         false));
@@ -204,52 +205,48 @@ public class SelectedActivity extends AppCompatActivity {
         final int itemID = item.getItemId();
 
         if (itemID == R.id.download_bound) {
-            final InputDialogBuilder dialogBuilder = new InputDialogBuilder(new InputDialogListener() {
-                @Override
-                public void onDialogInput(final String text) {
-                    getEpisode(AnimeAppMain.getInstance().getShowSaver().getLatestEpisode(showDirectory), Integer.parseInt(text), 0, false);
-                }
+            final MaterialDialog inputBottomDialog = new MaterialDialog(this, new BottomSheet());
+            inputBottomDialog.setTitle("Enter bound");
 
-                @Override
-                public void onDialogDenied() {
-                }
+            DialogInputExtKt.input(inputBottomDialog, null, null, null, null, InputType.TYPE_CLASS_NUMBER, null, true, false, (materialDialog, charSequence) -> {
+                getEpisode(AnimeAppMain.getInstance().getShowSaver().getLatestEpisode(showDirectory), Integer.parseInt(charSequence.toString()), 0, false);
+                return null;
             });
-            dialogBuilder.showInput("Download bound", "Enter bound", this);
+            inputBottomDialog.show();
+
         } else if (itemID == R.id.set_show_status) {
             final List<String> items = Arrays.asList(
                     getString(R.string.show_status_item_watching),
                     getString(R.string.show_status_item_completed),
                     getString(R.string.show_status_item_on_hold),
                     getString(R.string.show_status_item_dropped),
-                    getString(R.string.show_status_item_plan_to_watch)
-            );
+                    getString(R.string.show_status_item_plan_to_watch));
 
             final int i = MyAnimeListWatchingStatus.getFromStatus(getShow().getWatchingStatus()).getIndex();
 
-            final MaterialDialog dialog = new MaterialDialog(this, new BottomSheet());
-            dialog.title(null, "Select state");
-            DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, null, items, null, i, true, (materialDialog, integer, s) -> {
-                AnimeAppMain.getInstance().getMyAnimeList().updateShowState(getShow(), MyAnimeListWatchingStatus.getFromIndex(integer).getString());
+            final MaterialDialog listBottomDialog = new MaterialDialog(this, new BottomSheet());
+            listBottomDialog.setTitle("Select state");
+            DialogSingleChoiceExtKt.listItemsSingleChoice(listBottomDialog, null, items, null, i, true, (materialDialog, integer, s) -> {
+                AnimeAppMain.getInstance().getMyAnimeList().updateShowState(getShow(), MyAnimeListWatchingStatus.getFromIndex(integer));
                 return null;
             });
-            dialog.show();
-
+            listBottomDialog.show();
         } else if (itemID == R.id.set_show_score) {
-            final MaterialDialog dialog = new MaterialDialog(this, new BottomSheet());
-            dialog.title(null, "Select score");
-            DialogCustomViewExtKt.customView(dialog, R.layout.dialog_slider, null, false, true, false, true);
+            final MaterialDialog sliderBottomSheet = new MaterialDialog(this, new BottomSheet());
+            sliderBottomSheet.setTitle("Select score");
+            DialogCustomViewExtKt.customView(sliderBottomSheet, R.layout.dialog_slider, null, false, true, false, true);
 
-            ((Slider) dialog.getView().findViewById(R.id.seekBar)).setValue((float) getShow().getShowScore());
+            ((Slider) sliderBottomSheet.getView().findViewById(R.id.seekBar)).setValue(getShow().getOwnScore()); //Set the default own score
 
-            dialog.positiveButton(null, "Set", materialDialog -> {
+            sliderBottomSheet.positiveButton(null, "Set", materialDialog -> {
                 assert materialDialog.getView() != null : "Custom view is null";
 
-                final Slider seekBar = materialDialog.getView().findViewById(R.id.seekBar);
-                AnimeAppMain.getInstance().getMyAnimeList().updateShowScore(getShow(), (int) seekBar.getValue());
-                getShow().setShowScore(seekBar.getValue());
+                final Slider slider = materialDialog.getView().findViewById(R.id.seekBar);
+                AnimeAppMain.getInstance().getMyAnimeList().updateShowScore(getShow(), (int) slider.getValue());
+                getShow().setShowScore(slider.getValue());
                 return null;
             });
-            dialog.show();
+            sliderBottomSheet.show();
         }
         return super.onOptionsItemSelected(item);
     }
