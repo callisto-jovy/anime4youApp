@@ -11,11 +11,11 @@ import java.util.regex.Pattern;
 public interface GogoAnimeHolder {
 
     String BASE_URL = "https://gogoanime.sh";
-
-    String API_URL = "https://gogo-play.net/ajax.php?id=%s";
+    //Download API endpoint
+    String API_URL = "https://streamani.net/download?id=%s";
     //Start, end, anime-id, Returns a "list" containing all redirects to the other episodes
-    String EPISODE_API_URL = "https://ajax.gogocdn.net/ajax/load-list-episode?ep_start=%d&ep_end=%d&id=%d";
-
+    String EPISODE_API_URL = "https://ajax.gogo-load.com/ajax/load-list-episode?ep_start=%d&ep_end=%d&id=%d";
+    //TODO: New search API (it ain't broke, so don't fix it :))
     String SEARCH_URL = "https://gogoanime.so/search.html?keyword=%s";
 
     Pattern PATTERN = Pattern.compile("id=.+&");

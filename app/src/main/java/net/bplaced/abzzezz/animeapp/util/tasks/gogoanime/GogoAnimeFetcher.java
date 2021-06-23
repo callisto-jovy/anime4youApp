@@ -6,6 +6,7 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
+import ga.abzzezz.util.stringing.StringUtil;
 import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.provider.holders.GogoAnimeHolder;
 import org.json.JSONArray;
@@ -15,9 +16,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import java.util.stream.Collector;
 
 /**
@@ -29,7 +30,7 @@ public class GogoAnimeFetcher implements GogoAnimeHolder {
     private final Document showDocument;
 
     public GogoAnimeFetcher(final String urlIn) throws IOException {
-        this.showDocument = createGogoConnection(urlIn, Constant.USER_AGENT).get();
+        this.showDocument = createGogoConnection(urlIn).get();
         this.fetchedReferrals = this.fetchReferrals();
     }
 
@@ -58,7 +59,7 @@ public class GogoAnimeFetcher implements GogoAnimeHolder {
      */
     private static JSONArray collectReferrals(int epiStart, int epiEnd, int id) throws IOException {
         final String episodesURL = String.format(Locale.ENGLISH, EPISODE_API_URL, epiStart, epiEnd, id); //Format episode request URL
-        final Document episodesDocument = createGogoCdn(episodesURL, Constant.USER_AGENT).get(); //Create httpsurlconnection
+        final Document episodesDocument = createGogoCdn(episodesURL).get(); //Create httpsurlconnection
 
         return episodesDocument.body().getElementById("episode_related")
                 .children()
@@ -78,23 +79,30 @@ public class GogoAnimeFetcher implements GogoAnimeHolder {
      * @param referral referral to the site
      * @return the
      */
-    public static Optional<String> fetchIDLink(final String referral) {
+    public static Optional<String> fetchDownloadLink(final String referral) {
         if (referral.isEmpty()) return Optional.empty(); //Empty case, return empty
 
         try {
-            final Document episodeDocument = createGogoCdn(referral, Constant.USER_AGENT).get();
+            final Document episodeDocument = createGogoCdn(referral).get();
 
-            final String src = episodeDocument.selectFirst("iframe").attr("src");
-            final Matcher matcher = PATTERN.matcher(src);
+            final String downloadAPIURL = episodeDocument.getElementsByClass("dowloads").get(0).select("a").attr("href");
+            final Document downloadAPIDocument = Jsoup.connect(downloadAPIURL).userAgent(Constant.USER_AGENT).get();
 
-            if (matcher.find()) {
-                return Optional.of(String.format(API_URL, matcher.group().substring(3, matcher.group().length() - 1)));
-            } else return Optional.empty();
+
+            return downloadAPIDocument.getElementsByClass("dowload")
+                    .select("a")
+                    .stream()
+                    .max(Comparator.comparingInt(value -> {
+                        String s = StringUtil.extractNumber(value.ownText());
+                        return Integer.parseInt(s.isEmpty() ? "-1" : s);
+                    }))
+                    .map(element -> element.attr("href"));
         } catch (final IOException e) {
             e.printStackTrace();
             return Optional.empty();
         }
     }
+
 
     /**
      * Calls gogoanime's search api
@@ -114,23 +122,21 @@ public class GogoAnimeFetcher implements GogoAnimeHolder {
     /**
      * Create jsoup connection
      *
-     * @param url       url in
-     * @param userAgent user agent to use
+     * @param url url in
      * @return pre constructed connection
      */
-    private static Connection createGogoConnection(final String url, final String userAgent) {
-        return Jsoup.connect(url).userAgent(userAgent).header("authority", "gogoanime.so").referrer("https://gogoanime.so/search.html");
+    private static Connection createGogoConnection(final String url) {
+        return Jsoup.connect(url).userAgent(Constant.USER_AGENT).header("authority", "gogoanime.so").referrer("https://gogoanime.so/search.html");
     }
 
     /**
      * Create jsoup connection
      *
      * @param url       url in
-     * @param userAgent user agent to use
      * @return pre constructed connection
      */
-    private static Connection createGogoCdn(final String url, final String userAgent) {
-        return Jsoup.connect(url).userAgent(userAgent).header("authority", "ajax.gogocdn.net");
+    private static Connection createGogoCdn(final String url) {
+        return Jsoup.connect(url).userAgent(Constant.USER_AGENT).header("authority", "ajax.gogocdn.net");
     }
 
     /**

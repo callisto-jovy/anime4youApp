@@ -6,17 +6,23 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
-import com.arthenica.mobileffmpeg.FFmpeg;
+import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
+import net.bplaced.abzzezz.animeapp.util.Constant;
+import net.bplaced.abzzezz.animeapp.util.connection.RBCWrapper;
+import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.tasks.download.EpisodeDownloadTask;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.File;
-import java.util.LinkedList;
-import java.util.List;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.channels.Channels;
 
 public class GogoAnimeEpisodeDownloadTask extends EpisodeDownloadTask {
 
-    private long ffmpegTask;
+    private FileOutputStream fileOutputStream;
 
     public GogoAnimeEpisodeDownloadTask(SelectedActivity application, String url, String name, File outDir, int[] count) {
         super(application, url, name, outDir, count);
@@ -24,43 +30,44 @@ public class GogoAnimeEpisodeDownloadTask extends EpisodeDownloadTask {
 
     @Override
     public String call() throws Exception {
-        if (!outDir.exists()) outDir.mkdir();
-        this.outFile = new File(outDir, count[1] + ".mp4");
         try {
-            final String extension = url.substring(url.lastIndexOf(".") + 1);
-            if (extension.equals("mp4")) {
-                return super.call();
-            } else if (extension.equals("m3u8")) {
-                final List<String> ffmpegArguments = new LinkedList<>();
-                //Input
-                ffmpegArguments.add("-i");
-                ffmpegArguments.add(url);
+            final HttpsURLConnection connection = URLUtil.createHTTPSURLConnection(url, 0, 0,
+                    new String[]{"User-Agent", Constant.USER_AGENT}, new String[]{"Range", "bytes=0-"});
 
-                ffmpegArguments.add("-vcodec");
-                ffmpegArguments.add("copy");
-                ffmpegArguments.add("-c:a");
-                ffmpegArguments.add("copy");
-                ffmpegArguments.add("-acodec");
-                ffmpegArguments.add("mp3");
-                //Output
-                ffmpegArguments.add(outFile.toString());
+            connection.setInstanceFollowRedirects(true);
 
-                this.ffmpegTask = this.startFFDefaultTask(ffmpegArguments, url);
-                return null;
-            } else {
-                progressHandler.onErrorThrown(getError("Unexpected video format"));
-                return null;
-            }
+            progressHandler.receiveTotalSize(connection.getContentLength());
 
-        } catch (final StringIndexOutOfBoundsException e) {
+            URLUtil.copyFileFromRBC(new RBCWrapper(
+                            Channels.newChannel(connection.getInputStream()),
+                            connection.getContentLength(),
+                            progressHandler::onDownloadProgress
+                    ),
+                    outFile,
+                    fileOutputStream -> this.fileOutputStream = fileOutputStream);
+
+            Logger.log("Done copying streams, closing stream", Logger.LogType.INFO);
+
+            progressHandler.onDownloadCompleted(name.concat(": ") + count[1]);
+            return null;
+        } catch (final MalformedURLException e) {
             progressHandler.onErrorThrown(getError(e));
+            this.cancelExecution();
             return null;
         }
     }
 
     @Override
     public void cancelExecution() {
-        FFmpeg.cancel(ffmpegTask);
+        //Flush and close the stream if needed
+        if (this.fileOutputStream != null) {
+            try {
+                this.fileOutputStream.flush();
+                this.fileOutputStream.close();
+            } catch (final IOException e) {
+                sendErrorNotification(e.getLocalizedMessage());
+            }
+        }
         super.cancelExecution();
     }
 

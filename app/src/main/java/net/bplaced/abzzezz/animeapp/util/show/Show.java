@@ -28,8 +28,8 @@ public class Show {
     private final boolean[] episodesWatched; //Keep track of all the individual episodes watched
     private UserAnimeWatchingStatus watchingStatus;
     private final JSONObject providers; //Provider information for each provider
-    private double showScore; //the show's score, mostly rounded to two digits
-    private final int ownScore; //the user's own score
+    private final double showScore; //the show's score, mostly rounded to two digits
+    private int ownScore; //the user's own score
 
     /**
      * Basic Show object constructed from MAL data
@@ -182,6 +182,7 @@ public class Show {
     @Override
     public String toString() {
         try {
+            System.out.println(Arrays.toString(getEpisodesWatched0()));
             return new JSONObject()
                     .put(Constant.SHOW_ID, getID())
                     .put(Constant.SHOW_TITLE, getShowTitle())
@@ -190,7 +191,7 @@ public class Show {
                     .put(Constant.SHOW_IMAGE_URL, getImageURL())
                     .put(Constant.SHOW_EPISODE_COUNT, getEpisodeCount())
                     .put(Constant.SHOW_WATCHING_STATUS, getWatchingStatus().order)
-                    .put(Constant.SHOW_EPISODES_WATCHED, getEpisodesWatched())
+                    .put(Constant.SHOW_EPISODES_WATCHED, JSONHelper.getBooleanArrayAsJSONArray(getEpisodesWatched0()))
                     .put("provider_info", providers)
                     .toString();
         } catch (final JSONException e) {
@@ -202,6 +203,7 @@ public class Show {
 
     public void setWatchingStatus(UserAnimeWatchingStatus watchingStatus) {
         this.watchingStatus = watchingStatus;
+        updateShow(); //Ensure progress is saved
     }
 
     public int getOwnScore() {
@@ -214,10 +216,6 @@ public class Show {
 
     public double getShowScore() {
         return showScore;
-    }
-
-    public void setShowScore(double showScore) {
-        this.showScore = showScore;
     }
 
     public String getID() {
@@ -240,11 +238,25 @@ public class Show {
         return episodesWatched;
     }
 
+    public boolean isEpisodeWatched(final int index) {
+        return episodesWatched[index];
+    }
+
     public int getEpisodesWatched() {
         return ArrayHelper.getTotalTruthsInArray(getEpisodesWatched0());
     }
 
     public void setEpisodesWatched(final int index, final boolean b) {
         this.episodesWatched[index] = b;
+    }
+
+    public void setEpisodeWatched(final int index) {
+        this.episodesWatched[index] = !this.episodesWatched[index];
+        updateShow(); //Ensure the progress is saved
+    }
+
+    public void setOwnScore(int ownScore) {
+        this.ownScore = ownScore;
+        updateShow(); //Ensure the progress is saved
     }
 }

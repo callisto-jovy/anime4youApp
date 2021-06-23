@@ -13,10 +13,14 @@ import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.tasks.download.EpisodeDownloadTask;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.nio.channels.Channels;
 
 public class TwistmoeEpisodeDownloadTask extends EpisodeDownloadTask {
+
+    private FileOutputStream fileOutputStream;
 
     public TwistmoeEpisodeDownloadTask(SelectedActivity application, String url, String name, File outDir, int[] count) {
         super(application, url, name, outDir, count);
@@ -24,8 +28,6 @@ public class TwistmoeEpisodeDownloadTask extends EpisodeDownloadTask {
 
     @Override
     public String call() throws Exception {
-        if (!outDir.exists()) outDir.mkdir();
-        this.outFile = new File(outDir, count[1] + ".mp4");
         try {
             final HttpURLConnection connection = URLUtil.createHTTPSURLConnection
                     (
@@ -53,5 +55,19 @@ public class TwistmoeEpisodeDownloadTask extends EpisodeDownloadTask {
             this.cancelExecution();
             return null;
         }
+    }
+
+    @Override
+    public void cancelExecution() {
+        //Flush and close the stream if needed
+        if (this.fileOutputStream != null) {
+            try {
+                this.fileOutputStream.flush();
+                this.fileOutputStream.close();
+            } catch (final IOException e) {
+                sendErrorNotification(e.getLocalizedMessage());
+            }
+        }
+        super.cancelExecution();
     }
 }

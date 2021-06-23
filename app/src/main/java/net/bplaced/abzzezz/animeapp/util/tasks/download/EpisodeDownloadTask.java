@@ -22,20 +22,13 @@ import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.main.ui.home.SelectedActivity;
-import net.bplaced.abzzezz.animeapp.util.Constant;
 import net.bplaced.abzzezz.animeapp.util.IntentHelper;
-import net.bplaced.abzzezz.animeapp.util.connection.RBCWrapper;
-import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.crypto.M3U8Util;
 import net.bplaced.abzzezz.animeapp.util.receiver.StopDownloadReceiver;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URLConnection;
-import java.nio.channels.Channels;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -54,7 +47,6 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
     protected final File outDir;
     protected final EpisodeDownloadProgressHandler progressHandler;
     protected File outFile;
-    protected FileOutputStream fileOutputStream; //Fileoutputstream, can be closed if canceled
     private boolean cancel;
     private NotificationManagerCompat notificationManagerCompat;
     private NotificationCompat.Builder notification;
@@ -129,32 +121,7 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
 
     @Override
     public String call() throws Exception {
-        Logger.log("New download thread started: " + notifyID, Logger.LogType.INFO);
-        if (!outDir.exists()) outDir.mkdir();
-        this.outFile = new File(outDir, count[1] + ".mp4");
-        try {
-            final URLConnection connection = URLUtil.createURLConnection(url, 0, 0,
-                    new String[]{"User-Agent", Constant.USER_AGENT});
-
-            progressHandler.receiveTotalSize(connection.getContentLength());
-
-            URLUtil.copyFileFromRBC(new RBCWrapper(
-                            Channels.newChannel(connection.getInputStream()),
-                            connection.getContentLength(),
-                            progressHandler::onDownloadProgress
-                    ),
-                    outFile,
-                    fileOutputStream -> this.fileOutputStream = fileOutputStream);
-
-            Logger.log("Done copying streams, closing stream", Logger.LogType.INFO);
-
-            progressHandler.onDownloadCompleted(name.concat(": ") + count[1]);
-            return null;
-        } catch (final MalformedURLException e) {
-            progressHandler.onErrorThrown(getError(e));
-            this.cancelExecution();
-            return null;
-        }
+        return "No call method defined";
     }
 
     @Override
@@ -197,6 +164,10 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
         Logger.log("Assigned thread id: " + notifyID, Logger.LogType.INFO);
         //Put object key
         IntentHelper.addObjectForKey(this, String.valueOf(notifyID));
+
+        Logger.log("New download thread started: " + notifyID, Logger.LogType.INFO);
+        if (!outDir.exists()) outDir.mkdir();
+        this.outFile = new File(outDir, count[1] + ".mp4");
     }
 
     /**
@@ -210,18 +181,11 @@ public class EpisodeDownloadTask extends EpisodeDownloadTaskExecutor implements 
      * Cancel task
      */
     public void cancelExecution() {
-        //Flush and close the stream if needed
-        if (this.fileOutputStream != null) {
-            try {
-                this.fileOutputStream.flush();
-                this.fileOutputStream.close();
-            } catch (final IOException e) {
-                sendErrorNotification(e.getLocalizedMessage());
-            }
-        }
         this.refreshAdapter(); //Refresh the adapter
         this.cancel = true; //Set the cancel, so the
         Logger.log("Task cancelled, Streams flushed; File deleted: " + outFile.delete(), Logger.LogType.INFO);
+
+        notificationManagerCompat.cancel(notifyID);
     }
 
     /**

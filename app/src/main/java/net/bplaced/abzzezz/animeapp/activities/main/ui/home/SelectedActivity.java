@@ -242,8 +242,10 @@ public class SelectedActivity extends AppCompatActivity {
                 assert materialDialog.getView() != null : "Custom view is null";
 
                 final Slider slider = materialDialog.getView().findViewById(R.id.seekBar);
-                AnimeAppMain.getInstance().getMyAnimeList().updateShowScore(getShow(), (int) slider.getValue());
-                getShow().setShowScore(slider.getValue());
+                int sliderValue = (int) slider.getValue();
+
+                AnimeAppMain.getInstance().getMyAnimeList().updateShowScore(getShow(), sliderValue);
+                getShow().setOwnScore(sliderValue);
                 return null;
             });
             sliderBottomSheet.show();

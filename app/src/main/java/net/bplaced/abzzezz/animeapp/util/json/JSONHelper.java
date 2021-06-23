@@ -35,4 +35,12 @@ public class JSONHelper {
         return booleans;
     }
 
+    public static JSONArray getBooleanArrayAsJSONArray(final boolean[] object) {
+        final JSONArray jsonArray = new JSONArray();
+        for (boolean o : object) {
+            jsonArray.put(o);
+        }
+        return jsonArray;
+    }
+
 }

@@ -6,13 +6,10 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
-import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 
@@ -40,14 +37,7 @@ public class GogoAnimeFetchDirectTask extends TaskExecutor implements Callable<O
 
     @Override
     public Optional<String> call() throws Exception {
-        return GogoAnimeFetcher.fetchIDLink(referral).map(s -> {
-            try {
-                return getVidURL(URLUtil.collectLines(new URL(s), ""));
-            } catch (final JSONException | IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        });
+        return GogoAnimeFetcher.fetchDownloadLink(referral);
     }
 
 }

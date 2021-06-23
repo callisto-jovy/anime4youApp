@@ -74,7 +74,7 @@ public class EpisodeBottomSheet extends BottomSheetDialogFragment {
         setButtonText(markButton);
 
         markButton.setOnClickListener(v -> {
-            parent.getShow().setEpisodesWatched(episode, !parent.getShow().getEpisodesWatched0()[episode]);
+            parent.getShow().setEpisodeWatched(episode); //Increment the number of episodes watched
             AnimeAppMain.getInstance().getMyAnimeList().updateShowEpisodes(parent.getShow());
             setButtonText(markButton);
         });
@@ -91,7 +91,7 @@ public class EpisodeBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void setButtonText(final Button button) {
-        button.setText(parent.getShow().getEpisodesWatched0()[episode] ? R.string.mark_unwatched_button_text : R.string.mark_watched_button_text);
+        button.setText(parent.getShow().isEpisodeWatched(episode) ? R.string.mark_unwatched_button_text : R.string.mark_watched_button_text);
     }
 
     /**

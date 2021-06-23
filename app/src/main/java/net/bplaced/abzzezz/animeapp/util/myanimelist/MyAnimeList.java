@@ -129,7 +129,7 @@ public class MyAnimeList implements MyAnimeListHolder {
         this.checkToken(unused -> updateShowEpisodes(show));
 
         if (isSyncable())
-            new MyAnimeListUpdateEntryTask(show.getID(), myToken, new String[]{"num_episodes_watched", String.valueOf(show.getEpisodesWatched())}).executeAsync(new TaskExecutor.Callback<Integer>() {
+            new MyAnimeListUpdateEntryTask(show.getID(), myToken, new String[]{"num_watched_episodes", String.valueOf(show.getEpisodesWatched())}).executeAsync(new TaskExecutor.Callback<Integer>() {
                 @Override
                 public void onComplete(final Integer responseCode) {
                     Logger.log("Status code:" + responseCode, Logger.LogType.INFO);
@@ -137,7 +137,6 @@ public class MyAnimeList implements MyAnimeListHolder {
 
                 @Override
                 public void preExecute() {
-
                 }
             });
     }
@@ -174,7 +173,7 @@ public class MyAnimeList implements MyAnimeListHolder {
                 @Override
                 public void onComplete(final Integer responseCode) {
                     Logger.log("Status code:" + responseCode, Logger.LogType.INFO);
-                    show.setShowScore(score);
+                    show.setOwnScore(score);
                 }
 
                 @Override

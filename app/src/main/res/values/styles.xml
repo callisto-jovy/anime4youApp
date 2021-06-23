@@ -46,6 +46,12 @@
         <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
+    <style name="TextViewStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:maxLength">30</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+
     <!-- This will set the fade in animation on all your activities by default -->
     <style name="WindowAnimationTransition">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>

@@ -31,9 +31,6 @@ public class AnimePaheEpisodeDownloadTask extends EpisodeDownloadTask implements
 
     @Override
     public String call() throws Exception {
-        //M3u8 download
-        if (!outDir.exists()) outDir.mkdir();
-        this.outFile = new File(outDir, count[1] + ".mp4");
         //Fetch document
         if (url.isEmpty()) {
             this.progressHandler.onErrorThrown(getError("Video resolution"));
