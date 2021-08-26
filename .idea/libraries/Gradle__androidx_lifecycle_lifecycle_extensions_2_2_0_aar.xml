@@ -4,13 +4,14 @@
       <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/5e625fbbcdbc9929d5ac78994bcdece4/transformed/lifecycle-extensions-2.2.0/res" />
       <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/c5573eb2c5ca6a8345977198c2a81224/transformed/lifecycle-extensions-2.2.0/res" />
       <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/a5da42387a5602f8bd4cb1219c807181/transformed/lifecycle-extensions-2.2.0/res" />
-      <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/377d42a07b7cf05e818952d0c6a3df65/transformed/lifecycle-extensions-2.2.0/AndroidManifest.xml" />
       <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/377d42a07b7cf05e818952d0c6a3df65/transformed/lifecycle-extensions-2.2.0/res" />
-      <root url="jar://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/377d42a07b7cf05e818952d0c6a3df65/transformed/lifecycle-extensions-2.2.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/377d42a07b7cf05e818952d0c6a3df65/transformed/lifecycle-extensions-2.2.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/377d42a07b7cf05e818952d0c6a3df65/transformed/lifecycle-extensions-2.2.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/377d42a07b7cf05e818952d0c6a3df65/transformed/lifecycle-extensions-2.2.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-extensions/2.2.0/32e7a190b796f6853c89f5d6b92b64a6fe8318d3/lifecycle-extensions-2.2.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-extensions/2.2.0/32e7a190b796f6853c89f5d6b92b64a6fe8318d3/lifecycle-extensions-2.2.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

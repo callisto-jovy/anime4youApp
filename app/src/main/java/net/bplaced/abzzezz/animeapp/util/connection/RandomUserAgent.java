@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomUserAgent {
 
-    private static final String[] USER_AGENTS = new String[]{
+    public static final String[] USER_AGENTS = new String[]{
             "Mozilla/5.0 (compatible; MSIE 10.6; Windows NT 6.1; Trident/5.0; InfoPath.2; SLCC1; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; .NET CLR 2.0.50727) 3gpp-gba UNTRUSTED/1.0",
             "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/6.0)",
             "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)",

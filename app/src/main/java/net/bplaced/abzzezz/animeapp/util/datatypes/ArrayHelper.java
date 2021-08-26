@@ -6,12 +6,34 @@
 
 package net.bplaced.abzzezz.animeapp.util.datatypes;
 
+import net.ricecode.similarity.SimilarityStrategy;
+
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ArrayHelper {
+
+    public static int mostSimilarString(String[] array, String test, SimilarityStrategy strategy, Function<String, String>... stringManipulationFunctions) {
+        double prev = 0;
+        int best = -1;
+        for (int i = 0; i < array.length - 1; i++) {
+            String s1 = array[i];
+
+            for (final Function<String, String> stringFunction : stringManipulationFunctions)
+                s1 = stringFunction.apply(s1);
+
+            double score = strategy.score(s1, test);
+            if (score > best) {
+                best = i;
+                prev = score;
+            }
+        }
+        return best;
+    }
+
     /**
      * Counts all the "truths" in a given array
      *
@@ -48,5 +70,4 @@ public class ArrayHelper {
                                 value -> value[1])
                 );
     }
-
 }

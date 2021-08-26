@@ -105,7 +105,7 @@ public class SearchFragment extends Fragment {
             final Show showAtIndex = (Show) getItem(position);
 
             view.setOnClickListener(listener -> {
-                AnimeAppMain.getInstance().getShowSaver().addShow(showAtIndex);
+                AnimeAppMain.INSTANCE.getShowSaver().addShow(showAtIndex);
                 Toast.makeText(context, "Added show!", Toast.LENGTH_SHORT).show();
             });
 

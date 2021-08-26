@@ -4,13 +4,14 @@
       <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/88115fa5b0f425cab7dc72ef1c67bb04/transformed/vectordrawable-animated-1.1.0/res" />
       <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/d9bc70f54b0588ea5866323c318851c9/transformed/vectordrawable-animated-1.1.0/res" />
       <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/34f7b55a2bb799c052e263861980f901/transformed/vectordrawable-animated-1.1.0/res" />
-      <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/22b1ed0c50035cfea7c355d50353651a/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml" />
       <root url="file://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/22b1ed0c50035cfea7c355d50353651a/transformed/vectordrawable-animated-1.1.0/res" />
-      <root url="jar://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/transforms-3/22b1ed0c50035cfea7c355d50353651a/transformed/vectordrawable-animated-1.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/22b1ed0c50035cfea7c355d50353651a/transformed/vectordrawable-animated-1.1.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/22b1ed0c50035cfea7c355d50353651a/transformed/vectordrawable-animated-1.1.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/22b1ed0c50035cfea7c355d50353651a/transformed/vectordrawable-animated-1.1.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../../../../../Runtime/gradle/caches/modules-2/files-2.1/androidx.vectordrawable/vectordrawable-animated/1.1.0/871a7705cd03bc246947638c712cdd11378233ff/vectordrawable-animated-1.1.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.vectordrawable/vectordrawable-animated/1.1.0/871a7705cd03bc246947638c712cdd11378233ff/vectordrawable-animated-1.1.0-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

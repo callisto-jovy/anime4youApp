@@ -16,7 +16,6 @@ import net.bplaced.abzzezz.animeapp.AnimeAppMain;
 import net.bplaced.abzzezz.animeapp.BuildConfig;
 import net.bplaced.abzzezz.animeapp.R;
 import net.bplaced.abzzezz.animeapp.activities.main.DrawerMainMenu;
-import net.bplaced.abzzezz.animeapp.util.tasks.UpdateTask;
 
 
 public class SplashScreen extends AppCompatActivity {
@@ -25,12 +24,9 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        AnimeAppMain.getInstance().createNotificationChannel(getApplication());
-        AnimeAppMain.getInstance().checkAndroidPermissions(this);
-        //Configure handlers
-        AnimeAppMain.getInstance().configureHandlers(getApplication());
-
-        new UpdateTask(getApplication()).executeAsync(); //Check version
+        AnimeAppMain.INSTANCE.createNotificationChannel(getApplication());
+        AnimeAppMain.INSTANCE.checkAndroidPermissions(this);
+        AnimeAppMain.INSTANCE.configureHandlers(getApplication());
 
         ((TextView) findViewById(R.id.version_text)).append("v." + BuildConfig.VERSION_NAME);   //Set version text
 
@@ -38,7 +34,7 @@ public class SplashScreen extends AppCompatActivity {
             //Start menu
             startActivity(new Intent(this, DrawerMainMenu.class));
             finish();
-        }, AnimeAppMain.getInstance().isDeveloperMode() ? 10 : 2500);
+        }, AnimeAppMain.INSTANCE.isDeveloperMode() ? 10 : 2500);
     }
 
 }

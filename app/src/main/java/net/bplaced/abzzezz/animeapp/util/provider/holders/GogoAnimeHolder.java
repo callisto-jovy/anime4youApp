@@ -10,13 +10,14 @@ import java.util.regex.Pattern;
 
 public interface GogoAnimeHolder {
 
-    String BASE_URL = "https://gogoanime.sh";
-    //Download API endpoint
-    String API_URL = "https://streamani.net/download?id=%s";
-    //Start, end, anime-id, Returns a "list" containing all redirects to the other episodes
-    String EPISODE_API_URL = "https://ajax.gogo-load.com/ajax/load-list-episode?ep_start=%d&ep_end=%d&id=%d";
-    //TODO: New search API (it ain't broke, so don't fix it :))
-    String SEARCH_URL = "https://gogoanime.so/search.html?keyword=%s";
+    String BASE_URL = "https://gogoanime.pe";
 
-    Pattern PATTERN = Pattern.compile("id=.+&");
+    String BASE_SEARCH_API = "https://gogoanime.pe/search.html?keyword=%s";
+
+    //Start, end, anime-id, Returns a "list" containing all redirects to the other episodes
+    String EPISODE_API_URL = "https://ajax.gogo-load.com/ajax/load-list-episode?ep_start=%d&ep_end=1000000&id=%d";
+
+    String FORMATTED_SEARCH_API = "https://gogoanime.pe/search.html?keyword=%s";
+
+    Pattern SOURCE_PATTERN = Pattern.compile("(?<=sources:\\[\\{file: ')[^']+");
 }

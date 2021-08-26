@@ -7,8 +7,6 @@
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -19,16 +17,6 @@ public class GogoAnimeFetchDirectTask extends TaskExecutor implements Callable<O
 
     public GogoAnimeFetchDirectTask(final String referral) {
         this.referral = referral;
-    }
-
-    /**
-     * Gets the direct video url from the formatted api link
-     *
-     * @param in read in lines
-     * @return url to mp4
-     */
-    private static String getVidURL(final String in) throws JSONException {
-        return new JSONObject(in).getJSONArray("source").getJSONObject(0).getString("file");
     }
 
     public void executeAsync(final Callback<Optional<String>> callback) {

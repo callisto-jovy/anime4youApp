@@ -6,7 +6,9 @@
 
 package net.bplaced.abzzezz.animeapp.util.tasks.gogoanime;
 
+import net.bplaced.abzzezz.animeapp.util.datatypes.ArrayHelper;
 import net.bplaced.abzzezz.animeapp.util.tasks.TaskExecutor;
+import net.ricecode.similarity.JaroStrategy;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,21 +34,25 @@ public class GogoAnimeSearchTask extends TaskExecutor implements Callable<Option
         final String[] urls = GogoAnimeFetcher.getURLsFromSearch(searchQuery);
         if (urls.length == 0) return Optional.empty(); //No urls have been found
 
+        final JaroStrategy strategy = new JaroStrategy();
+
+        final int best = ArrayHelper.mostSimilarString(urls, searchQuery, strategy, s -> s.substring(s.lastIndexOf("/")));
+
+        if (best == -1) return Optional.empty();
+
         try {
-            final GogoAnimeFetcher fetcher = new GogoAnimeFetcher(urls[0]);
+            final GogoAnimeFetcher fetcher = new GogoAnimeFetcher(urls[best]);
             final String id = fetcher.getID();
             final String episodeStart = fetcher.getEpisodeStart();
-            final String episodeEnd = fetcher.getEpisodeEnd();
 
             return Optional.of(new JSONObject()
                     .put("id", id)
                     .put("ep_start", episodeStart)
-                    .put("ep_end", episodeEnd)
                     .put("referrals", fetcher.getFetchedReferrals()
                     ));
         } catch (final IOException | JSONException e) {
             e.printStackTrace();
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 }

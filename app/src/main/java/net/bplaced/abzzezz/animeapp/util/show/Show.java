@@ -114,7 +114,7 @@ public class Show {
      * @return Difference between the current time and the timestamp
      */
     public long getTimestampDifference(final Provider provider) {
-        if (AnimeAppMain.getInstance().isDeveloperMode()) return System.currentTimeMillis();
+        if (AnimeAppMain.INSTANCE.isDeveloperMode()) return System.currentTimeMillis();
         return this.getProviderJSON(provider)
                 .map(jsonObject -> System.currentTimeMillis() - jsonObject.optLong("time"))
                 .orElse(System.currentTimeMillis());
@@ -169,11 +169,11 @@ public class Show {
      * Updates this show at it's given index
      */
     public void updateShow() {
-        final int index = AnimeAppMain.getInstance().getShowSaver().getIndex(this);
+        final int index = AnimeAppMain.INSTANCE.getShowSaver().getIndex(this);
         if (index == -1) {
             throw new IndexOutOfBoundsException("Index out of range");
         } else
-            AnimeAppMain.getInstance().getShowSaver().refreshShow(this, index);
+            AnimeAppMain.INSTANCE.getShowSaver().refreshShow(this, index);
     }
 
     /**
@@ -182,7 +182,6 @@ public class Show {
     @Override
     public String toString() {
         try {
-            System.out.println(Arrays.toString(getEpisodesWatched0()));
             return new JSONObject()
                     .put(Constant.SHOW_ID, getID())
                     .put(Constant.SHOW_TITLE, getShowTitle())
@@ -239,18 +238,19 @@ public class Show {
     }
 
     public boolean isEpisodeWatched(final int index) {
-        return episodesWatched[index];
+        if (index >= episodeCount)
+            return false;
+        else
+            return episodesWatched[index];
     }
 
     public int getEpisodesWatched() {
         return ArrayHelper.getTotalTruthsInArray(getEpisodesWatched0());
     }
 
-    public void setEpisodesWatched(final int index, final boolean b) {
-        this.episodesWatched[index] = b;
-    }
-
     public void setEpisodeWatched(final int index) {
+        if (index >= episodeCount) return;
+
         this.episodesWatched[index] = !this.episodesWatched[index];
         updateShow(); //Ensure the progress is saved
     }

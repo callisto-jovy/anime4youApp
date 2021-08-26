@@ -71,7 +71,7 @@ public class SelectedActivity extends AppCompatActivity {
         ((TextView) this.findViewById(R.id.selected_show_title_text_view)).setText(show.getShowTitle());
         ((TextView) this.findViewById(R.id.selected_show_id_text_view)).setText(getString(R.string.show_id, show.getID()));
         ((TextView) this.findViewById(R.id.show_directory_total_size_text_view)).append(FileUtil.calculateFileSize(showDirectory));
-        ((TextView) findViewById(R.id.selected_show_score_text_view)).setText(getString(R.string.show_score, show.getShowScore()));
+        ((TextView) this.findViewById(R.id.selected_show_score_text_view)).setText(getString(R.string.show_score, show.getShowScore()));
 
         final TextView episodeCountTextView = this.findViewById(R.id.selected_show_episode_count_text_view);
         episodeCountTextView.setText(getString(R.string.show_episodes, show.getEpisodeCount()));
@@ -174,7 +174,7 @@ public class SelectedActivity extends AppCompatActivity {
 
         findViewById(R.id.download_show_button).setOnClickListener(listener ->
                 getEpisode(
-                        AnimeAppMain.getInstance().getShowSaver().getLatestEpisode(showDirectory),
+                        AnimeAppMain.INSTANCE.getShowSaver().getLatestEpisode(showDirectory),
                         show.getEpisodeCount(),
                         0,
                         false));
@@ -209,7 +209,7 @@ public class SelectedActivity extends AppCompatActivity {
             inputBottomDialog.setTitle("Enter bound");
 
             DialogInputExtKt.input(inputBottomDialog, null, null, null, null, InputType.TYPE_CLASS_NUMBER, null, true, false, (materialDialog, charSequence) -> {
-                getEpisode(AnimeAppMain.getInstance().getShowSaver().getLatestEpisode(showDirectory), Integer.parseInt(charSequence.toString()), 0, false);
+                getEpisode(AnimeAppMain.INSTANCE.getShowSaver().getLatestEpisode(showDirectory), Integer.parseInt(charSequence.toString()), 0, false);
                 return null;
             });
             inputBottomDialog.show();
@@ -227,7 +227,7 @@ public class SelectedActivity extends AppCompatActivity {
             final MaterialDialog listBottomDialog = new MaterialDialog(this, new BottomSheet());
             listBottomDialog.setTitle("Select state");
             DialogSingleChoiceExtKt.listItemsSingleChoice(listBottomDialog, null, items, null, i, true, (materialDialog, integer, s) -> {
-                AnimeAppMain.getInstance().getMyAnimeList().updateShowState(getShow(), MyAnimeListWatchingStatus.getFromIndex(integer));
+                AnimeAppMain.INSTANCE.getMyAnimeList().updateShowState(getShow(), MyAnimeListWatchingStatus.getFromIndex(integer));
                 return null;
             });
             listBottomDialog.show();
@@ -244,7 +244,7 @@ public class SelectedActivity extends AppCompatActivity {
                 final Slider slider = materialDialog.getView().findViewById(R.id.seekBar);
                 int sliderValue = (int) slider.getValue();
 
-                AnimeAppMain.getInstance().getMyAnimeList().updateShowScore(getShow(), sliderValue);
+                AnimeAppMain.INSTANCE.getMyAnimeList().updateShowScore(getShow(), sliderValue);
                 getShow().setOwnScore(sliderValue);
                 return null;
             });
@@ -312,7 +312,7 @@ public class SelectedActivity extends AppCompatActivity {
      */
     public void deleteItem(final int index) {
         //Get episode file, delete then notify dataset changes
-        AnimeAppMain.getInstance().getShowSaver().getEpisodeFile(index, showDirectory).ifPresent(file -> {
+        AnimeAppMain.INSTANCE.getShowSaver().getEpisodeFile(index, showDirectory).ifPresent(file -> {
             Logger.log("Deleted: " + file.delete(), Logger.LogType.INFO);
             refreshAdapter();
         });
@@ -366,9 +366,9 @@ public class SelectedActivity extends AppCompatActivity {
 
             final CheckedTextView checkedTextView = view.findViewById(R.id.episode_int_text_view);
             checkedTextView.setText(String.valueOf(position));
-            checkedTextView.setChecked(show.getEpisodesWatched() >= position); //Every episode watched is marked (TODO: Episodes not watched in order)
+            checkedTextView.setChecked(show.isEpisodeWatched(position)); //Every episode watched is marked
             //Highlight downloaded episodes, i.e. give those text views a different color
-            if (AnimeAppMain.getInstance().getShowSaver().isEpisodeDownloaded(position, showDirectory))
+            if (AnimeAppMain.INSTANCE.getShowSaver().isEpisodeDownloaded(position, showDirectory))
                 checkedTextView.setTextColor(getColor(R.color.colorAccent));
             else checkedTextView.setTextColor(defaultTextColor); //Revert text color back to default
 

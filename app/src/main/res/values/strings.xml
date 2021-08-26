@@ -6,6 +6,8 @@
 
 <resources>
     <string name="app_name">Anime4you</string>
+    <string name="app_notification_channel_name">Anime4you-App notification channel</string>
+    <string name="app_notification_channel_description">This notification channel is used to display download notifications</string>
 
     <!-- Strings for menus -->
     <string name="menu_list">Anime List</string>

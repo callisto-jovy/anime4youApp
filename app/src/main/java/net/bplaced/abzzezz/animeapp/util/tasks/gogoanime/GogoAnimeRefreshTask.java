@@ -26,17 +26,13 @@ public class GogoAnimeRefreshTask extends TaskExecutor implements Callable<Show>
         super.executeAsync(this, callback);
     }
 
-    /*
-    TODO: Only fetches the episodes for now. Add URL to additional json!
-     */
     @Override
     public Show call() throws Exception {
         final Optional<JSONObject> providerJSON = showIn.getProviderJSON(Providers.GOGOANIME.getProvider());
 
         final int start = providerJSON.map(jsonObject -> jsonObject.optInt("ep_start")).orElse(0);
-        final int end = providerJSON.map(jsonObject -> jsonObject.optInt("ep_end")).orElse(0);
 
-        showIn.addEpisodesForProvider(GogoAnimeFetcher.fetchReferrals(showIn.getID(), start, end), Providers.GOGOANIME.getProvider());
+        showIn.addEpisodesForProvider(GogoAnimeFetcher.fetchReferrals(showIn.getID(), start), Providers.GOGOANIME.getProvider());
         return showIn;
     }
 }

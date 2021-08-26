@@ -32,7 +32,7 @@ public class OfflineImageLoader {
      */
     public static void loadImage(final String url, final Show show, final ImageView imageView, final Context context) {
         //Get image Bitmap file
-        final File imageBitmap = new File(AnimeAppMain.getInstance().getImageStorage(), show.getID());
+        final File imageBitmap = new File(AnimeAppMain.INSTANCE.getInternalImageStorage(), show.getID());
         if (!imageBitmap.exists()) {
             //Create new task
             new TaskExecutor().executeAsync(() -> {

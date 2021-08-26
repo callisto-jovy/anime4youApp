@@ -41,4 +41,24 @@
     <string name="offline_images_delete_all_confirm">Löschen</string>
     <string name="move_files_title">Alle Folgen in den internen Speicher verschieben?</string>
     <string name="move_files_confirm">Verschieben</string>
+    <string name="app_notification_channel_name">Anime4you-App Benachrichtigungen</string>
+    <string name="app_notification_channel_description">Dieser Kanal wird genutzt, um Benachrichtigungen für Downloads anzuzueigen</string>
+    <string name="show_episode">Episode: %d</string>
+    <string name="abort">Abbrechen</string>
+    <string name="password">Passwort</string>
+    <string name="username">Nutzername</string>
+    <string name="download_button_text">Herunterladen</string>
+    <string name="episode_properties">Eigenschaften</string>
+    <string name="mark_watched_button_text">Als gesehen markieren</string>
+    <string name="delete_button_text">Löschen</string>
+    <string name="play_episode_button">Abspielen</string>
+    <string name="mark_unwatched_button_text">Als ungesehen markieren</string>
+    <string name="download_bound_menu_item">Bestimmte Anzahl herunterladen</string>
+    <string name="show_status_menu_item">MyAnimeList Status aktualisieren</string>
+    <string name="show_status_item_watching">Watching</string>
+    <string name="show_status_item_completed">Completed</string>
+    <string name="show_status_item_on_hold">On Hold</string>
+    <string name="show_status_item_dropped">Dropped</string>
+    <string name="show_status_item_plan_to_watch">Plan to watch</string>
+    <string name="score_menu_item">Bewertung</string>
 </resources>

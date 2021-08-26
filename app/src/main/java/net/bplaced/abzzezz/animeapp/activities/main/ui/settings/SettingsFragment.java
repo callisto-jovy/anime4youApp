@@ -50,8 +50,8 @@ public class SettingsFragment extends Fragment {
                         .setContentText(getString(R.string.offline_images_delete_all_content))
                         .setConfirmText(getString(R.string.offline_images_delete_all_confirm))
                         .setConfirmClickListener(ionAlert -> {
-                            if (AnimeAppMain.getInstance().getImageStorage().exists() && AnimeAppMain.getInstance().getImageStorage().listFiles() != null) {
-                                for (final File imageFile : AnimeAppMain.getInstance().getImageStorage().listFiles())
+                            if (AnimeAppMain.INSTANCE.getInternalImageStorage().exists() && AnimeAppMain.INSTANCE.getInternalImageStorage().listFiles() != null) {
+                                for (final File imageFile : AnimeAppMain.INSTANCE.getInternalImageStorage().listFiles())
                                     Logger.log("Deleting file: " + imageFile.getName() + "- Success: " + imageFile.delete(), Logger.LogType.INFO);
                                 ionAlert.dismissWithAnimation();
                             }
@@ -76,7 +76,7 @@ public class SettingsFragment extends Fragment {
                         final EditText password = materialDialog.getView().findViewById(R.id.dialog_two_input_password);
                         final String username = usernameEditText.getText().toString().trim();
 
-                        AnimeAppMain.getInstance().getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
+                        AnimeAppMain.INSTANCE.getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
                             if (processFinished) {
                                 new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
                                         .setTitleText("Sync done")
@@ -113,7 +113,7 @@ public class SettingsFragment extends Fragment {
             });
 
             findPreference("clear_list").setOnPreferenceClickListener(preference -> {
-                AnimeAppMain.getInstance().getShowSaver().clear();
+                AnimeAppMain.INSTANCE.getShowSaver().clear();
                 return true;
             });
         }

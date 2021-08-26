@@ -20,46 +20,54 @@ import ga.abzzezz.util.logging.Logger;
 import net.bplaced.abzzezz.animeapp.util.connection.URLUtil;
 import net.bplaced.abzzezz.animeapp.util.myanimelist.MyAnimeList;
 import net.bplaced.abzzezz.animeapp.util.show.ShowSaver;
+import net.bplaced.abzzezz.animeapp.util.tasks.UpdateTask;
 
 import java.io.File;
 
 public class AnimeAppMain {
-
+    /**
+     * Notification Channel Identification for android's notification service
+     */
     public static final String NOTIFICATION_CHANNEL_ID = "Anime Channel";
-    private static final AnimeAppMain INSTANCE = new AnimeAppMain();
-
+    /**
+     * App Main instance
+     */
+    public static final AnimeAppMain INSTANCE = new AnimeAppMain();
+    /**
+     * The app's version, determined by the Build-Config
+     */
     private final float version;
-    private final boolean developerMode;
-    private final String notificationChannelName;
+    /**
+     * Developer mode toggle
+     * (Set to true whenever the app is under development, is set to false in final builds)
+     */
+    private final boolean developerMode = true;
+
     private boolean versionOutdated;
 
-    private File imageStorage;
-    //Show utilities
+    private File internalImageStorage;
+
     private ShowSaver showSaver;
 
-    private MyAnimeList myAnimeList;
-
+    private MyAnimeList myAnimeList; //MyAnimeList class instance
 
     public AnimeAppMain() {
         this.version = Float.parseFloat(BuildConfig.VERSION_NAME.replace(".", ""));
-        this.developerMode = true;
-        this.notificationChannelName = "AnimeChannel";
-
-    }
-
-    public static AnimeAppMain getInstance() {
-        return INSTANCE;
     }
 
     /**
-     * Configures the handlers and gets a random background
+     * Initialize service handlers, check the version & set local storage
      */
     public void configureHandlers(final Application application) {
+        Logger.log("Starting app's internal services", Logger.LogType.INFO);
         this.showSaver = new ShowSaver(application);
         this.myAnimeList = new MyAnimeList(application);
 
-        this.imageStorage = new File(application.getDataDir(), "StoredImagesOffline");
-        if (!imageStorage.exists()) Logger.log("Image file created: " + imageStorage.mkdir(), Logger.LogType.INFO);
+        this.internalImageStorage = new File(application.getDataDir(), "StoredImagesOffline");
+        if (!internalImageStorage.exists())
+            Logger.log("Image file created: " + internalImageStorage.mkdir(), Logger.LogType.INFO);
+
+        new UpdateTask(application).executeAsync(); //Check version
     }
 
     /**
@@ -88,19 +96,23 @@ public class AnimeAppMain {
      */
     public void createNotificationChannel(final Context context) {
         Logger.log("Creating new notification channel", Logger.LogType.INFO);
-        final NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, notificationChannelName, NotificationManager.IMPORTANCE_HIGH);
-        channel.setDescription("Notification channel to display download notification");
+
+        final NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, context.getString(R.string.app_notification_channel_name), NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription(context.getString(R.string.app_notification_channel_description));
         channel.setLightColor(Color.MAGENTA);
         final NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
+
+        if (isDeveloperMode())
+            notificationManager.cancelAll();
     }
 
     public MyAnimeList getMyAnimeList() {
         return myAnimeList;
     }
 
-    public File getImageStorage() {
-        return imageStorage;
+    public File getInternalImageStorage() {
+        return internalImageStorage;
     }
 
     public ShowSaver getShowSaver() {

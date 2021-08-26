@@ -50,9 +50,6 @@ public class MyAnimeListUpdateEntryTask extends TaskExecutor implements Callable
                     .ignoreContentType(true)
                     .userAgent(Constant.USER_AGENT)
                     .execute();
-
-            System.out.println(response.body());
-
             return response.statusCode();
         } catch (IOException e) {
             e.printStackTrace();

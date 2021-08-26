@@ -42,10 +42,10 @@ public class UpdateTask extends TaskExecutor implements Callable<File>, TaskExec
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @Override
     public File call() throws Exception {
-        final boolean updateNeeded = AnimeAppMain.getInstance().getVersion() < Float.parseFloat(URLUtil.collectLines(new URL(Constant.APP_VERSION_TXT), ""));
+        final boolean updateNeeded = AnimeAppMain.INSTANCE.getVersion() < Float.parseFloat(URLUtil.collectLines(new URL(Constant.APP_VERSION_TXT), ""));
         Logger.log("Update needed: " + updateNeeded, Logger.LogType.INFO);
         if (updateNeeded) {
-            AnimeAppMain.getInstance().setVersionOutdated(true);
+            AnimeAppMain.INSTANCE.setVersionOutdated(true);
 
             final File outFile = File.createTempFile("update", ".apk", context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
             final Uri outFileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", outFile);

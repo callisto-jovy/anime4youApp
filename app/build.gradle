@@ -48,29 +48,29 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.4.31'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21'
 
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation 'com.squareup.picasso:picasso:2.5.2' // Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828' // Picasso
     implementation 'com.github.oktavianto:ionalert:1.0.4' //Alerts
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'com.google.android.exoplayer:exoplayer:2.14.0' //Exo -player
-    implementation 'org.jsoup:jsoup:1.13.1' //JSOUP
+    implementation 'com.google.android.exoplayer:exoplayer:2.15.0' //Exo -player
+    implementation 'org.jsoup:jsoup:1.14.2' //JSOUP
     implementation 'net.ricecode:string-similarity:1.0.0' //String comparisons
-    implementation 'com.blankj:utilcodex:1.30.1' //Android app install
-    implementation 'com.arthenica:mobile-ffmpeg-full:4.4' //FFMPEG
-    implementation 'net.sandrohc:reactive-jikan:1.0.0' //Mal api
+    implementation 'com.blankj:utilcodex:1.30.6' //Android app install
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.4.LTS' //FFMPEG
+    implementation 'net.sandrohc:reactive-jikan:1.0.1' //Mal api
     implementation 'com.afollestad.material-dialogs:bottomsheets:3.3.0'
     implementation 'com.afollestad.material-dialogs:input:3.3.0'
     implementation 'com.afollestad.material-dialogs:core:3.3.0'

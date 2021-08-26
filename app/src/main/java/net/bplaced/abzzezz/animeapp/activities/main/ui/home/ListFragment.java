@@ -43,7 +43,7 @@ public class ListFragment extends Fragment {
 
         final GridView gridView = root.findViewById(R.id.show_item_grid);
 
-        final ShowAdapter showAdapter = new ShowAdapter(AnimeAppMain.getInstance().getShowSaver().getShowSize(), getActivity());
+        final ShowAdapter showAdapter = new ShowAdapter(AnimeAppMain.INSTANCE.getShowSaver().getShowSize(), getActivity());
         gridView.setAdapter(showAdapter);
         /*
          * Set onclick listener, if clicked pass information through to selected anime.
@@ -67,7 +67,7 @@ public class ListFragment extends Fragment {
             return true;
         });
 
-        if (AnimeAppMain.getInstance().isVersionOutdated()) {
+        if (AnimeAppMain.INSTANCE.isVersionOutdated()) {
             new IonAlert(getActivity(), IonAlert.WARNING_TYPE)
                     .setTitleText("Outdated version")
                     .setContentText("Your app-version is outdated, please update it now! If the auto update does not start automatically, download from the website!")
@@ -83,8 +83,8 @@ public class ListFragment extends Fragment {
                 return;
             }
 
-            if (AnimeAppMain.getInstance().getMyAnimeList().isSyncable()) {
-                AnimeAppMain.getInstance().getMyAnimeList().startSync(aBoolean -> {
+            if (AnimeAppMain.INSTANCE.getMyAnimeList().isSyncable()) {
+                AnimeAppMain.INSTANCE.getMyAnimeList().startSync(aBoolean -> {
                     if (!aBoolean) {
                         final MaterialDialog dialog = new MaterialDialog(getContext(), new BottomSheet());
                         dialog.title(null, "Myanimelist credentials");
@@ -97,7 +97,7 @@ public class ListFragment extends Fragment {
                             final EditText password = materialDialog.getView().findViewById(R.id.dialog_two_input_password);
                             final String username = usernameEditText.getText().toString().trim();
 
-                            AnimeAppMain.getInstance().getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
+                            AnimeAppMain.INSTANCE.getMyAnimeList().setupSync(username, password.getText().toString(), processFinished -> {
                                 if (processFinished)
                                     new IonAlert(getActivity(), IonAlert.SUCCESS_TYPE)
                                             .setTitleText("Sync done")
@@ -129,7 +129,7 @@ public class ListFragment extends Fragment {
      * @param intent intent
      */
     private void getInformation(final int index, final Intent intent) {
-        AnimeAppMain.getInstance().getShowSaver().getShow(index).ifPresent(show -> {
+        AnimeAppMain.INSTANCE.getShowSaver().getShow(index).ifPresent(show -> {
             IntentHelper.addObjectForKey(show, "show");
             this.startActivity(intent);
             requireActivity().finish();
@@ -153,7 +153,7 @@ public class ListFragment extends Fragment {
 
         @Override
         public Object getItem(int position) {
-            return AnimeAppMain.getInstance().getShowSaver().getShow(position);
+            return AnimeAppMain.INSTANCE.getShowSaver().getShow(position);
         }
 
         @Override
@@ -172,7 +172,7 @@ public class ListFragment extends Fragment {
             final ImageView coverImage = view.findViewById(R.id.list_show_cover_image_view);
             final TextView showTitle = view.findViewById(R.id.list_show_title_text_view);
             //Grab show
-            AnimeAppMain.getInstance().getShowSaver().getShow(position).ifPresent(show -> {
+            AnimeAppMain.INSTANCE.getShowSaver().getShow(position).ifPresent(show -> {
                 showTitle.setText(show.getShowTitle()); //Set title text view
                 //Load image
                 final String imageURL = show.getImageURL();
@@ -211,7 +211,7 @@ public class ListFragment extends Fragment {
                             .setCancelClickListener(IonAlert::dismissWithAnimation)
                             .show();
                 }
-                AnimeAppMain.getInstance().getShowSaver().remove(index);
+                AnimeAppMain.INSTANCE.getShowSaver().remove(index);
                 notifyDataSetChanged();
             });
         }

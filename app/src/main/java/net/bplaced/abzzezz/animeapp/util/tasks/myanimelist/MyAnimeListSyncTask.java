@@ -44,7 +44,7 @@ public class MyAnimeListSyncTask extends TaskExecutor implements Callable<Boolea
                 animeQueryFactory.list(0).status(UserAnimeWatchingStatus.PLAN_TO_WATCH).execute())
                 .toStream()
                 .forEach(userAnime ->
-                        AnimeAppMain.getInstance().getShowSaver().addShow(
+                        AnimeAppMain.INSTANCE.getShowSaver().addShow(
                                 new Show(
                                         String.valueOf(userAnime.malId),
                                         userAnime.title,

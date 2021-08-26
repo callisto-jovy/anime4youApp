@@ -56,8 +56,7 @@ public class GogoAnime extends Provider {
                             try {
                                 //Put the new provider data
                                 providerJSON
-                                        .put("ep_start", resultJSON.getInt("ep_start"))
-                                        .put("ep_end", resultJSON.getInt("ep_end"));
+                                        .put("ep_start", resultJSON.getInt("ep_start"));
 
                                 show.updateProviderJSON(GogoAnime.this, providerJSON); //Update data for provider
 

@@ -59,7 +59,7 @@ public class EpisodeBottomSheet extends BottomSheetDialogFragment {
         episodeTextView.setText(getString(R.string.show_episode, episode));
 
         final Button leftButton = view.findViewById(R.id.selected_show_bottom_sheet_left_button);
-        final boolean isDownloaded = AnimeAppMain.getInstance().getShowSaver().isEpisodeDownloaded(episode, showDirectory);
+        final boolean isDownloaded = AnimeAppMain.INSTANCE.getShowSaver().isEpisodeDownloaded(episode, showDirectory);
 
         if (isDownloaded) leftButton.setText(R.string.play_episode_button);
 
@@ -75,8 +75,9 @@ public class EpisodeBottomSheet extends BottomSheetDialogFragment {
 
         markButton.setOnClickListener(v -> {
             parent.getShow().setEpisodeWatched(episode); //Increment the number of episodes watched
-            AnimeAppMain.getInstance().getMyAnimeList().updateShowEpisodes(parent.getShow());
+            AnimeAppMain.INSTANCE.getMyAnimeList().updateShowEpisodes(parent.getShow());
             setButtonText(markButton);
+            parent.refreshAdapter();
         });
 
         final Button deleteButton = view.findViewById(R.id.selected_show_button_sheet_delete_button);
@@ -101,7 +102,7 @@ public class EpisodeBottomSheet extends BottomSheetDialogFragment {
      */
     private void playEpisodeFromSave(final int index) {
         Intent intent = null;
-        final Optional<File> videoFile = AnimeAppMain.getInstance().getShowSaver().getEpisodeFile(index, showDirectory);
+        final Optional<File> videoFile = AnimeAppMain.INSTANCE.getShowSaver().getEpisodeFile(index, showDirectory);
 
         if (videoFile.isPresent()) {
             final int mode = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("video_player_preference", "0"));
